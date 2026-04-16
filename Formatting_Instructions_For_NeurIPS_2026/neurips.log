@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  16 APR 2026 01:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  16 APR 2026 14:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -491,21 +491,21 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
 Package rerunfilecheck Info: File `neurips.out' has not changed.
-(rerunfilecheck)             Checksum: EA822DEE8A367DA3FFF2518EC62965E8;2261.
+(rerunfilecheck)             Checksum: 1C1BF8C13A31CEB415A0D6062AA1207D;2284.
  ) 
 Here is how much of TeX's memory you used:
- 13741 strings out of 469339
- 210573 string characters out of 5466426
- 668667 words of memory out of 5000000
- 41986 multiletter control sequences out of 15000+600000
- 680595 words of font info for 274 fonts, out of 8000000 for 9000
+ 13710 strings out of 469339
+ 210339 string characters out of 5466426
+ 668666 words of memory out of 5000000
+ 41985 multiletter control sequences out of 15000+600000
+ 679605 words of font info for 260 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,9n,79p,1637b,647s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,9n,79p,1691b,619s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk> </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on neurips.pdf (12 pages, 222645 bytes).
+Output written on neurips.pdf (12 pages, 223797 bytes).
 PDF statistics:
- 390 PDF objects out of 1000 (max. 8388607)
- 296 compressed objects within 3 object streams
- 111 named destinations out of 1000 (max. 500000)
- 52873 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 374 PDF objects out of 1000 (max. 8388607)
+ 281 compressed objects within 3 object streams
+ 102 named destinations out of 1000 (max. 500000)
+ 52865 words of extra memory for PDF output out of 61914 (max. 10000000)
 

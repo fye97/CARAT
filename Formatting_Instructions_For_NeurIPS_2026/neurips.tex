@@ -31,53 +31,54 @@
 \maketitle
 
 \begin{abstract}
-Federated learning servers must aggregate client updates without observing client data, making them vulnerable to both untargeted model poisoning and targeted backdoor attacks. Existing robust aggregators mainly rely on update geometry, coordinate-wise robust statistics, or alignment with a single trusted reference direction. These signals can be brittle when benign clients are heterogeneous and adaptive attackers remain close to the benign update manifold. We present \textbf{CARAT}, a class-aware robust aggregation rule based on \emph{hidden task certificates}. CARAT uses server-visible labeled reference data to instantiate multiple hidden, class-balanced micro-tasks and scores each client update by the loss decrease it induces on those tasks. It then combines robust norm clipping, common-radius evaluation, worst-task optimization through a soft minimum over certificate scores, coordinate-rank anomaly penalties, and capped-simplex weight optimization with temporal regularization. This design favors updates that are broadly useful across semantic sub-tasks while suppressing clients that remain structurally extreme in rank space. In a verified FedAvg/CIFAR100/FangAttack run, CARAT substantially improves over Mean and assigns zero weight to the attacker coalition in late rounds. Because the strongest completed CARAT run currently available disables test-time evaluation, this evidence should be read as an initial empirical validation rather than a complete benchmark; nevertheless, it supports the promise of task-aware aggregation and motivates completion of the clean-accuracy and ASR benchmark now underway.
+Federated learning servers must aggregate client updates without observing client data, which leaves training vulnerable to both untargeted model poisoning and targeted backdoor attacks. Existing robust aggregators mainly rely on update geometry, coordinate-wise robust statistics, or alignment with a single trusted reference direction, but these signals can be brittle when benign clients are heterogeneous and adaptive attackers stay near the benign update manifold. We present \textbf{CARAT}, a class-aware robust aggregation rule based on \emph{hidden task certificates}: using server-side labeled reference data, CARAT instantiates multiple hidden, class-balanced micro-tasks and scores each client update by the loss reduction it induces across them. CARAT combines this task-aware signal with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization under a worst-task objective with temporal regularization, thereby favoring updates that remain broadly useful across hidden semantic slices while suppressing structurally extreme clients. In the strongest completed repository-backed CIFAR100/FangAttack pilot, CARAT suppresses attacker weights and substantially improves over Mean; however, because the current completed evidence is still training-only and the full clean-accuracy and ASR benchmark suite is not yet finished, these results should be read as initial empirical validation rather than a complete benchmark claim.
 \end{abstract}
 
 \section{Introduction}
+\label{sec:introduction}
 
-Federated learning (FL) enables many clients to train a shared model without centralizing their raw data \citep{mcmahan2017fedavg}. This decentralization is attractive for privacy, governance, and communication, but it also leaves the server in a fundamentally asymmetric position: it must update the global model using client messages that it cannot directly verify. Poisoning attacks exploit exactly this asymmetry. Malicious clients can slow or prevent convergence, bias the learned decision boundary, or implant triggers that activate attacker-chosen behavior at test time \citep{fang2020local,shejwalkar2021manipulating,bagdasaryan2020backdoor,wang2020tails,zhang2022neurotoxin}. In practice, the security of FL is therefore tightly coupled to the aggregation rule.
+Federated learning (FL) enables many clients to train a shared model without centralizing their raw data \citep{mcmahan2017fedavg,bonawitz2017secureagg,kairouz2021federated}. This decentralization is attractive in privacy- and governance-sensitive settings, but it also leaves the server in a fundamentally asymmetric position: it must update the global model using client messages that it cannot directly verify. Poisoning attacks exploit exactly this asymmetry. Malicious clients can slow convergence, distort the learned decision boundary, or implant triggers that activate attacker-chosen behavior at test time \citep{bhagoji2019adversarial,fang2020local,shejwalkar2021manipulating,baruch2019alie,bagdasaryan2020backdoor,xie2020dba,wang2020tails,zhang2022neurotoxin}. In practice, the robustness of FL is therefore tightly coupled to the aggregation rule.
 
-The central difficulty is that malicious behavior and benign heterogeneity can look superficially similar. Under non-i.i.d.\ partitions, benign clients legitimately differ in direction, norm, sparsity, and class emphasis. As a result, an update can appear unusual either because it is harmful or because it reflects a different local data distribution. Many existing defenses rely on signals that are too coarse to resolve this ambiguity reliably. Pairwise distances and geometric centrality can misclassify benign dispersion as adversarial deviation; coordinate-wise robust statistics suppress only marginal extremes and ignore cross-coordinate structure; trusted-reference schemes reduce the server's auxiliary information to a single global direction, which can miss failures concentrated on particular classes or semantic regions.
+The central difficulty is that malicious behavior and benign heterogeneity can look superficially similar. Under non-i.i.d.\ partitions, benign clients legitimately differ in direction, norm, sparsity, and class emphasis \citep{zhao2018noniid,li2020fedprox,karimireddy2020scaffold,zhu2021noniidsurvey}. As a result, an update can appear unusual either because it is harmful or because it reflects a different local data distribution. Existing defenses often rely on signals that are too coarse to resolve this ambiguity reliably. Pairwise distances and geometric centrality can misclassify benign dispersion as adversarial deviation; coordinate-wise robust statistics suppress only marginal extremes and ignore cross-coordinate structure; and trusted-reference schemes reduce the server's auxiliary information to a single global direction, which can miss failures concentrated on particular classes or semantic regions \citep{blanchard2017krum,elmhamdi2018bulyan,yin2018median,xie2019zeno,chen2018draco,li2019rsa,pillutla2022rfa,cao2021fltrust}.
 
-This observation motivates the main question behind CARAT: \emph{can the server evaluate an update by testing whether it is consistently useful across hidden semantic sub-tasks, rather than only by testing whether it looks similar to other updates?} We answer this question with \textbf{CARAT}, \emph{Class-Aware Robust Aggregation via Hidden Task Certificates}. CARAT assumes server-side access to labeled reference data and uses that data to sample hidden, class-balanced micro-tasks. Each client update is then scored by the loss reduction it induces across these tasks. The resulting certificate matrix gives the server a finer-grained notion of utility: an update should be trusted not merely because it looks central, but because it remains broadly helpful across multiple hidden slices of the learning problem.
+This leaves a key question: how should the server validate client updates when benign heterogeneity is intrinsic and the most harmful attacks may only reveal themselves on specific semantic slices of the task? What is needed is a validation signal that is semantically discriminative, robust to benign diversity, and difficult for attackers to satisfy by merely staying near the benign update manifold.
 
-CARAT complements this task-aware signal with two additional ingredients. First, it uses robust clipping and common-radius evaluation so that certificate comparisons are not dominated by raw magnitude. Second, it adds a coordinate-rank anomaly penalty to capture whether a client remains structurally extreme even after clipping. Aggregation weights are then learned on a capped simplex through a worst-task objective with temporal regularization. The overall goal is to preserve benign diversity while suppressing updates that are either semantically brittle or structurally anomalous.
+To address this, the paper proposes \textbf{CARAT}, \emph{Class-Aware Robust Aggregation via Hidden Task Certificates}. CARAT assumes server-side access to labeled reference data and uses that data to instantiate hidden, class-balanced micro-tasks. Each client update is then scored by the loss reduction it induces across these tasks, producing a certificate matrix that measures whether the update is broadly useful across hidden semantic slices rather than merely geometrically central. CARAT combines this task-aware signal with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization under a worst-task objective with temporal regularization. Our main contributions are summarized as follows.
 
+<<<<<<< HEAD
 This design places CARAT between trust-based aggregation and task-aware validation. Compared with FLTrust, it expands trusted data into many hidden probes rather than a single trusted direction. Compared with heterogeneity-aware schemes such as bucketing, it does not try to homogenize clients before aggregation; instead, it directly asks whether each update is useful across hidden task slices. Compared with inspection-oriented defenses such as FLAME and DeepSight, it intervenes at aggregation time rather than primarily through post-hoc filtering. In this sense, CARAT does not merely introduce another distance rule. It changes the server's validation signal from update similarity to hidden-task utility.
 
+=======
+>>>>>>> 6470f77 (update)
 \begin{itemize}
-\item We introduce hidden-task certificates as a task-aware server-side validation signal for robust FL aggregation, using multiple class-balanced micro-tasks instead of a single trusted reference direction.
-\item We formulate CARAT as a capped-simplex weight optimization problem that jointly enforces worst-task utility, rank-space anomaly suppression, and temporal regularization.
-\item We make the implementation assumptions explicit, most importantly the server-side access to labeled data from which the hidden-task probe pool is constructed.
-\item We report the current repository-backed empirical evidence and separate verified results from the larger clean-accuracy and ASR benchmark suite that is still being completed.
+\item We propose CARAT, a class-aware robust aggregation rule that validates client updates through hidden-task certificates built from server-side labeled reference data, replacing one-shot geometric trust signals with multi-task utility checks.
+\item We formulate aggregation as a capped-simplex optimization problem that combines worst-task utility across hidden tasks, coordinate-rank anomaly suppression, and temporal regularization, yielding a robust weighting mechanism that remains compatible with heterogeneous FL.
+\item We provide repository-backed empirical evidence for CARAT and clearly distinguish completed verified runs from the broader clean-accuracy and ASR benchmark suite that is still being finalized.
 \end{itemize}
 
+\section{Related Work}
+\label{sec:related-work}
+
+\paragraph{Model poisoning attacks.}
+Modern FL attacks are explicitly designed to remain effective under server-side robustness measures. Early work already showed that highly constrained adversaries can poison the global model while preserving substantial stealth, even when the server deploys Byzantine-style defenses \citep{bhagoji2019adversarial,fang2020local,shejwalkar2021manipulating}. On the untargeted side, MinMax, MinSum, ALIE, and related optimization-based attacks craft malicious updates that evade simple geometric or statistical filters while still degrading global learning \citep{shejwalkar2021manipulating,baruch2019alie}. On the targeted side, model-replacement backdoors, distributed backdoor construction, trigger-tail attacks, and durable attacks such as Neurotoxin show that an update can appear globally plausible while implanting highly specific malicious behavior \citep{bagdasaryan2020backdoor,xie2020dba,wang2020tails,zhang2022neurotoxin}. Recent surveys make the broader point explicit: once the server cannot inspect raw client data, poisoning and backdoor attacks become a first-class systems concern rather than an edge case \citep{kairouz2021federated,liu2022threats}.
+
+\paragraph{Defense and detection.}
+Classical Byzantine-robust aggregation rules infer benignness from centrality. Krum and related geometry-based methods favor updates that remain close to other clients under pairwise distances \citep{blanchard2017krum,elmhamdi2018bulyan}, while coordinate-wise median and trimmed mean suppress marginal extremes independently \citep{yin2018median}. Later variants extend this family through suspicion scoring, regularized robust aggregation, coding-based redundancy, and geometric-median aggregation \citep{xie2019zeno,li2019rsa,chen2018draco,pillutla2022rfa,yin2019saddle}. These methods are appealing because they require limited server-side prior knowledge, but under heterogeneous data they may still confuse legitimate benign dispersion with malicious deviation. This limitation has motivated a second line of work that explicitly tackles heterogeneity, for example through FedProx- and SCAFFOLD-style stabilization, resampling, bucketing, local-SGD analysis, gradient splitting, nearest-neighbor mixing, label-skew-aware aggregation, and entropy-based public-data guidance \citep{li2020fedprox,karimireddy2020scaffold,he2021resampling,karimireddy2022bucketing,data2021localsgd,liu2023gas,allouah2023fixing,bao2024boba,huang2024sdea,zhu2021noniidsurvey}. A third line augments aggregation with trusted data, history, or representation-level inspection. In collaborative-learning settings, AUROR already anticipated update screening for poisoning resistance \citep{shen2016auror}; in FL, FLTrust introduces a trusted server anchor, FoolsGold and FLDetector rely on historical similarity diagnostics, and FLARE, FLAME, DeepSight, CRFL, and FLIP use latent-space inspection, clustering, clipping, smoothing, or reverse-engineering-based backdoor mitigation \citep{cao2021fltrust,fung2020foolsgold,zhang2022fldetector,wang2022flare,nguyen2022flame,rieger2022deepsight,xie2021crfl,zhang2023flip}. Recent work also revisits the cost of robustness itself, highlighting clipping design and the tradeoff between Byzantine resilience and no-attack accuracy \citep{allouah2025arc,yang2025tension}. CARAT is closest to this broader defense-and-detection family, but differs in its validation principle: instead of trusting update similarity, one reference direction, or post-hoc clustering alone, it evaluates whether a client update remains useful across multiple hidden semantic sub-tasks.
+
 \section{Method}
+\label{sec:method}
 
-\subsection{Problem setting}
+\subsection{Formulation and Assumptions}
 
-We consider synchronous FL with $n$ clients and a global parameter vector $w_r \in \R^d$ at round $r$. At each round, client $i$ returns a message $u_i^r$, which the server maps to a vector-form update $\Delta_i^r \in \R^d$. For FedAvg, $\Delta_i^r$ can be viewed as the client model delta relative to the current global model; for gradient-style optimizers, it is the client update itself. The server must aggregate $\{\Delta_i^r\}_{i=1}^n$ into a single global step while a fraction $\rho$ of clients may be malicious and may coordinate their behavior.
+We consider synchronous FL with $n$ clients and a global parameter vector $w_r \in \R^d$ at round $r$. At each round, client $i$ returns a message $u_i^r$, which the server maps to a vector-form update $\Delta_i^r \in \R^d$. For FedAvg, $\Delta_i^r$ can be read as the client model delta relative to the current global model; for gradient-style optimizers, it is the client update itself. The server must aggregate $\{\Delta_i^r\}_{i=1}^n$ into a single global step while a fraction $\rho$ of clients may be malicious and may coordinate their behavior.
 
-\paragraph{Server knowledge.}
-CARAT assumes the server has access to labeled reference data. From this reference set it builds a probe pool and repeatedly samples hidden, class-balanced validation tasks. This is a materially stronger assumption than fully data-free robust aggregation and should be treated as part of the method definition rather than as an incidental implementation detail.
+CARAT assumes the server has access to labeled reference data $\mathcal{D}^{\mathrm{ref}}$. From this data, it constructs a probe pool $\mathcal{P}$ and repeatedly samples hidden, class-balanced validation tasks. This is a stronger assumption than fully data-free robust aggregation, and it should be treated as part of the method definition rather than as an incidental implementation detail. The reason for making this assumption explicit is that CARAT uses the server's auxiliary data not to define one trusted direction, but to generate many hidden semantic checks against which candidate client updates can be evaluated.
 
-\paragraph{Goal.}
-The goal is to assign aggregation weights that preserve benign diversity while suppressing updates that are either semantically harmful or structurally anomalous. The key challenge is to distinguish malicious deviation from legitimate non-i.i.d.\ variation without relying only on geometric similarity.
+The goal is to assign aggregation weights that preserve benign diversity while suppressing updates that are either semantically harmful or structurally anomalous. This distinction matters in non-i.i.d.\ FL: benign clients may differ substantially in direction, norm, and class emphasis, so geometric dispersion alone is not enough to identify attacks. CARAT therefore separates each round into three conceptual steps. It first places all client updates into a common evaluation geometry, then measures each client's task utility and structural abnormality, and finally converts these signals into robust aggregation weights. This separation is central to the method: evaluation should be comparable across clients, while the final server step should still remain conservative and robust.
 
-\subsection{CARAT overview}
+\subsection{Method Details}
 
-CARAT is organized around three ideas. First, it validates updates through hidden task utility rather than through client-to-client similarity alone. Second, it emphasizes \emph{worst-task} performance, reflecting the intuition that an update should not be trusted if it helps on average but damages a subset of hidden semantic slices. Third, it augments semantic utility with a structural anomaly signal in rank space.
-
-Operationally, each round has three stages. The server first places updates into a fair evaluation geometry by clipping and rescaling them. It then scores each client using hidden-task certificates and coordinate-rank anomaly penalties. Finally, it solves a capped-simplex optimization problem whose solution defines the aggregation weights. A crucial design choice is that normalized updates are used only for \emph{evaluation}, whereas clipped updates are used for the actual model step. CARAT therefore separates evaluation geometry from update geometry.
-
-\subsection{Hidden-task and anomaly scoring}
-
-Let $\mathcal{D}^{\mathrm{ref}}$ denote the server reference data and let $\mathcal{P}$ denote a probe pool sampled from it. At round $r$, CARAT samples $T$ hidden tasks from $\mathcal{P}$, with each task constructed to be approximately class-balanced. This design is the source of CARAT's class-aware behavior: a malicious update may look globally plausible while degrading only a subset of classes, whereas balanced hidden tasks make such class-selective failures easier to detect.
-
-\paragraph{Clipping and common-radius evaluation.}
-
-Before hidden-task evaluation, CARAT robustly clips client updates. Let $\|\Delta_i\|_2$ denote the norm of client $i$'s update. In our implementation, the clipping threshold $\tau_r$ is estimated by a MAD-based rule:
+At round $r$, CARAT begins by converting all client messages into vector-form deltas and computing their norms. Before any semantic evaluation, the server robustly clips client updates to prevent a small number of large-magnitude messages from dominating the comparison stage. Let $\|\Delta_i\|_2$ denote the norm of client $i$'s update. In our implementation, the clipping threshold $\tau_r$ is estimated by a MAD-based rule:
 \begin{equation}
 \tau_r = \operatorname{median}(\{\|\Delta_i\|_2\}) +
 k \cdot 1.4826 \cdot \operatorname{MAD}(\{\|\Delta_i\|_2\}),
@@ -93,24 +94,18 @@ CARAT then rescales each clipped update to a common evaluation radius $q_r$:
 \tilde{\Delta}_i = q_r \frac{\bar{\Delta}_i}{\|\bar{\Delta}_i\|_2 + \varepsilon},
 \label{eq:normalize}
 \end{equation}
-where $q_r$ is chosen as a quantile of the positive clipped norms. This normalization removes pure scale advantages during hidden-task comparison. Importantly, it does \emph{not} define the final server step; it only creates a common evaluation geometry in which client updates can be compared more fairly. Appendix Proposition~\ref{prop:directional-invariance} formalizes the invariance induced by this step.
+where $q_r$ is chosen as a quantile of the positive clipped norms. This normalization removes pure scale advantages during hidden-task comparison. Importantly, the normalized vectors are used only for evaluation; the final model update is still computed from the clipped vectors. In other words, CARAT uses normalization to create a fair scoring geometry, not to define the actual optimization step taken by the server.
 
-\paragraph{Hidden-task certificates.}
-
-For each hidden task $t$, let $\ell_t(w)$ denote the average cross-entropy loss of model $w$ on that task. CARAT defines a \emph{hidden-task certificate}
+After this preprocessing stage, CARAT samples $T$ hidden tasks from the probe pool $\mathcal{P}$, with each task constructed to be approximately class-balanced. This is the source of the method's class-aware behavior. A malicious update can remain globally plausible while degrading only a subset of classes or semantic regions, whereas repeated balanced hidden tasks make these localized failures harder to hide. For each hidden task $t$, let $\ell_t(w)$ denote the average cross-entropy loss of model $w$ on that task. CARAT defines a \emph{hidden-task certificate}
 \begin{equation}
 c_{i,t} = \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i).
 \label{eq:cert}
 \end{equation}
 Here, ``certificate'' denotes an internal task-level utility score rather than a formal certified-robustness guarantee. Positive values indicate that client $i$ improves task $t$ relative to the current global model.
 
-Stacking these scores yields a certificate matrix $C \in \R^{n \times T}$. Because different tasks may have different intrinsic difficulties and baseline loss scales, CARAT robustly standardizes each column of $C$ before optimization. This preserves within-task ordering while making scores comparable across tasks.
+Stacking these scores yields a certificate matrix $C \in \R^{n \times T}$. Because different tasks may have different intrinsic difficulty and baseline loss scale, CARAT robustly standardizes each column of $C$ before optimization. This preserves within-task ordering while making the task scores comparable across different hidden slices. The resulting matrix gives the server a much richer signal than client-to-client similarity alone: a client should be trusted because it remains broadly useful across hidden tasks, not merely because it lies near the geometric center of the client population.
 
-\paragraph{Rank-space anomaly penalties.}
-
-Hidden-task utility alone is not sufficient: an attacker may overfit to the probe tasks or align with a subset of them while still remaining structurally atypical. CARAT therefore augments semantic utility with a coordinate-rank anomaly signal.
-
-For a sampled coordinate set $S \subseteq \{1,\dots,d\}$, CARAT ranks clients coordinate-wise and measures the average normalized distance from the center rank:
+Task utility alone is still insufficient, because a malicious client may overfit to the probe tasks or align with part of the semantic signal while remaining structurally extreme in parameter space. CARAT therefore augments hidden-task certificates with a coordinate-rank anomaly score. For a sampled coordinate set $S \subseteq \{1,\dots,d\}$, it ranks clients coordinate-wise and measures the average normalized distance from the center rank:
 \begin{equation}
 r_i^{(S)} = \frac{1}{|S|}\sum_{j \in S}
 \left|
@@ -118,11 +113,11 @@ r_i^{(S)} = \frac{1}{|S|}\sum_{j \in S}
 \right|.
 \label{eq:rank}
 \end{equation}
-CARAT repeats this computation over several random coordinate subsets and aggregates the resulting values robustly. A client receives a large anomaly score if its update remains persistently extreme across many coordinates. After robust standardization, only positive deviations are retained as penalties. The signal is intentionally asymmetric: suspicious extremeness is penalized, whereas unusual centrality is not explicitly rewarded.
+CARAT repeats this computation over several random coordinate subsets and aggregates the resulting values robustly. A client receives a large anomaly score if its update remains persistently extreme across many coordinates rather than only on a few isolated entries. After robust standardization, only positive deviations are retained as penalties. The signal is intentionally asymmetric: suspicious extremeness is penalized, whereas unusual centrality is not explicitly rewarded. Together, the certificate matrix and rank penalty separate two notions that are often conflated in robust aggregation: whether an update is useful, and whether it remains structurally atypical.
 
-\subsection{Weight optimization and aggregation}
+\subsection{Weight Optimization and Aggregation}
 
-CARAT chooses aggregation weights $\alpha \in \R^n$ on the capped simplex
+CARAT converts these signals into aggregation weights by solving a constrained optimization problem on the capped simplex
 \begin{equation}
 \mathcal{A}(\hat{\rho}) =
 \left\{
@@ -133,7 +128,7 @@ CARAT chooses aggregation weights $\alpha \in \R^n$ on the capped simplex
 \right\},
 \label{eq:capped-simplex}
 \end{equation}
-where $\hat{\rho}$ is an estimate of the attacker fraction. This cap prevents any single client from dominating the aggregate and guarantees a minimum support size. Appendix Proposition~\ref{prop:capped-simplex} states the corresponding feasibility and support guarantees.
+where $\hat{\rho}$ is an estimate of the attacker fraction. The cap prevents any single client from dominating the aggregate and encodes a conservative trust budget at the weight level: even when a client appears useful, it cannot absorb arbitrary influence in one round.
 
 Let $r \in \R^n$ denote the positive rank penalties and let $\alpha^{\mathrm{prev}}$ be the previous round's weights. CARAT solves
 \begin{equation}
@@ -149,22 +144,19 @@ where
 = -\frac{1}{\beta}\log\left(\frac{1}{T}\sum_{t=1}^T e^{-\beta s_t}\right).
 \label{eq:softmin}
 \end{equation}
-The softmin term gives a smooth approximation to worst-task utility: large $\beta$ places more emphasis on the weakest hidden tasks, while finite $\beta$ preserves optimization stability. The second term penalizes structurally extreme clients, and the third term regularizes the solution toward the previous round to reduce unnecessary oscillation. Appendix Proposition~\ref{prop:softmin} records the basic bounds and gradient form of the softmin term.
-
-Eq.~\eqref{eq:objective} yields a clear selection principle. A client should retain influence only if it is useful across hidden tasks \emph{and} not persistently extreme in rank space. The temporal prior does not define trust by itself; instead, it resolves ambiguity among utility-equivalent feasible solutions and discourages gratuitous weight oscillation. Appendix Proposition~\ref{prop:temporal-prior} formalizes this role.
-
-\paragraph{Final aggregation and complexity.}
+The first term is a smooth approximation to worst-task utility: large $\beta$ places more emphasis on the weakest hidden tasks, while finite $\beta$ preserves optimization stability. The second term penalizes structurally extreme clients, and the third term regularizes the solution toward the previous round to reduce unnecessary oscillation. Eq.~\eqref{eq:objective} therefore encodes a clear decision rule: a client should retain influence only if it remains useful across hidden tasks and does not repeatedly appear as an outlier in rank space.
 
 After optimization, CARAT aggregates the clipped updates:
 \begin{equation}
 \Delta_{\mathrm{agg}} = \sum_{i=1}^n \alpha_i \bar{\Delta}_i.
 \label{eq:aggregate}
 \end{equation}
-This yields the final server step. The final update therefore inherits the robustness benefits of clipping while using weights learned from the richer evaluation geometry defined above.
+This yields the final server step. The final update therefore inherits the robustness benefits of clipping while using weights learned from the richer evaluation geometry defined above. In practice, the main additional computation comes from evaluating $n$ candidate updates over $T$ hidden tasks and computing rank penalties on coordinate subsamples; the probe-model forward passes dominate, while the ranking and optimization stages remain tunable through explicit budget parameters.
 
-Relative to standard aggregation, the main additional cost comes from evaluating $n$ candidate updates over $T$ hidden tasks and computing rank penalties on coordinate subsamples. Appendix Proposition~\ref{prop:complexity} summarizes the resulting per-round complexity. In practice, the probe-model forward passes dominate, while the rank and optimization stages are lower-order terms with tunable budgets.
+Formal properties of the normalization step, capped-simplex feasibility, softmin behavior, temporal regularization, and per-round complexity are deferred to Appendix~\ref{sec:appendix-theory}. A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendix-algorithm}.
 
 \section{Experiments}
+\label{sec:experiments}
 
 \noindent We organize the empirical study into two parts. \emph{Experimental Setup} defines the common dataset, implementation, baselines, and default settings used across all runs. \emph{Performance Evaluation} then examines five aspects of CARAT: defense effectiveness under different attacks, sensitivity to attacker ratio, compatibility with cross-device and cross-silo deployment regimes, aggregation overhead, and the influence of key hyperparameters. Because the evaluation-enabled benchmark suite is still running in the repository, we explicitly distinguish completed evidence from planned benchmark slices.
 
@@ -259,29 +251,12 @@ The intended empirical narrative is therefore sequential: establish clean and un
 
 A core methodological limitation remains the server-side data assumption already stated in the Method section: in the current code path, the probe pool is sampled from a server-visible labeled training dataset rather than from a tiny external reference set. This assumption matters when CARAT is compared to fully data-free robust aggregators. Empirical coverage is also still incomplete. The strongest completed CARAT evidence is a single-seed, training-only FangAttack pilot. An evaluation-enabled benchmark suite that includes CARAT is now committed and running, but the CARAT rows, non-i.i.d.\ cases, backdoor tasks, and adaptive-attack studies are not yet complete. This means the current manuscript supports a methodology claim and an initial empirical result, but not yet a full benchmark claim.
 
-\section{Related Work}
-
-The most relevant prior work differs primarily in \emph{what signal} it uses to decide whether a client should influence the global model. This perspective is useful for evaluating CARAT because the method does not mainly contribute a new distance metric or a new filter; it changes the unit of validation from client-to-client similarity to client-to-task utility.
-
-\paragraph{Similarity-based robust aggregation.}
-Classical Byzantine-robust rules infer benignness from centrality. Krum and related geometry-based methods favor updates that remain close to other clients under pairwise distances \citep{blanchard2017krum,elmhamdi2018bulyan}, while coordinate-wise median and trimmed mean suppress marginal extremes independently \citep{yin2018median}. These methods are appealing because they require little server-side prior knowledge. Their weakness is that they implicitly assume benign updates should look mutually similar. Under non-i.i.d.\ data, that assumption becomes fragile: benign clients may be dispersed for legitimate reasons, and adaptive attackers may remain close to the benign manifold while still harming a subset of classes or semantic regions.
-
-\paragraph{Heterogeneity-aware and reference-data defenses.}
-Two important responses to this limitation are to reshape the client population or to inject trusted server knowledge. Bucketing reduces heterogeneity by averaging clients before robust aggregation \citep{karimireddy2022bucketing}. FLTrust instead uses a trusted server dataset to compute a reference direction and reweights clients by alignment with that anchor \citep{cao2021fltrust}. Other defenses, including FoolsGold and FLDetector, add historical or representation-level diagnostics rather than relying purely on instantaneous geometry \citep{fung2020foolsgold,zhang2022fldetector}. CARAT is closest to this family because it also exploits server-side labeled data. The key difference is that it does not compress trusted information into one global direction. Instead, it expands that information into many hidden validation tasks, allowing the server to ask whether an update is broadly useful rather than merely well aligned.
-
-\paragraph{Adaptive poisoning and backdoor defenses.}
-Modern attacks are explicitly optimized against robust aggregators. FangAttack, MinMax, MinSum, and ALIE are representative untargeted attacks designed to evade simple geometric or statistical filters \citep{fang2020local,shejwalkar2021manipulating,baruch2019alie}. On the backdoor side, model replacement, edge-case attacks, and durable attacks such as Neurotoxin show that an update can remain outwardly plausible while still encoding highly targeted malicious behavior \citep{bagdasaryan2020backdoor,wang2020tails,zhang2022neurotoxin}. Backdoor-oriented defenses such as FLAME, DeepSight, and CRFL respond with clustering, inspection, clipping, or smoothing mechanisms \citep{nguyen2022flame,rieger2022deepsight,xie2021crfl}. Taken together, this literature suggests that one-dimensional defenses are increasingly brittle: when the server validates only one property, adaptive attackers can often optimize against exactly that property.
-
-\paragraph{Positioning of CARAT.}
-CARAT is best understood as a task-aware aggregation rule for the regime where benign heterogeneity and adaptive poisoning interact. Compared with FLTrust, it uses trusted data to instantiate many hidden semantic probes rather than one trust anchor. Compared with bucketing, it does not pre-average clients to reduce dispersion; it directly evaluates each client on hidden task slices. Compared with FLAME and DeepSight, it intervenes at aggregation time instead of relying primarily on post-hoc inspection or clustering. The intended contribution is therefore not another robustness heuristic layered on top of update similarity, but a different validation principle: a useful client update should remain helpful across hidden sub-tasks, not merely look centrally located.
-
 \section{Conclusion}
+\label{sec:conclusion}
 
-CARAT combines hidden class-balanced task certificates, rank-space anomaly suppression, and capped-simplex weight optimization into a single aggregation rule. The central claim of the paper is not merely that robust aggregation should filter outliers, but that it should validate client updates against multiple hidden semantic slices of the task. This perspective is what allows CARAT to separate benign diversity from malicious inconsistency more directly than geometry-only or single-reference defenses.
+We presented CARAT, a class-aware robust aggregation rule that validates client updates through hidden task certificates rather than relying only on geometric centrality or a single trusted reference direction. By scoring updates across multiple hidden, class-balanced semantic slices of the task and combining those scores with rank-space anomaly suppression and capped-simplex weight optimization, CARAT is designed to preserve benign heterogeneity while reducing the influence of semantically harmful or structurally extreme clients.
 
-The current repository already supports a concrete methodology claim and an initial empirical claim: in a completed CIFAR100/FangAttack pilot, CARAT suppresses attacker weights and substantially improves over Mean, albeit with higher runtime and without yet surpassing every strong baseline on that single seed. The immediate next step is to complete the evaluation-enabled untargeted, backdoor, and ablation suites so that the final paper reports clean accuracy, ASR, runtime overhead, and multi-seed variance under both i.i.d.\ and non-i.i.d.\ settings.
-
-If those experiments confirm the pilot pattern, CARAT would offer a practically relevant path toward more reliable FL aggregation in settings where class-selective failures matter, including safety-sensitive deployments. Even if the gains turn out to be conditional, the hidden-task view still provides a useful organizing principle for designing and stress-testing future FL defenses.
+The current repository-backed evidence supports this mechanism claim at a preliminary empirical level: in the completed CIFAR100/FangAttack pilot, CARAT suppresses attacker weights and substantially improves over Mean. At the same time, the present manuscript does not yet support a full benchmark claim, because the clean-accuracy, ASR, non-i.i.d., and multi-seed CARAT suites are still being completed, and the method retains the explicit assumption of server-side labeled reference data. Even with these limitations, the hidden-task certificate view provides a concrete and technically grounded direction for robust FL aggregation, especially in settings where class-selective failures matter.
 
 \bibliographystyle{unsrtnat}
 \bibliography{ref}
@@ -289,6 +264,9 @@ If those experiments confirm the pilot pattern, CARAT would offer a practically 
 \appendix
 
 \section{Theoretical Analysis}
+\label{sec:appendix-theory}
+
+This appendix records the main structural properties used to interpret CARAT. These results are not presented as a complete robustness guarantee against arbitrary adaptive attackers. Instead, they clarify why the method decomposes naturally into a normalized evaluation geometry, a task-aware utility objective, and a constrained robust aggregation step.
 
 \begin{proposition}[Feasibility and support of the capped simplex]
 \label{prop:capped-simplex}
@@ -325,7 +303,13 @@ Let $s \in \R^T$ and define
 \]
 Then
 \[
-\min_t s_t \le \softmin_{\beta}(s) \le \frac{1}{T}\sum_{t=1}^T s_t.
+\min_t s_t \le \softmin_{\beta}(s) \le \min_t s_t + \frac{\log T}{\beta}.
+\]
+Moreover,
+\[
+\lim_{\beta \to \infty}\softmin_{\beta}(s)=\min_t s_t,
+\qquad
+\lim_{\beta \to 0}\softmin_{\beta}(s)=\frac{1}{T}\sum_{t=1}^T s_t.
 \]
 Moreover, if $z(\alpha)=C^\top\alpha$ and
 \[
@@ -338,7 +322,21 @@ then
 \end{proposition}
 
 \begin{proof}[Proof sketch]
-The lower and upper bounds follow from standard log-sum-exp inequalities: the exponential average is bounded below by the largest exponential term and above by the arithmetic mean. Monotonicity in each coordinate is immediate. Differentiating the softmin expression with respect to $z_t$ yields the Gibbs weights $\pi_t(\alpha)$, and the chain rule then gives $C\pi(\alpha)$. Hence the ascent direction is a convex combination of certificate columns, with more weight placed on tasks whose current aggregate utility is smaller.
+Let $m=\min_t s_t$. Since
+\[
+e^{-\beta m}/T \le \frac{1}{T}\sum_{t=1}^T e^{-\beta s_t} \le e^{-\beta m},
+\]
+applying $-(1/\beta)\log(\cdot)$ yields
+\[
+m \le \softmin_{\beta}(s) \le m+\frac{\log T}{\beta}.
+\]
+The limit $\beta \to \infty$ follows immediately from the vanishing gap bound. For $\beta \to 0$, a first-order expansion of the exponential average gives
+\[
+\frac{1}{T}\sum_{t=1}^T e^{-\beta s_t}
+=
+1-\beta \frac{1}{T}\sum_{t=1}^T s_t + o(\beta),
+\]
+so the softmin converges to the arithmetic mean. Differentiating the softmin expression with respect to $z_t$ yields the Gibbs weights $\pi_t(\alpha)$, and the chain rule then gives $C\pi(\alpha)$. Hence the ascent direction is a convex combination of certificate columns, with more weight placed on tasks whose current aggregate utility is smaller.
 \end{proof}
 
 \begin{proposition}[Directional invariance of certificate scoring]
@@ -365,6 +363,30 @@ q_r\frac{\bar{\Delta}_j}{\|\bar{\Delta}_j\|_2}.
 Substituting the resulting equality into Eq.~\eqref{eq:cert} gives identical task scores. Thus, after clipping, the certificate stage depends on direction rather than residual norm magnitude.
 \end{proof}
 
+\begin{proposition}[Task-wise standardization preserves within-task ordering]
+\label{prop:task-standardization}
+Fix a task $t$ and define a standardized certificate score
+\[
+\hat{c}_{i,t}=\frac{c_{i,t}-m_t}{s_t+\varepsilon},
+\]
+where $m_t \in \R$ and $s_t>0$ depend only on task $t$ and not on client $i$. Then for any clients $i,j$,
+\[
+c_{i,t} \ge c_{j,t}
+\quad \Longleftrightarrow \quad
+\hat{c}_{i,t} \ge \hat{c}_{j,t}.
+\]
+Moreover,
+\[
+\hat{c}_{i,t}-\hat{c}_{j,t}
+=
+\frac{c_{i,t}-c_{j,t}}{s_t+\varepsilon}.
+\]
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+For a fixed task $t$, the map $x \mapsto (x-m_t)/(s_t+\varepsilon)$ is affine with strictly positive slope because $s_t+\varepsilon>0$. Hence it preserves ordering. The difference identity follows by direct subtraction. Therefore column-wise robust standardization calibrates cross-task scale without changing the within-task ranking induced by the raw certificate scores.
+\end{proof}
+
 \begin{proposition}[Temporal prior and projected-iterate invariants]
 \label{prop:temporal-prior}
 Define
@@ -388,6 +410,32 @@ every iterate remains in $\mathcal{A}(\hat{\rho})$.
 The first statement follows by direct substitution: if the certificate and rank terms match, the only remaining difference in objective value is the quadratic prior term. CARAT therefore prefers, among utility-equivalent feasible weights, the solution closer to $\alpha^{\mathrm{prev}}$. The second statement is immediate from the projection operator. Hence the optimizer preserves three round invariants throughout: $\alpha_i \ge 0$, $\sum_i \alpha_i =1$, and $\alpha_i \le 1/((1-\hat{\rho})n)$.
 \end{proof}
 
+\begin{proposition}[Norm bound for the final aggregate]
+\label{prop:aggregate-bound}
+Suppose each clipped update satisfies $\|\bar{\Delta}_i\|_2 \le \tau_r$ and $\alpha \in \mathcal{A}(\hat{\rho})$. Then the final aggregate
+\[
+\Delta_{\mathrm{agg}}=\sum_{i=1}^n \alpha_i \bar{\Delta}_i
+\]
+satisfies
+\[
+\|\Delta_{\mathrm{agg}}\|_2 \le \tau_r.
+\]
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Because $\alpha_i \ge 0$ and $\sum_i \alpha_i=1$, the aggregate is a convex combination of clipped updates. By the triangle inequality,
+\[
+\|\Delta_{\mathrm{agg}}\|_2
+\le
+\sum_{i=1}^n \alpha_i \|\bar{\Delta}_i\|_2
+\le
+\sum_{i=1}^n \alpha_i \tau_r
+=
+\tau_r.
+\]
+Thus the final server step inherits the clipping radius as a hard norm upper bound.
+\end{proof}
+
 \begin{proposition}[Per-round complexity]
 \label{prop:complexity}
 Let $n$ be the number of clients, $T$ the number of hidden tasks, $m$ the number of sampled coordinates for rank scoring, $S$ the number of rank subsamples, and $K$ the number of projected-gradient steps. Ignoring constant factors from batch size and model width, the extra defense-side work of CARAT scales as
@@ -403,7 +451,8 @@ CARAT performs one baseline probe evaluation plus $n$ candidate probe evaluation
 \paragraph{Remark on assumptions.}
 The theoretical object $D^{\mathrm{ref}}$ in the main text should be read as the probe pool \emph{after} subsampling. The code, however, obtains that pool by sampling from the full server-visible training dataset. Any final formal discussion should keep this distinction explicit, because it materially strengthens the server-side assumption relative to a fully data-free defense.
 
-\section{Algorithm}
+\section{Algorithmic Details}
+\label{sec:appendix-algorithm}
 
 \paragraph{Inputs.}
 Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, server-visible training dataset, and CARAT hyperparameters.
@@ -414,6 +463,56 @@ CARAT maintains two pieces of state across rounds: a balanced probe pool sampled
 \paragraph{Initialization.}
 At the first round, the implementation initializes $\alpha^{\mathrm{prev}}$ to the uniform vector. This makes the initial round unbiased across clients while still allowing later rounds to exploit temporal consistency once CARAT has observed several optimization trajectories.
 
+\paragraph{Reference-pool construction and hidden-task sampling.}
+Let $\mathcal{P}_c \subseteq \mathcal{P}$ denote the subset of probe examples with class label $c$. A hidden task is constructed by sampling a small number of examples from each available class pool and concatenating them into one balanced micro-task. If the desired number of samples per class is not available without replacement, CARAT falls back to replacement and, if needed, to a random subset of the probe pool rather than aborting the round. This fail-soft design preserves the intended semantic diversity of the task sampler while ensuring that the server always obtains a well-defined certificate matrix.
+
+\paragraph{Robust score calibration.}
+For notation economy, the main text reuses $C$ after standardization. In implementation terms, the raw certificate matrix is first transformed column-wise into
+\[
+C^{\mathrm{std}}_{i,t}
+=
+\frac{c_{i,t}-\operatorname{median}_j(c_{j,t})}
+{1.4826 \cdot \operatorname{MAD}_j(c_{j,t})+\varepsilon}.
+\]
+This removes task-specific scale effects while preserving within-task ordering by Proposition~\ref{prop:task-standardization}. Rank penalties are calibrated similarly. For each coordinate subsample $S_s$, let
+\[
+\rho_i^{(s)}=
+\frac{1}{|S_s|}\sum_{j \in S_s}
+\left|
+\frac{\operatorname{rank}_{i,j}}{n-1} - \frac{1}{2}
+\right|.
+\]
+CARAT then computes a standardized rank score
+\[
+z_i^{(s)}=
+\frac{\rho_i^{(s)}-\operatorname{median}_\ell(\rho_\ell^{(s)})}
+{1.4826 \cdot \operatorname{MAD}_\ell(\rho_\ell^{(s)})+\varepsilon},
+\]
+and aggregates subsamples through
+\[
+r_i=\max\left(0,\operatorname{median}_s z_i^{(s)}\right).
+\]
+As a result, a client is penalized only when it is consistently extreme across repeated coordinate views, not because of a single noisy subsample.
+
+\paragraph{Projected optimization details.}
+Again writing $C$ for the standardized certificate matrix, CARAT initializes the optimizer with $\alpha^{(0)}=\alpha^{\mathrm{prev}}$ after the first round, and with the uniform vector at initialization. If
+\[
+z(\alpha)=C^\top \alpha,
+\qquad
+\pi_t(\alpha)=\frac{\exp(-\beta z_t(\alpha))}{\sum_{\ell=1}^T \exp(-\beta z_\ell(\alpha))},
+\]
+then the ascent direction used in projected updates is
+\[
+g(\alpha)=C\pi(\alpha)-\lambda_r r-2\lambda_p(\alpha-\alpha^{\mathrm{prev}}).
+\]
+With optimizer step size $\eta$, one iteration takes the form
+\[
+\alpha^{(k+1)}=
+\Pi_{\mathcal{A}(\hat{\rho})}
+\left(\alpha^{(k)}+\eta g(\alpha^{(k)})\right).
+\]
+The projection maintains feasibility throughout optimization, so every intermediate iterate already obeys the nonnegativity, unit-sum, and per-client cap constraints described in the main text.
+
 \paragraph{Procedure.}
 \begin{enumerate}
 \item Convert client messages to vector-form deltas $\Delta_i^r$ using the common update-preparation utility.
@@ -421,11 +520,11 @@ At the first round, the implementation initializes $\alpha^{\mathrm{prev}}$ to t
 \item Choose an evaluation radius from the configured quantile of positive clipped norms and normalize clipped deltas to obtain $\tilde{\Delta}_i^r$.
 \item Sample class-balanced hidden tasks from the fixed probe pool for round $r$; if strict balanced sampling fails, fall back to replacement and, if necessary, to a random subset rather than aborting the round.
 \item Load the current global weights into the server-side probe model, evaluate baseline hidden-task losses, and compute certificate scores $c_{i,t} = \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i^r)$ for all clients and tasks.
-\item Robustly standardize certificate columns, compute rank-space penalties from coordinate subsamples of $\bar{\Delta}_i^r$, and retain only positive standardized rank deviations.
+\item Robustly standardize certificate columns to obtain $C^{\mathrm{std}}$, compute rank-space penalties from coordinate subsamples of $\bar{\Delta}_i^r$, and retain only positive standardized rank deviations in $r$.
 \item Resolve $\hat{\rho}$, initialize weights from $\alpha^{\mathrm{prev}}$, and optimize
 \[
 \max_{\alpha \in \mathcal{A}(\hat{\rho})}
-\softmin_{\beta}(C^\top\alpha)-\lambda_r r^\top\alpha-\lambda_p\|\alpha-\alpha^{\mathrm{prev}}\|_2^2
+\softmin_{\beta}((C^{\mathrm{std}})^\top\alpha)-\lambda_r r^\top\alpha-\lambda_p\|\alpha-\alpha^{\mathrm{prev}}\|_2^2
 \]
 by projected gradient ascent on the capped simplex.
 \item Update $\alpha^{\mathrm{prev}}$ with the optimized solution.
@@ -438,7 +537,11 @@ Two implementation choices are important for robustness. First, the optimizer ne
 \paragraph{Outputs.}
 Aggregated server update, updated temporal prior $\alpha^{\mathrm{prev}}$, and diagnostic logs including learned weights, task scores, softmin focus, rank penalties, evaluation radius, clipping threshold, and the identities of the hidden probe tasks used in the current round.
 
-\section{Additional Experiments}
+\paragraph{Practical diagnostics.}
+The most useful round-level diagnostics for debugging and empirical interpretation are the learned weights, the weakest-task values emphasized by the softmin, the clip threshold $\tau_r$, the evaluation radius $q_r$, and the final rank penalties $r_i$. In successful runs, these quantities help distinguish three qualitatively different cases: benign but diverse clients that retain moderate weight, clearly harmful clients that lose certificate support across multiple tasks, and structurally extreme clients whose influence is reduced primarily by the rank penalty.
+
+\section{Additional Experimental Details}
+\label{sec:appendix-experiments}
 
 This section summarizes the current verified experimental scope together with the next empirical extensions already supported by the repository structure.
 

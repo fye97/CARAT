@@ -46,8 +46,6 @@ CARAT complements this task-aware signal with two additional ingredients. First,
 
 This design places CARAT between trust-based aggregation and task-aware validation. Compared with FLTrust, it expands trusted data into many hidden probes rather than a single trusted direction. Compared with heterogeneity-aware schemes such as bucketing, it does not try to homogenize clients before aggregation; instead, it directly asks whether each update is useful across hidden task slices. Compared with inspection-oriented defenses such as FLAME and DeepSight, it intervenes at aggregation time rather than primarily through post-hoc filtering. In this sense, CARAT does not merely introduce another distance rule. It changes the server's validation signal from update similarity to hidden-task utility.
 
-\paragraph{Contributions.}
-Our contributions are as follows.
 \begin{itemize}
 \item We introduce hidden-task certificates as a task-aware server-side validation signal for robust FL aggregation, using multiple class-balanced micro-tasks instead of a single trusted reference direction.
 \item We formulate CARAT as a capped-simplex weight optimization problem that jointly enforces worst-task utility, rank-space anomaly suppression, and temporal regularization.

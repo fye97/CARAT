@@ -45,11 +45,6 @@ This leaves a key question: how should the server validate client updates when b
 
 To address this, the paper proposes \textbf{CARAT}, \emph{Class-Aware Robust Aggregation via Hidden Task Certificates}. CARAT assumes server-side access to labeled reference data and uses that data to instantiate hidden, class-balanced micro-tasks. Each client update is then scored by the loss reduction it induces across these tasks, producing a certificate matrix that measures whether the update is broadly useful across hidden semantic slices rather than merely geometrically central. CARAT combines this task-aware signal with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization under a worst-task objective with temporal regularization. Our main contributions are summarized as follows.
 
-<<<<<<< HEAD
-This design places CARAT between trust-based aggregation and task-aware validation. Compared with FLTrust, it expands trusted data into many hidden probes rather than a single trusted direction. Compared with heterogeneity-aware schemes such as bucketing, it does not try to homogenize clients before aggregation; instead, it directly asks whether each update is useful across hidden task slices. Compared with inspection-oriented defenses such as FLAME and DeepSight, it intervenes at aggregation time rather than primarily through post-hoc filtering. In this sense, CARAT does not merely introduce another distance rule. It changes the server's validation signal from update similarity to hidden-task utility.
-
-=======
->>>>>>> 6470f77 (update)
 \begin{itemize}
 \item We propose CARAT, a class-aware robust aggregation rule that validates client updates through hidden-task certificates built from server-side labeled reference data, replacing one-shot geometric trust signals with multi-task utility checks.
 \item We formulate aggregation as a capped-simplex optimization problem that combines worst-task utility across hidden tasks, coordinate-rank anomaly suppression, and temporal regularization, yielding a robust weighting mechanism that remains compatible with heterogeneous FL.

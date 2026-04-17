@@ -166,85 +166,13 @@ The clean-reference benchmark uses \texttt{NoAttack} and compares \{Mean, FLTrus
 \subsection{Performance Evaluation}
 
 \paragraph{Performance of Defense Effectiveness under Various Attacks.}
-The main comparative question is whether CARAT improves robustness under both untargeted and targeted poisoning. For untargeted attacks, Table~\ref{tab:preliminary} summarizes the strongest \emph{completed CARAT evidence} currently verified end-to-end in the repository: a single-seed pilot FedAvg run on CIFAR100 with an i.i.d.\ split, $20$ clients, $20\%$ attackers ($4$ malicious client slots), ResNet-18, $300$ rounds, and FangAttack. The available logs cover Mean, TriGuardFL, and CARAT under the same base training configuration. Because that pilot configuration sets \verb|evaluate=false|, the table reports \emph{training-only} diagnostics and runtime rather than clean-test accuracy or ASR.
 
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lcccc}
-\toprule
-Defense & Train acc. @299 & Train loss @299 & Mean round time (s) & Total runtime \\
-\midrule
-Mean & 0.5699 & 1.5187 & 1.66 & 8m25s \\
-TriGuardFL & \textbf{0.6385} & 1.2932 & 7.37 & 37m07s \\
-CARAT & 0.6286 & \textbf{1.2748} & 9.49 & 47m37s \\
-\bottomrule
-\end{tabular}
-\caption{Completed pilot evidence from repository logs for FedAvg on CIFAR100 under i.i.d.\ FangAttack. These are training-only diagnostics because that pilot configuration disables test-time evaluation.}
-\label{tab:preliminary}
-\end{table}
-
-CARAT substantially improves over simple averaging in the verified run. Relative to Mean, it increases round-299 training accuracy by about $5.9$ points and reduces training loss by about $0.24$. At the same time, the current evidence does \emph{not} support a broader claim of uniform dominance across strong baselines: on this single training-only run, TriGuardFL finishes with slightly higher training accuracy, whereas CARAT attains the lowest training loss. We therefore interpret Table~\ref{tab:preliminary} as pilot evidence that the method is functioning as intended, not as a complete comparative benchmark.
-
-An evaluation-enabled benchmark aligned with the protocol above is now running in the repository. In the current repository snapshot dated April 16, 2026, the first four completed tasks from \texttt{main\_untargeted.yaml} all come from the i.i.d.\ ALIE, 20\% attacker slice: three Mean repeats and one FLTrust repeat. The three Mean runs finish at epoch 299 with eval accuracy $57.55\%$, $57.97\%$, and $57.39\%$ and eval loss $1.579$, $1.544$, and $1.554$; the completed FLTrust run finishes at $47.25\%$ eval accuracy and $1.937$ eval loss. These logs confirm that the new benchmark path is recording test-time metrics as intended, but the corresponding CARAT tasks in this suite have not finished yet, so they do not yet support a CARAT comparison.
-
-For targeted attacks, the final benchmark should report clean test accuracy and ASR side by side for \{BadNets, Neurotoxin\} against \{Mean, FLTrust, FLAME, DeepSight, CARAT\}, rather than collapsing untargeted robustness and backdoor resistance into a single claim. This separation matters because an update can be globally harmful, or harmful only on a trigger-defined slice.
-
-The most diagnostic CARAT-specific signal available today is the behavior of the learned weights. In the verified FangAttack pilot, the coordinator assigns the first \texttt{num\_adv} worker slots to attackers, so clients $0$--$3$ are malicious. Late in training, CARAT repeatedly logs weight vectors of the form
-\[
-\alpha = [0,0,0,0,0.0625,0.0625,\ldots,0.0625],
-\]
-which means the optimizer places zero mass on the entire malicious coalition while distributing the remaining mass uniformly over benign clients. At epoch 298, for example, the log records task scores $[0.2879, 0.2784, 0.2859, 0.2781, 0.2533, 0.3009, 0.2930, 0.2876]$, a softmin value of $0.2820$, evaluation radius $18.1484$, and clip norm $18.3227$. These quantities indicate that the implementation is doing more than hard filtering: it is identifying weak hidden tasks under a common scoring radius and then applying the optimized weights to the clipped updates used for aggregation.
-
-This mechanistic evidence is encouraging, but it still does not establish improved clean-test accuracy, reduced ASR, or robustness across non-i.i.d.\ regimes for CARAT. The remaining empirical gap is no longer instrumentation but coverage: the evaluation-enabled CARAT benchmark has started, yet its CARAT rows, non-i.i.d.\ tasks, backdoor suite, and ablations are not complete.
 
 \paragraph{Impact of Attacker Ratio.}
-Attacker ratio is varied explicitly in the untargeted benchmark through \texttt{num\_advs} $\in \{0.2,0.4\}$. This sweep isolates robustness degradation as the malicious coalition grows while keeping the dataset, model, and optimization protocol fixed. The currently verified CARAT pilot corresponds to the $0.2$ slice, whereas the $0.4$ slice remains in the running evaluation-enabled suite. This axis is especially important for CARAT because the capped-simplex constraint and the default prior $\hat{\rho}=0.2$ encode an explicit belief about how much malicious mass the aggregator should tolerate. Comparing $0.2$ and $0.4$ therefore tests whether the method remains stable when the true attack rate approaches or exceeds its default trust budget. The clean-reference suite uses attacker ratio $0$ to measure the no-attack cost of robustness, and the backdoor suite fixes $0.2$ so that clean accuracy and ASR can be compared without introducing another confound.
 
-\paragraph{Compatibility with Cross-device and Cross-silo FL Scenarios.}
-The current committed paper benchmarks are synchronous FedAvg runs with $20$ clients, so they should be viewed as a controlled common-protocol setting rather than as a complete cross-device or cross-silo study. In practice, the present setup is closer to a small-scale cross-silo proxy than to a large-scale cross-device deployment. A more complete evaluation should therefore separate two deployment regimes. Cross-device-like settings should stress larger and more heterogeneous client populations, potentially with weaker per-client signal. Cross-silo-like settings should stress fewer but more stable participants whose updates carry stronger local information. FLPoison already supports multiple FL algorithms, datasets, models, and client-count configurations, so extending CARAT to both regimes is operationally feasible. However, the current manuscript should present this item as a compatibility target rather than a finished empirical claim, since no dedicated cross-device or cross-silo CARAT benchmark is complete yet.
 
-\paragraph{Aggregation Overhead.}
-Aggregation overhead is a second practical criterion. Compared with lightweight rules such as Mean, CARAT adds repeated hidden-task forward passes, rank subsampling, and projected optimization. On the current FangAttack/CIFAR100 pilot, the mean round time is $9.49$s for CARAT versus $1.66$s for Mean and $7.37$s for TriGuardFL. Any final empirical case must therefore justify the extra server-side cost with corresponding clean-test or ASR gains, not only with training-time diagnostics. This subsection focuses on server-side aggregation overhead rather than end-to-end system latency.
+\paragraph{Impact of the number of clients-scale}
 
-\paragraph{Impact of Key Hyperparameters.}
-The cleanest hyperparameter study is the one already supported by the current configuration interface. The first ablation package should isolate:
-\begin{itemize}
-\item probe pool size,
-\item number of hidden tasks,
-\item per-class probe samples,
-\item clipping rule, clipping threshold, and evaluation-radius quantile,
-\item rank penalty weight $\lambda_r$,
-\item prior weight $\lambda_p$,
-\item softmin temperature $\beta$,
-\item rank subsampling budget and optimizer steps.
-\end{itemize}
-
-These ablations are directly supported by the preset groups summarized in Table~\ref{tab:ablation-placeholder}. This design already supports a concrete methodological question: how much of CARAT's behavior comes from task construction, clipping and normalization, rank penalties, or temporal regularization?
-
-Two additional structural ablations would strengthen the final paper but require small code patches rather than simple config changes: replacing the softmin objective with average utility, and bypassing hidden-task certificates entirely. The current implementation does not expose those switches as top-level parameters, so the paper should not imply that those ablations have already been run.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{ll}
-\toprule
-Factor & Directly supported config keys \\
-\midrule
-Probe construction & \verb|num_probe_pool|, \verb|num_probe_tasks|, \verb|probe_samples_per_class| \\
-Clipping / normalization & \verb|clip_method|, \verb|clip_k|, \verb|clip_percentile|, \verb|probe_radius_quantile| \\
-Objective shaping & \verb|certificate_beta|, \verb|rank_weight|, \verb|prior_weight|, \verb|rho_hat| \\
-Rank estimation & \verb|rank_num_coords|, \verb|rank_num_subsamples| \\
-Optimizer budget & \verb|optimizer_steps|, \verb|optimizer_lr| \\
-\bottomrule
-\end{tabular}
-\caption{Ablation axes already exposed by the current CARAT implementation. This is the safest starting point for a code-aligned ablation section.}
-\label{tab:ablation-placeholder}
-\end{table}
-
-The intended empirical narrative is therefore sequential: establish clean and untargeted robustness first, evaluate backdoor robustness with both ASR and clean utility second, and then use the supported ablations above to determine whether CARAT's gains come primarily from hidden-task validation, rank-space filtering, clipping and common-radius evaluation, or their interaction.
-
-A core methodological limitation remains the server-side data assumption already stated in the Method section: in the current code path, the probe pool is sampled from a server-visible labeled training dataset rather than from a tiny external reference set. This assumption matters when CARAT is compared to fully data-free robust aggregators. Empirical coverage is also still incomplete. The strongest completed CARAT evidence is a single-seed, training-only FangAttack pilot. An evaluation-enabled benchmark suite that includes CARAT is now committed and running, but the CARAT rows, non-i.i.d.\ cases, backdoor tasks, and adaptive-attack studies are not yet complete. This means the current manuscript supports a methodology claim and an initial empirical result, but not yet a full benchmark claim.
 
 \section{Conclusion}
 \label{sec:conclusion}

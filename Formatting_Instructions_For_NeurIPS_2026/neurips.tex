@@ -13,6 +13,7 @@
 \usepackage{amsthm}
 \usepackage{microtype}
 \usepackage{xcolor}
+\usepackage{framed}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\softmin}{\operatorname*{softmin}}
@@ -148,7 +149,7 @@ After optimization, CARAT aggregates the clipped updates:
 \end{equation}
 This yields the final server step. The final update therefore inherits the robustness benefits of clipping while using weights learned from the richer evaluation geometry defined above. In practice, the main additional computation comes from evaluating $n$ candidate updates over $T$ hidden tasks and computing rank penalties on coordinate subsamples; the probe-model forward passes dominate, while the ranking and optimization stages remain tunable through explicit budget parameters.
 
-Formal properties of the normalization step, capped-simplex feasibility, softmin behavior, temporal regularization, and per-round complexity are deferred to Appendix~\ref{sec:appendix-theory}. A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendix-algorithm}.
+A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendix-algorithm}. Formal properties of the normalization step, capped-simplex feasibility, softmin behavior, temporal regularization, and per-round complexity are deferred to Appendix~\ref{sec:appendix-theory}.
 
 \section{Experiments}
 \label{sec:experiments}
@@ -257,6 +258,124 @@ The current repository-backed evidence supports this mechanism claim at a prelim
 \bibliography{ref}
 
 \appendix
+
+\section{Algorithmic Details}
+\label{sec:appendix-algorithm}
+
+\subsection{Round-Level Pseudocode}
+
+The following boxed pseudocode summarizes the server-side CARAT procedure for one communication round.
+
+\begin{framed}
+\small
+\noindent\textbf{Pseudocode: CARAT server aggregation at round $r$}
+
+\noindent\textbf{Input:} current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, probe pool $\mathcal{P}$, CARAT hyperparameters.
+
+\noindent\textbf{Output:} aggregated update $\Delta_{\mathrm{agg}}$, updated temporal prior $\alpha^{\mathrm{prev}}$.
+
+\begin{tabbing}
+\hspace{1.6em}\=\hspace{1.6em}\=\hspace{1.6em}\=\kill
+\textbf{if} $\mathcal{P}$ is uninitialized \textbf{then} build a balanced probe pool from the server-visible training dataset \\
+\textbf{if} $r=1$ \textbf{then} $\alpha^{\mathrm{prev}} \gets \frac{1}{n}\mathbf{1}$ \\
+\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
+\> convert $u_i^r$ into a vector-form delta $\Delta_i^r$ \\
+compute client norms and the clipping threshold $\tau_r$ \\
+\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
+\> $\bar{\Delta}_i^r \gets \min\!\left(1,\frac{\tau_r}{\|\Delta_i^r\|_2+\varepsilon}\right)\Delta_i^r$ \\
+choose the evaluation radius $q_r$ from a quantile of positive clipped norms \\
+\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
+\> $\tilde{\Delta}_i^r \gets q_r \bar{\Delta}_i^r / (\|\bar{\Delta}_i^r\|_2+\varepsilon)$ \\
+sample $T$ class-balanced hidden tasks from $\mathcal{P}$ \\
+\> with replacement/subset fallback if strict balanced sampling fails \\
+\textbf{for each} task $t=1,\dots,T$ \textbf{do} evaluate baseline loss $\ell_t(w_r)$ \\
+\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
+\> \textbf{for each} task $t=1,\dots,T$ \textbf{do} \\
+\>\> $c_{i,t} \gets \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i^r)$ \\
+robustly standardize certificate columns to obtain $C^{\mathrm{std}}$ \\
+compute rank penalties $r$ from repeated coordinate subsamples of the clipped updates \\
+$\alpha^{(0)} \gets \alpha^{\mathrm{prev}}$ \\
+\textbf{for} $k=0,\dots,K-1$ \textbf{do} \\
+\> $z \gets (C^{\mathrm{std}})^\top \alpha^{(k)}$ \\
+\> $\pi_t \gets \exp(-\beta z_t) \big/ \sum_{\ell=1}^T \exp(-\beta z_\ell)$ for each task $t$ \\
+\> $g \gets C^{\mathrm{std}}\pi - \lambda_r r - 2\lambda_p(\alpha^{(k)}-\alpha^{\mathrm{prev}})$ \\
+\> $\alpha^{(k+1)} \gets \Pi_{\mathcal{A}(\hat{\rho})}\!\left(\alpha^{(k)} + \eta g\right)$ \\
+$\alpha^\star \gets \alpha^{(K)}$ and $\alpha^{\mathrm{prev}} \gets \alpha^\star$ \\
+$\Delta_{\mathrm{agg}} \gets \sum_{i=1}^n \alpha_i^\star \bar{\Delta}_i^r$ \\
+\textbf{return} $\Delta_{\mathrm{agg}}, \alpha^{\mathrm{prev}}$
+\end{tabbing}
+\normalsize
+\end{framed}
+
+\subsection{Implementation Notes}
+
+\paragraph{Inputs.}
+Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, server-visible training dataset, and CARAT hyperparameters.
+
+\paragraph{Persistent state.}
+CARAT maintains two pieces of state across rounds: a balanced probe pool sampled at initialization from the server-visible training dataset, and the previous-round weight vector $\alpha^{\mathrm{prev}}$, which serves as the temporal prior in the current round.
+
+\paragraph{Initialization.}
+At the first round, the implementation initializes $\alpha^{\mathrm{prev}}$ to the uniform vector. This makes the initial round unbiased across clients while still allowing later rounds to exploit temporal consistency once CARAT has observed several optimization trajectories.
+
+\paragraph{Reference-pool construction and hidden-task sampling.}
+Let $\mathcal{P}_c \subseteq \mathcal{P}$ denote the subset of probe examples with class label $c$. A hidden task is constructed by sampling a small number of examples from each available class pool and concatenating them into one balanced micro-task. If the desired number of samples per class is not available without replacement, CARAT falls back to replacement and, if needed, to a random subset of the probe pool rather than aborting the round. This fail-soft design preserves the intended semantic diversity of the task sampler while ensuring that the server always obtains a well-defined certificate matrix.
+
+\paragraph{Robust score calibration.}
+For notation economy, the main text reuses $C$ after standardization. In implementation terms, the raw certificate matrix is first transformed column-wise into
+\[
+C^{\mathrm{std}}_{i,t}
+=
+\frac{c_{i,t}-\operatorname{median}_j(c_{j,t})}
+{1.4826 \cdot \operatorname{MAD}_j(c_{j,t})+\varepsilon}.
+\]
+This removes task-specific scale effects while preserving within-task ordering by Proposition~\ref{prop:task-standardization}. Rank penalties are calibrated similarly. For each coordinate subsample $S_s$, let
+\[
+\rho_i^{(s)}=
+\frac{1}{|S_s|}\sum_{j \in S_s}
+\left|
+\frac{\operatorname{rank}_{i,j}}{n-1} - \frac{1}{2}
+\right|.
+\]
+CARAT then computes a standardized rank score
+\[
+z_i^{(s)}=
+\frac{\rho_i^{(s)}-\operatorname{median}_\ell(\rho_\ell^{(s)})}
+{1.4826 \cdot \operatorname{MAD}_\ell(\rho_\ell^{(s)})+\varepsilon},
+\]
+and aggregates subsamples through
+\[
+r_i=\max\left(0,\operatorname{median}_s z_i^{(s)}\right).
+\]
+As a result, a client is penalized only when it is consistently extreme across repeated coordinate views, not because of a single noisy subsample.
+
+\paragraph{Projected optimization details.}
+Again writing $C$ for the standardized certificate matrix, CARAT initializes the optimizer with $\alpha^{(0)}=\alpha^{\mathrm{prev}}$ after the first round, and with the uniform vector at initialization. If
+\[
+z(\alpha)=C^\top \alpha,
+\qquad
+\pi_t(\alpha)=\frac{\exp(-\beta z_t(\alpha))}{\sum_{\ell=1}^T \exp(-\beta z_\ell(\alpha))},
+\]
+then the ascent direction used in projected updates is
+\[
+g(\alpha)=C\pi(\alpha)-\lambda_r r-2\lambda_p(\alpha-\alpha^{\mathrm{prev}}).
+\]
+With optimizer step size $\eta$, one iteration takes the form
+\[
+\alpha^{(k+1)}=
+\Pi_{\mathcal{A}(\hat{\rho})}
+\left(\alpha^{(k)}+\eta g(\alpha^{(k)})\right).
+\]
+The projection maintains feasibility throughout optimization, so every intermediate iterate already obeys the nonnegativity, unit-sum, and per-client cap constraints described in the main text.
+
+\paragraph{Round invariants and failure handling.}
+Two implementation choices are important for robustness. First, the optimizer never leaves the capped simplex, so every intermediate and final weight vector remains feasible. Second, probe-task construction is fail-soft rather than fail-stop: if strict class-balanced sampling is impossible, the code falls back to replacement or to a random subset, ensuring that the round can still proceed with a well-defined certificate matrix.
+
+\paragraph{Outputs.}
+Aggregated server update, updated temporal prior $\alpha^{\mathrm{prev}}$, and diagnostic logs including learned weights, task scores, softmin focus, rank penalties, evaluation radius, clipping threshold, and the identities of the hidden probe tasks used in the current round.
+
+\paragraph{Practical diagnostics.}
+The most useful round-level diagnostics for debugging and empirical interpretation are the learned weights, the weakest-task values emphasized by the softmin, the clip threshold $\tau_r$, the evaluation radius $q_r$, and the final rank penalties $r_i$. In successful runs, these quantities help distinguish three qualitatively different cases: benign but diverse clients that retain moderate weight, clearly harmful clients that lose certificate support across multiple tasks, and structurally extreme clients whose influence is reduced primarily by the rank penalty.
 
 \section{Theoretical Analysis}
 \label{sec:appendix-theory}
@@ -445,95 +564,6 @@ CARAT performs one baseline probe evaluation plus $n$ candidate probe evaluation
 
 \paragraph{Remark on assumptions.}
 The theoretical object $D^{\mathrm{ref}}$ in the main text should be read as the probe pool \emph{after} subsampling. The code, however, obtains that pool by sampling from the full server-visible training dataset. Any final formal discussion should keep this distinction explicit, because it materially strengthens the server-side assumption relative to a fully data-free defense.
-
-\section{Algorithmic Details}
-\label{sec:appendix-algorithm}
-
-\paragraph{Inputs.}
-Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, server-visible training dataset, and CARAT hyperparameters.
-
-\paragraph{Persistent state.}
-CARAT maintains two pieces of state across rounds: a balanced probe pool sampled at initialization from the server-visible training dataset, and the previous-round weight vector $\alpha^{\mathrm{prev}}$, which serves as the temporal prior in the current round.
-
-\paragraph{Initialization.}
-At the first round, the implementation initializes $\alpha^{\mathrm{prev}}$ to the uniform vector. This makes the initial round unbiased across clients while still allowing later rounds to exploit temporal consistency once CARAT has observed several optimization trajectories.
-
-\paragraph{Reference-pool construction and hidden-task sampling.}
-Let $\mathcal{P}_c \subseteq \mathcal{P}$ denote the subset of probe examples with class label $c$. A hidden task is constructed by sampling a small number of examples from each available class pool and concatenating them into one balanced micro-task. If the desired number of samples per class is not available without replacement, CARAT falls back to replacement and, if needed, to a random subset of the probe pool rather than aborting the round. This fail-soft design preserves the intended semantic diversity of the task sampler while ensuring that the server always obtains a well-defined certificate matrix.
-
-\paragraph{Robust score calibration.}
-For notation economy, the main text reuses $C$ after standardization. In implementation terms, the raw certificate matrix is first transformed column-wise into
-\[
-C^{\mathrm{std}}_{i,t}
-=
-\frac{c_{i,t}-\operatorname{median}_j(c_{j,t})}
-{1.4826 \cdot \operatorname{MAD}_j(c_{j,t})+\varepsilon}.
-\]
-This removes task-specific scale effects while preserving within-task ordering by Proposition~\ref{prop:task-standardization}. Rank penalties are calibrated similarly. For each coordinate subsample $S_s$, let
-\[
-\rho_i^{(s)}=
-\frac{1}{|S_s|}\sum_{j \in S_s}
-\left|
-\frac{\operatorname{rank}_{i,j}}{n-1} - \frac{1}{2}
-\right|.
-\]
-CARAT then computes a standardized rank score
-\[
-z_i^{(s)}=
-\frac{\rho_i^{(s)}-\operatorname{median}_\ell(\rho_\ell^{(s)})}
-{1.4826 \cdot \operatorname{MAD}_\ell(\rho_\ell^{(s)})+\varepsilon},
-\]
-and aggregates subsamples through
-\[
-r_i=\max\left(0,\operatorname{median}_s z_i^{(s)}\right).
-\]
-As a result, a client is penalized only when it is consistently extreme across repeated coordinate views, not because of a single noisy subsample.
-
-\paragraph{Projected optimization details.}
-Again writing $C$ for the standardized certificate matrix, CARAT initializes the optimizer with $\alpha^{(0)}=\alpha^{\mathrm{prev}}$ after the first round, and with the uniform vector at initialization. If
-\[
-z(\alpha)=C^\top \alpha,
-\qquad
-\pi_t(\alpha)=\frac{\exp(-\beta z_t(\alpha))}{\sum_{\ell=1}^T \exp(-\beta z_\ell(\alpha))},
-\]
-then the ascent direction used in projected updates is
-\[
-g(\alpha)=C\pi(\alpha)-\lambda_r r-2\lambda_p(\alpha-\alpha^{\mathrm{prev}}).
-\]
-With optimizer step size $\eta$, one iteration takes the form
-\[
-\alpha^{(k+1)}=
-\Pi_{\mathcal{A}(\hat{\rho})}
-\left(\alpha^{(k)}+\eta g(\alpha^{(k)})\right).
-\]
-The projection maintains feasibility throughout optimization, so every intermediate iterate already obeys the nonnegativity, unit-sum, and per-client cap constraints described in the main text.
-
-\paragraph{Procedure.}
-\begin{enumerate}
-\item Convert client messages to vector-form deltas $\Delta_i^r$ using the common update-preparation utility.
-\item Compute client norms, choose a clipping threshold with the configured MAD or percentile rule, and form clipped deltas $\bar{\Delta}_i^r$.
-\item Choose an evaluation radius from the configured quantile of positive clipped norms and normalize clipped deltas to obtain $\tilde{\Delta}_i^r$.
-\item Sample class-balanced hidden tasks from the fixed probe pool for round $r$; if strict balanced sampling fails, fall back to replacement and, if necessary, to a random subset rather than aborting the round.
-\item Load the current global weights into the server-side probe model, evaluate baseline hidden-task losses, and compute certificate scores $c_{i,t} = \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i^r)$ for all clients and tasks.
-\item Robustly standardize certificate columns to obtain $C^{\mathrm{std}}$, compute rank-space penalties from coordinate subsamples of $\bar{\Delta}_i^r$, and retain only positive standardized rank deviations in $r$.
-\item Resolve $\hat{\rho}$, initialize weights from $\alpha^{\mathrm{prev}}$, and optimize
-\[
-\max_{\alpha \in \mathcal{A}(\hat{\rho})}
-\softmin_{\beta}((C^{\mathrm{std}})^\top\alpha)-\lambda_r r^\top\alpha-\lambda_p\|\alpha-\alpha^{\mathrm{prev}}\|_2^2
-\]
-by projected gradient ascent on the capped simplex.
-\item Update $\alpha^{\mathrm{prev}}$ with the optimized solution.
-\item Aggregate the clipped deltas $\bar{\Delta}_i^r$ with the optimized weights and return the resulting global step.
-\end{enumerate}
-
-\paragraph{Round invariants and failure handling.}
-Two implementation choices are important for robustness. First, the optimizer never leaves the capped simplex, so every intermediate and final weight vector remains feasible. Second, probe-task construction is fail-soft rather than fail-stop: if strict class-balanced sampling is impossible, the code falls back to replacement or to a random subset, ensuring that the round can still proceed with a well-defined certificate matrix.
-
-\paragraph{Outputs.}
-Aggregated server update, updated temporal prior $\alpha^{\mathrm{prev}}$, and diagnostic logs including learned weights, task scores, softmin focus, rank penalties, evaluation radius, clipping threshold, and the identities of the hidden probe tasks used in the current round.
-
-\paragraph{Practical diagnostics.}
-The most useful round-level diagnostics for debugging and empirical interpretation are the learned weights, the weakest-task values emphasized by the softmin, the clip threshold $\tau_r$, the evaluation radius $q_r$, and the final rank penalties $r_i$. In successful runs, these quantities help distinguish three qualitatively different cases: benign but diverse clients that retain moderate weight, clearly harmful clients that lose certificate support across multiple tasks, and structurally extreme clients whose influence is reduced primarily by the rank penalty.
 
 \section{Additional Experimental Details}
 \label{sec:appendix-experiments}

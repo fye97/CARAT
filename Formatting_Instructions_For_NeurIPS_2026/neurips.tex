@@ -158,21 +158,359 @@ A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendi
 \subsection{Experimental Setup}
 
 \paragraph{Datasets and Implementation.}
-All paper-side experiments currently use FedAvg on CIFAR100 with a ResNet-18 backbone. Keeping the dataset-model pair fixed across clean-reference, untargeted-poisoning, backdoor, and ablation runs ensures that observed changes can be attributed to the defense rather than to architecture changes. CIFAR100 is a useful stress test for CARAT because the method evaluates client updates on class-balanced hidden tasks, and a larger label space exposes class-selective failure modes more clearly than low-class-count benchmarks. CARAT is implemented as a server-side aggregator in FLPoison and operates directly on the vectorized client deltas produced by the runtime. Unless otherwise noted, all committed experiment specs use synchronous FedAvg with $20$ clients, $300$ communication rounds, local epoch count $4$, batch size $64$, and learning rate $0.05$. For clean and untargeted runs, \texttt{metrics\_exp*.csv} records per-round training and test accuracy and loss. For backdoor runs, we report clean test accuracy together with attack success rate (ASR), and attack-specific diagnostics are parsed from the detailed run logs.
+Our evaluation uses two widely adopted benchmark datasets:  CIFAR-10 \cite{krizhevsky2009learning} and CIFAR-100 \cite{krizhevsky2009learning}. To emulate a realistic federated environment with heterogeneous data, we partition samples among clients using a Dirichlet distribution ( $\bm{p}\sim \text{Dir}_N(\alpha)$ ). We set the concentration parameter to $\alpha=0.1, 0.5, 1$,  standard choices in the literature that induces a significant degree of non-IID distribution in the local datasets of the clients.
+
+The experiments employ two representative neural network architectures to assess performance across varying model complexities: VGG19~\cite{simonyan2015deepconvolutionalnetworkslargescale}, and ResNet18~\cite{He_2016_CVPR}. Specifically, we pair the VGG19 model with the CIFAR-10 dataset. For the more complex CIFAR-100 dataset, we evaluate performance using ResNet18 to cover a diverse set of architectures.
 
 \paragraph{Baselines and Default Setting.}
+To benchmark the performance of \texttt{TriGuardFL}, we compare it against four methods:  FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, NormClipping~\cite{sun2019normclipping}, and MultiKrum ~\cite{blanchard2017machine}. With regard to the attack models, four model poisoning attacks are adopted: Min-Sum~\cite{shejwalkar2021manipulating}, Min-Max \cite{shejwalkar2021manipulating}, ALIE \cite{baruch2019little}, and FangAttack \cite{fang2020local}.
+
 The clean-reference benchmark uses \texttt{NoAttack} and compares \{Mean, FLTrust, MultiKrum, CARAT\}. The untargeted poisoning benchmark evaluates \{ALIE, MinMax, FangAttack\} against the same defense set. The backdoor benchmark evaluates \{BadNets, Neurotoxin\} against \{Mean, FLTrust, FLAME, DeepSight, CARAT\}. We consider both i.i.d.\ partitions and Dirichlet non-i.i.d.\ splits: \texttt{clean\_reference.yaml} and \texttt{main\_untargeted.yaml} use $\alpha \in \{0.1,0.5\}$, while \texttt{backdoor.yaml} uses i.i.d.\ plus $\alpha=0.5$. The untargeted suite sweeps attacker fractions $\{0.2,0.4\}$; the clean-reference and backdoor suites use $0$ and $0.2$, respectively. Each paper-side suite runs three repeats with effective seeds $42$, $43$, and $44$. The default CARAT hyperparameters are: probe pool size $512$, $8$ hidden tasks, $4$ probe samples per class, probe batch size $128$, probe-radius quantile $0.5$, MAD clipping with $k=2.5$, default attacker prior $\hat{\rho}=0.2$, certificate temperature $\beta=12.0$, rank weight $0.20$, prior weight $0.05$, $4096$ sampled coordinates, $5$ rank subsamples, $60$ optimization steps, and optimizer learning rate $0.5$. One important caveat is that the strongest completed legacy CARAT pilot was produced from an earlier base config with \verb|evaluate=false|. Its main-text evidence is therefore limited to training accuracy, training loss, and runtime, whereas all newly committed benchmark suites are configured to record test-time metrics.
+
+The key hyperparameters used throughout the experiments are summarized in Table \ref{tab:hyperparams}.
+\begin{table*}[!htbp]
+\centering
+\caption{Default hyperparameter configuration.}
+\label{tab:hyperparams}
+\renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{3pt}
+\small
+\begin{tabular}{cccccccccc}
+\toprule
+\textbf{Parameter} &
+\makecell[c]{\textbf{Total}\\\textbf{Clients} ($N$)} &
+\makecell[c]{\textbf{Malicious}\\\textbf{Clients Ratio} ($\%$)} &
+\makecell[c]{\textbf{Clients}\\\textbf{per Round}} &
+\makecell[c]{\textbf{Local}\\\textbf{Iterations} ($K$)} &
+\makecell[c]{\textbf{Total}\\\textbf{Epochs} ($T$)} &
+\makecell[c]{\textbf{Learning}\\\textbf{Rate} ($\eta$)} &
+\makecell[c]{\textbf{Significance}\\\textbf{Level}}  \\
+\midrule
+\textbf{Value} & 20 & 10/20/30  & 20 & 4 & 200& 0.05 & 0.02 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \subsection{Performance Evaluation}
 
 \paragraph{Performance of Defense Effectiveness under Various Attacks.}
+\subsection{Mitigating the impact of attacks} 
+  \begin{table*}[!htbp]
+      \definecolor{mygray}{gray}{.90}
+      \renewcommand{\arraystretch}{1.0}
+      \setlength{\tabcolsep}{4pt}
+      \caption{Loss under four state-of-the-art model poisoning attacks with $10\%$
+  malicious clients on two datasets and model architectures under non-IID settings.}
+      \label{tablossmergedcifar10cifar100}
+      \centering\small
+      \begin{tabular}{c c c c c c c c}
+      \toprule
+      \multirow{2}{*}{\makecell[c]{Dataset\\Model}} &
+      \multirow{2}{*}{\makecell[c]{Non-IID\\Settings}} &
+      \multirow{2}{*}{\makecell[c]{Defense\\Rules}} &
+      \multicolumn{4}{c}{Attacks} &
+      \multirow{2}{*}{Rank} \\
+      \cmidrule(lr){4-7}
+      & & & ALIE & FangAttack & MinMax & MinSum & \\
+      \midrule
 
+      \multirow{18}{*}{\makecell[c]{CIFAR-10\\VGG19}}
+      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
+      & NormClipping & 0.0176$\pm$0.0003 & 0.0184$\pm$0.0003 & 0.0176$\pm$0.0003 & 0.0177$
+  \pm$0.0003 & 5.0 \\
+      & & MultiKrum & 0.0120$\pm$0.0001 & 0.0159$\pm$0.0009 & 0.0157$\pm$0.0005 & 0.0153$
+  \pm$0.0010 & 4.0 \\
+      & & FLTrust & 0.0152$\pm$0.0003 & 0.0152$\pm$0.0003 & 0.0148$\pm$0.0003 & 0.0149$
+  \pm$0.0003 & 3.0 \\
+      & & FLDetector & \textbf{0.0093$\pm$0.0002} & 0.0192$\pm$0.0018 & \textbf{0.0089$
+  \pm$0.0001} & \textbf{0.0089$\pm$0.0002} & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0093$\pm$0.0002} &
+  \cellcolor{mygray}\textbf{0.0093$\pm$0.0002} & \cellcolor{mygray}0.0090$\pm$0.0002 &
+  \cellcolor{mygray}0.0090$\pm$0.0002 & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0092$\pm$0.0001 & 0.0092$\pm$0.0001 & 0.0092$\pm$0.0001 &
+  0.0092$\pm$0.0001 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
+      & NormClipping & 0.0194$\pm$0.0002 & 0.0200$\pm$0.0004 & 0.0196$\pm$0.0004 & 0.0195$
+  \pm$0.0003 & 4.5 \\
+      & & MultiKrum & 0.0147$\pm$0.0008 & 0.0207$\pm$0.0021 & 0.0196$\pm$0.0012 & 0.0208$
+  \pm$0.0023 & 4.5 \\
+      & & FLTrust & 0.0167$\pm$0.0004 & 0.0168$\pm$0.0003 & 0.0167$\pm$0.0004 & 0.0163$
+  \pm$0.0003 & 3.0 \\
+      & & FLDetector & 0.0108$\pm$0.0005 & 0.0242$\pm$0.0005 & 0.0110$\pm$0.0010 & 0.0106$
+  \pm$0.0006 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0106$\pm$0.0003} &
+  \cellcolor{mygray}\textbf{0.0107$\pm$0.0003} & \cellcolor{mygray}\textbf{0.0107$
+  \pm$0.0010} & \cellcolor{mygray}\textbf{0.0104$\pm$0.0003} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0104$\pm$0.0004 & 0.0104$\pm$0.0004 & 0.0104$\pm$0.0004 &
+  0.0104$\pm$0.0004 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
+      & NormClipping & 0.0256$\pm$0.0011 & 0.0261$\pm$0.0012 & 0.0268$\pm$0.0013 & 0.0260$
+  \pm$0.0015 & 4.0 \\
+      & & MultiKrum & 0.0270$\pm$0.0013 & 0.0330$\pm$0.0028 & 0.0321$\pm$0.0034 & 0.0327$
+  \pm$0.0026 & 5.0 \\
+      & & FLTrust & 0.0233$\pm$0.0011 & 0.0236$\pm$0.0013 & 0.0243$\pm$0.0018 & 0.0239$
+  \pm$0.0013 & 3.0 \\
+      & & FLDetector & 0.0215$\pm$0.0022 & 0.0243$\pm$0.0022 & 0.0218$\pm$0.0031 & 0.0218$
+  \pm$0.0034 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0198$\pm$0.0016} &
+  \cellcolor{mygray}\textbf{0.0198$\pm$0.0018} & \cellcolor{mygray}\textbf{0.0198$
+  \pm$0.0016} & \cellcolor{mygray}\textbf{0.0197$\pm$0.0024} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0199$\pm$0.0012 & 0.0199$\pm$0.0012 & 0.0199$\pm$0.0012 &
+  0.0199$\pm$0.0012 & -- \\
+      \midrule
+
+      \multirow{18}{*}{\makecell[c]{CIFAR-100\\ResNet18}}
+      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
+      & NormClipping & 0.0473$\pm$0.0003 & 0.0487$\pm$0.0004 & 0.0479$\pm$0.0003 & 0.0480$
+  \pm$0.0003 & 5.0 \\
+      & & MultiKrum & 0.0330$\pm$0.0004 & 0.0374$\pm$0.0008 & 0.0375$\pm$0.0005 & 0.0372$
+  \pm$0.0007 & 3.0 \\
+      & & FLTrust & 0.0405$\pm$0.0003 & 0.0405$\pm$0.0004 & 0.0403$\pm$0.0005 & 0.0404$
+  \pm$0.0004 & 4.0 \\
+      & & FLDetector & \textbf{0.0274$\pm$0.0005} & 0.0426$\pm$0.0004 & 0.0275$\pm$0.0004 &
+  \textbf{0.0275$\pm$0.0005} & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}0.0276$\pm$0.0004 &
+  \cellcolor{mygray}\textbf{0.0276$\pm$0.0004} & \cellcolor{mygray}\textbf{0.0273$
+  \pm$0.0003} & \cellcolor{mygray}\textbf{0.0275$\pm$0.0002} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0269$\pm$0.0003 & 0.0269$\pm$0.0003 & 0.0269$\pm$0.0003 &
+  0.0269$\pm$0.0003 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
+      & NormClipping & 0.0482$\pm$0.0006 & 0.0496$\pm$0.0003 & 0.0488$\pm$0.0004 & 0.0490$
+  \pm$0.0005 & 5.0 \\
+      & & MultiKrum & 0.0352$\pm$0.0008 & 0.0403$\pm$0.0015 & 0.0405$\pm$0.0012 & 0.0402$
+  \pm$0.0010 & 3.0 \\
+      & & FLTrust & 0.0414$\pm$0.0005 & 0.0414$\pm$0.0004 & 0.0412$\pm$0.0004 & 0.0413$
+  \pm$0.0005 & 4.0 \\
+      & & FLDetector & \textbf{0.0284$\pm$0.0004} & 0.0437$\pm$0.0011 & \textbf{0.0284$
+  \pm$0.0004} & \textbf{0.0283$\pm$0.0004} & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0284$\pm$0.0004} &
+  \cellcolor{mygray}\textbf{0.0285$\pm$0.0005} & \cellcolor{mygray}\textbf{0.0284$
+  \pm$0.0006} & \cellcolor{mygray}\textbf{0.0283$\pm$0.0005} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0276$\pm$0.0005 & 0.0276$\pm$0.0005 & 0.0276$\pm$0.0005 &
+  0.0276$\pm$0.0005 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
+      & NormClipping & 0.0519$\pm$0.0004 & 0.0529$\pm$0.0004 & 0.0527$\pm$0.0005 & 0.0529$
+  \pm$0.0004 & 5.0 \\
+      & & MultiKrum & 0.0424$\pm$0.0010 & 0.0504$\pm$0.0010 & 0.0504$\pm$0.0015 & 0.0504$
+  \pm$0.0014 & 4.0 \\
+      & & FLTrust & 0.0450$\pm$0.0004 & 0.0450$\pm$0.0005 & 0.0450$\pm$0.0005 & 0.0451$
+  \pm$0.0006 & 3.0 \\
+      & & FLDetector & 0.0326$\pm$0.0003 & 0.0461$\pm$0.0039 & 0.0325$\pm$0.0003 &
+  \textbf{0.0323$\pm$0.0005} & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0322$\pm$0.0004} &
+  \cellcolor{mygray}\textbf{0.0323$\pm$0.0004} & \cellcolor{mygray}\textbf{0.0322$
+  \pm$0.0005} & \cellcolor{mygray}\textbf{0.0323$\pm$0.0005} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0314$\pm$0.0004 & 0.0314$\pm$0.0004 & 0.0314$\pm$0.0004 &
+  0.0314$\pm$0.0004 & -- \\
+      \bottomrule
+      \end{tabular}
+  \end{table*}
+
+
+We subjected the FL system to four potent attacks: Min-Max, Min-Sum, ALIE, and FangAttack.
+
+Table~\ref{tablossmergedcifar10cifar100} presents the final test loss for all evaluated defenses across the different network architectures. According to the average performance rank, \texttt{TriGuardFL} is the highest-performing defense, achieving rank 1 in three different non-IID experimental settings. This resilience is particularly evident under strong and adaptive attacks. For example, when defending a ResNet-18 model against the FangAttack, \texttt{TriGuardFL} maintained a test loss of $0.0323$; meanwhile, the losses for MultiKrum and FLTrust significantly degraded to $0.0504$ and $0.0450$, respectively. 
+
+\begin{figure*}[!htbp]
+	\centering
+	% \subfloat[IID data distribution]{\includegraphics[trim=0 0 0 2.5cm,
+ %  clip,scale=0.31]{figures/iid_CIFAR100_resnet18_FedAvg_adv0.2_alphaNA_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
+	% \quad
+	\subfloat[Non-IID data distribution, $\alpha=1$]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
+	\quad
+	\subfloat[Non-IID data distribution, $\alpha=0.5$]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha0.5_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
+    \quad
+	\subfloat[Non-IID data distribution, $\alpha=0.1$]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha0.1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
+    \caption{Evolution of test accuracy on CIFAR-100, comparing \texttt{TriGuardFL} against baseline defenses under four state-of-the-art  model poisoning attacks. The experimental setup uses a ResNet-18 model trained among $20$ total clients, including $4$ malicious attackers.}
+
+
+	\label{figaccuracycifar100}
+\end{figure*}
+
+
+
+Fig.~\ref{figaccuracycifar100} shows that the accuracy curve for \texttt{TriGuardFL} remains high and stable throughout the training process, closely tracking the performance of the ideal ``no attack" baseline. This stands in contrast to several baseline defenses, such as FLTrust and MultiKrum, which exhibit significant performance degradation and instability, particularly under the more sophisticated full-knowledge attacks. These results underscore \texttt{TriGuardFL}'s ability to effectively filter out malicious updates without incorrectly penalizing benign clients, which is a critical weakness in many defenses that struggle with non-IID data.
 
 \paragraph{Impact of Attacker Ratio.}
+The proportion of malicious clients significantly influences the accuracy of the FL model accuracy. In our previous experiments, we set $10\%$ ratio for malicious clients as default. To evaluate the detection ability and model accuracy of \texttt{TriGuardFL} under different numbers of adversaries, we conducted additional tests with $20\%$ and $30\%$ proportion for malicious clients, while keeping other settings constant. As shown in %Table \ref{tabmoreattackers} and 
+Fig. \ref{figaccuracymoreattackerscifar100}, the accuracy of the test dataset decreases %and the losses of the test dataset increase 
+in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have significant differences with different numbers of malicious clients, indicating that \texttt{TriGuardFL} keeps excellent robustness. Moreover, FLTrust and MultiKrum crash in part of the cases. This is because even if \texttt{TriGuardFL} can detect most malicious clients, the number of benign clients decreases as that of malicious clients increases, and samples in benign clients also decrease. 
 
+\begin{figure*}[htbp]
+	\centering
+    % \subfloat[Dataset distribution is IID.]{\includegraphics[trim=0 0 0 2.5cm,clip,scale=0.31]{figures/adv_sensitivity_iid_CIFAR100_resnet18_FedAvg_alphaNA_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
+  
+	% \quad
+	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
+	\quad
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.5_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
+  \quad
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
+	\caption{Accuracy sensitivity ratio of different adversary settings comparing \texttt{TriGuardFL} and another four defense algorithms when the test dataset is CIFAR-100 and the neural network model is ResNet18.}
+	\label{figaccuracymoreattackerscifar100}
+\end{figure*}
 
 \paragraph{Impact of the number of clients-scale}
+\begin{figure*}[!htbp]
+	\centering
+	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha1_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
+	\quad
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.5_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
+  \quad
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\includegraphics[trim=0 0 0 2.5cm,
+  clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.1_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
+	\caption{Accuracy sensitivity of different clients settings comparing \texttt{TriGuardFL} and another four defense algorithms when the test dataset is CIFAR-100 and the neural network model is ResNet18.}
+	\label{figaccuracymoreclientscifar100}
+\end{figure*}
+  \begin{table*}[!h]
+      \definecolor{mygray}{gray}{.90}
+      \renewcommand{\arraystretch}{1.0}
+      \setlength{\tabcolsep}{4pt}
+      \caption{Loss of the CIFAR-100 dataset with ResNet18 under four state-of-the-art model
+  poisoning attacks at adversary ratio $20\%$, comparing non-IID settings across different
+  client counts. Each cell reports mean$\pm$std over available seeds. If a run stopped
+  early, its last recorded epoch before 200 is used.}
+      \label{tablosscifar100clientsadv02}
+      \centering\small
+      \begin{tabular}{c c c c c c c c}
+      \toprule
+      \multirow{2}{*}{\makecell[c]{Number of\\Clients}} &
+      \multirow{2}{*}{\makecell[c]{Non-IID\\Settings}} &
+      \multirow{2}{*}{\makecell[c]{Defense\\Rules}} &
+      \multicolumn{4}{c}{Attacks} &
+      \multirow{2}{*}{\makecell[c]{Rank}} \\
+      \cmidrule(lr){4-7}\cmidrule(lr){8-8}
+      & & & ALIE & FangAttack & MinMax & MinSum & \\
+      \midrule
 
+      \multirow{18}{*}{40}
+      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
+      & NormClipping & 0.0472$\pm$0.0003 & 0.0586$\pm$0.0067 & 0.0479$\pm$0.0002 & 0.0484$
+  \pm$0.0003 & 5.0 \\
+      & & MultiKrum & 0.0427$\pm$0.0012 & 0.0309$\pm$0.0006 & 0.0268$\pm$0.0007 & 0.0284$
+  \pm$0.0013 & 3.0 \\
+      & & FLTrust & 0.0412$\pm$0.0002 & 0.0405$\pm$0.0001 & 0.0403$\pm$0.0001 & 0.0405$
+  \pm$0.0003 & 4.0 \\
+      & & FLDetector & 0.0299$\pm$0.0007 & 0.0601$\pm$0.0024 & 0.0259$\pm$0.0005 & 0.0260$
+  \pm$0.0006 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0276$\pm$0.0006} &
+      \cellcolor{mygray}\textbf{0.0258$\pm$0.0006} &
+      \cellcolor{mygray}\textbf{0.0257$\pm$0.0007} &
+      \cellcolor{mygray}\textbf{0.0257$\pm$0.0005} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0251$\pm$0.0006 & 0.0251$\pm$0.0006 & 0.0251$\pm$0.0006 &
+  0.0251$\pm$0.0006 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
+      & NormClipping & 0.0482$\pm$0.0005 & 0.0560$\pm$0.0005 & 0.0490$\pm$0.0006 & 0.0496$
+  \pm$0.0008 & 5.0 \\
+      & & MultiKrum & 0.0448$\pm$0.0008 & 0.0327$\pm$0.0005 & 0.0279$\pm$0.0005 & 0.0293$
+  \pm$0.0013 & 3.0 \\
+      & & FLTrust & 0.0422$\pm$0.0002 & 0.0415$\pm$0.0004 & 0.0414$\pm$0.0005 & 0.0416$
+  \pm$0.0004 & 4.0 \\
+      & & FLDetector & 0.0311$\pm$0.0006 & 0.0572$\pm$0.0032 & 0.0267$\pm$0.0003 & 0.0268$
+  \pm$0.0004 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0290$\pm$0.0004} &
+      \cellcolor{mygray}\textbf{0.0267$\pm$0.0004} &
+      \cellcolor{mygray}\textbf{0.0266$\pm$0.0003} &
+      \cellcolor{mygray}\textbf{0.0265$\pm$0.0002} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0259$\pm$0.0003 & 0.0259$\pm$0.0003 & 0.0259$\pm$0.0003 &
+  0.0259$\pm$0.0003 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
+      & NormClipping & 0.0524$\pm$0.0004 & 0.0602$\pm$0.0005 & 0.0537$\pm$0.0006 & 0.0544$
+  \pm$0.0006 & 5.0 \\
+      & & MultiKrum & 0.0552$\pm$0.0007 & 0.0419$\pm$0.0010 & 0.0346$\pm$0.0005 & 0.0370$
+  \pm$0.0014 & 3.0 \\
+      & & FLTrust & 0.0466$\pm$0.0005 & 0.0458$\pm$0.0005 & 0.0460$\pm$0.0005 & 0.0468$
+  \pm$0.0005 & 4.0 \\
+      & & FLDetector & 0.0373$\pm$0.0009 & 0.0550$\pm$0.0043 & 0.0315$\pm$0.0008 & 0.0315$
+  \pm$0.0006 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0345$\pm$0.0006} &
+      \cellcolor{mygray}\textbf{0.0305$\pm$0.0004} &
+      \cellcolor{mygray}\textbf{0.0311$\pm$0.0007} &
+      \cellcolor{mygray}\textbf{0.0308$\pm$0.0005} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0303$\pm$0.0006 & 0.0303$\pm$0.0006 & 0.0303$\pm$0.0006 &
+  0.0303$\pm$0.0006 & -- \\
+      \midrule
+
+      \multirow{18}{*}{60}
+      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
+      & NormClipping & 0.0470$\pm$0.0003 & 0.0593$\pm$0.0037 & 0.0484$\pm$0.0012 & 0.0486$
+  \pm$0.0003 & 5.0 \\
+      & & MultiKrum & 0.0452$\pm$0.0003 & 0.0303$\pm$0.0011 & 0.0258$\pm$0.0005 & 0.0275$
+  \pm$0.0009 & 3.0 \\
+      & & FLTrust & 0.0410$\pm$0.0003 & 0.0427$\pm$0.0027 & 0.0401$\pm$0.0003 & 0.0405$
+  \pm$0.0005 & 4.0 \\
+      & & FLDetector & 0.0290$\pm$0.0003 & 0.0484$\pm$0.0007 & \textbf{0.0247$\pm$0.0003} &
+  0.0249$\pm$0.0004 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0271$\pm$0.0003} &
+      \cellcolor{mygray}\textbf{0.0260$\pm$0.0011} &
+      \cellcolor{mygray}\textbf{0.0247$\pm$0.0003} &
+      \cellcolor{mygray}\textbf{0.0247$\pm$0.0002} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0245$\pm$0.0004 & 0.0245$\pm$0.0004 & 0.0245$\pm$0.0004 &
+  0.0245$\pm$0.0004 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
+      & NormClipping & 0.0479$\pm$0.0004 & 0.0575$\pm$0.0011 & 0.0487$\pm$0.0003 & 0.0496$
+  \pm$0.0004 & 5.0 \\
+      & & MultiKrum & 0.0472$\pm$0.0008 & 0.0316$\pm$0.0006 & 0.0273$\pm$0.0013 & 0.0289$
+  \pm$0.0013 & 3.0 \\
+      & & FLTrust & 0.0422$\pm$0.0005 & 0.0431$\pm$0.0021 & 0.0411$\pm$0.0005 & 0.0418$
+  \pm$0.0005 & 4.0 \\
+      & & FLDetector & 0.0303$\pm$0.0006 & 0.0449$\pm$0.0012 & 0.0260$\pm$0.0005 & 0.0260$
+  \pm$0.0004 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0285$\pm$0.0006} &
+      \cellcolor{mygray}\textbf{0.0264$\pm$0.0004} &
+      \cellcolor{mygray}\textbf{0.0255$\pm$0.0003} &
+      \cellcolor{mygray}\textbf{0.0255$\pm$0.0003} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0253$\pm$0.0004 & 0.0253$\pm$0.0004 & 0.0253$\pm$0.0004 &
+  0.0253$\pm$0.0004 & -- \\
+      \cmidrule(lr){2-8}
+
+      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
+      & NormClipping & 0.0518$\pm$0.0004 & 0.0641$\pm$0.0059 & 0.0530$\pm$0.0005 & 0.0538$
+  \pm$0.0004 & 5.0 \\
+      & & MultiKrum & 0.0563$\pm$0.0005 & 0.0389$\pm$0.0016 & 0.0327$\pm$0.0006 & 0.0355$
+  \pm$0.0014 & 3.0 \\
+      & & FLTrust & 0.0463$\pm$0.0007 & 0.0519$\pm$0.0090 & 0.0454$\pm$0.0006 & 0.0459$
+  \pm$0.0007 & 4.0 \\
+      & & FLDetector & 0.0361$\pm$0.0007 & 0.0552$\pm$0.0112 & 0.0304$\pm$0.0007 & 0.0304$
+  \pm$0.0007 & 2.0 \\
+      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0338$\pm$0.0011} &
+      \cellcolor{mygray}\textbf{0.0292$\pm$0.0015} &
+      \cellcolor{mygray}\textbf{0.0298$\pm$0.0005} &
+      \cellcolor{mygray}\textbf{0.0298$\pm$0.0006} & \cellcolor{mygray}1.0 \\
+      & & NoAttack+Mean(Base) & 0.0294$\pm$0.0006 & 0.0294$\pm$0.0006 & 0.0294$\pm$0.0006 &
+  0.0294$\pm$0.0006 & -- \\
+      \bottomrule
+      \end{tabular}
+  \end{table*}
+
+To assess the scalability of our method, we conducted experiments in more hostile environments by increasing the network scale. This analysis investigates how defense mechanisms perform under heightened threat levels, a critical consideration for real-world deployment.
+
+
+Fig. \ref{figaccuracymoreclientscifar100} illustrates the evolution of the test accuracy of \texttt{TriGuardFL} with another four other state-of-the-art defense rules  when the numbers of clients are 40 and 60 and propotion of attackers is $20\%$. The accuracy of five defense rules decreases in general. It is obvious that \texttt{TriGuardFL}  achieves near convergence, while NormClipping and FLDetector crash in some cases.
+
+Table \ref{tablosscifar100clientsadv02} compares the test loss of the defense mechanisms in a baseline configuration and a scaled network configuration with a proportionally larger number of attackers. The results highlight the superior scalability of \texttt{TriGuardFL}. As the threat level intensifies, \texttt{TriGuardFL} is the only defense that maintains its top-ranked performance. In contrast, the effectiveness of other defenses degrades sharply; for instance, the test loss for NormClipping and FLDetector increases dramatically, indicating a performance collapse. This demonstrates that \texttt{TriGuardFL}'s detection and reputation mechanisms are robust to scaling, making it a more reliable defense for larger real-world FL systems.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -184,6 +522,7 @@ The current repository-backed evidence supports this mechanism claim at a prelim
 \bibliographystyle{unsrtnat}
 \bibliography{ref}
 
+\newpage
 \appendix
 
 \section{Algorithmic Details}

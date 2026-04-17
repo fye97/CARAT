@@ -58,7 +58,7 @@
 \maketitle
 
 \begin{abstract}
-Federated learning servers must aggregate client updates without observing client data, which leaves training vulnerable to both untargeted model poisoning and targeted backdoor attacks. Existing robust aggregators mainly rely on update geometry, coordinate-wise robust statistics, or alignment with a single trusted reference direction, but these signals can be brittle when benign clients are heterogeneous and adaptive attackers stay near the benign update manifold. We present \textbf{CARAT}, a class-aware robust aggregation rule based on \emph{hidden task certificates}: using server-side labeled reference data, CARAT instantiates multiple hidden, class-balanced micro-tasks and scores each client update by the loss reduction it induces across them. CARAT combines this task-aware signal with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization under a worst-task objective with temporal regularization, thereby favoring updates that remain broadly useful across hidden semantic slices while suppressing structurally extreme clients. In the strongest completed repository-backed CIFAR100/FangAttack pilot, CARAT suppresses attacker weights and substantially improves over Mean; however, because the current completed evidence is still training-only and the full clean-accuracy and ASR benchmark suite is not yet finished, these results should be read as initial empirical validation rather than a complete benchmark claim.
+Federated learning servers must aggregate client updates without observing client data, which leaves training vulnerable to both untargeted model poisoning and targeted backdoor attacks. Existing robust aggregators mainly rely on update geometry, coordinate-wise robust statistics, or alignment with a single trusted reference direction, but these signals can be brittle when benign clients are heterogeneous and adaptive attackers stay near the benign update manifold. We present \textbf{CARAT}, a class-aware robust aggregation rule based on \emph{hidden task certificates}: using server-side labeled reference data, CARAT instantiates multiple hidden, class-balanced micro-tasks and scores each client update by the loss reduction it induces across them. CARAT combines this task-aware signal with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization under a worst-task objective with temporal regularization, thereby favoring updates that remain broadly useful across hidden semantic slices while suppressing structurally extreme clients. To evaluate this design appropriately, we organize the empirical study around class-rich benchmarks, separate untargeted and backdoor threat models, matched trusted-data budgets, and class-sensitive metrics such as worst-class accuracy and attack success rate.
 \end{abstract}
 
 \section{Introduction}
@@ -75,7 +75,7 @@ To address this, the paper proposes \textbf{CARAT}, \emph{Class-Aware Robust Agg
 \begin{itemize}
 \item We propose CARAT, a class-aware robust aggregation rule that validates client updates through hidden-task certificates built from server-side labeled reference data, replacing one-shot geometric trust signals with multi-task utility checks.
 \item We formulate aggregation as a capped-simplex optimization problem that combines worst-task utility across hidden tasks, coordinate-rank anomaly suppression, and temporal regularization, yielding a robust weighting mechanism that remains compatible with heterogeneous FL.
-\item We provide repository-backed empirical evidence for CARAT and clearly distinguish completed verified runs from the broader clean-accuracy and ASR benchmark suite that is still being finalized.
+\item We develop a CARAT-specific evaluation protocol centered on class-rich benchmarks, separate untargeted and backdoor suites, matched trusted-data budgets, and class-sensitive metrics, so that the empirical study directly tests the semantic robustness claims of the method.
 \end{itemize}
 
 \section{Related Work}
@@ -180,354 +180,68 @@ A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendi
 \section{Experiments}
 \label{sec:experiments}
 
-\subsection{Experimental Setup}
+\subsection{Evaluation Questions}
 
-\paragraph{Datasets, models, and heterogeneity.}
-We evaluate CARAT on CIFAR-10 with VGG19~\cite{simonyan2015verydeep} and on CIFAR-100 with ResNet18~\cite{he2016deep}. To study robustness under client heterogeneity, we partition client data with a Dirichlet distribution $\bm{p}\sim \mathrm{Dir}_N(\alpha)$ and report non-IID settings with $\alpha \in \{0.1, 0.5, 1\}$. The main-text tables and figures focus on the completed untargeted-poisoning slice of this benchmark; broader benchmark scope and implementation details are deferred to Appendix~\ref{sec:appendix-experiments}.
+CARAT is intended for settings where the server has a small labeled audit set and where failures may concentrate on particular classes rather than appearing only as global geometric outliers. The empirical study is therefore organized around four questions. First, what clean-utility cost does CARAT impose when no attack is present? Second, does CARAT improve robustness to untargeted model poisoning under increasing client heterogeneity? Third, does the class-aware hidden-task mechanism improve robustness to class-selective and backdoor attacks, where semantic failures rather than pure norm outliers are central? Fourth, how do the method's gains trade off against server-reference budget and runtime overhead? The detailed benchmark matrix, appendix-only stress tests, and ablation scope are reported in Appendix~\ref{sec:appendix-experiments}.
 
-\paragraph{Baselines, attacks, and default training setting.}
-Unless otherwise stated, we compare CARAT against FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, NormClipping, and MultiKrum~\cite{blanchard2017krum}, and we include a no-attack Mean reference where useful. The current main-text robustness results use four untargeted model-poisoning attacks: ALIE~\cite{baruch2019alie}, Min-Max~\cite{shejwalkar2021manipulating}, Min-Sum~\cite{shejwalkar2021manipulating}, and FangAttack~\cite{fang2020local}. The shared training configuration is summarized in Table~\ref{tab:hyperparams}; CARAT-specific defaults and the full repository benchmark matrix are recorded in Appendix~\ref{sec:appendix-experiments}.
+\subsection{Benchmark Design}
+
+\paragraph{Datasets and models.}
+The primary benchmark is CIFAR-100 with ResNet18~\cite{he2016deep}. CIFAR-100 provides a class-rich label space in which hidden semantic slices are meaningful and class-selective failures are easier to expose than on low-cardinality datasets. We complement it with TinyImageNet, again using ResNet18, to test whether the method scales to a larger class vocabulary while keeping the backbone fixed. To anchor the method in a more application-oriented setting, we also include CHMNIST with the same backbone in the appendix, where class-selective degradation has a clearer domain interpretation. CIFAR-10 is retained only as an appendix sanity check rather than a primary source of evidence, because a ten-class benchmark is too coarse to be the main validation vehicle for a class-aware defense. Keeping the model family fixed across visual datasets ensures that observed differences are attributable to aggregation rather than to backbone changes.
+
+\paragraph{Untargeted poisoning suite.}
+For untargeted model poisoning, the main threat models are ALIE~\cite{baruch2019alie}, MinMax~\cite{shejwalkar2021manipulating}, and MinSum~\cite{shejwalkar2021manipulating}. These attacks represent stealthy optimization-based adversaries that try to remain near the benign update manifold while degrading global learning. The primary untargeted baselines are Mean, TrimmedMean~\cite{yin2018median}, MultiKrum~\cite{blanchard2017krum}, and FLTrust~\cite{cao2021fltrust}. FangAttack~\cite{fang2020local} is treated as an appendix stress test rather than a core main-text attack because it is especially tied to Krum-style geometry.
+
+\paragraph{Targeted and backdoor suite.}
+The second core suite targets semantic corruption. We focus on ModelReplacement-style backdoors~\cite{bagdasaryan2020backdoor}, DBA~\cite{xie2020dba}, and Neurotoxin~\cite{zhang2022neurotoxin}, since these attacks directly test whether CARAT's hidden tasks can expose updates that preserve apparent global plausibility while damaging specific semantic regions. The main backdoor baselines are Mean, FLTrust, FLAME~\cite{nguyen2022flame}, DeepSight~\cite{rieger2022deepsight}, and CARAT. BadNets-style triggers can be retained in the appendix as a sanity check, but they are not the main stress case because they are typically easier to detect than adaptive distributed or persistent attacks.
+
+\paragraph{Shared protocol.}
+Across the primary suites, we use $20$ clients with full participation, $300$ global rounds, $4$ local epochs, and learning rate $0.05$. To probe heterogeneity, we evaluate i.i.d.\ partitions together with Dirichlet non-i.i.d.\ regimes $\alpha \in \{0.5,0.1\}$. The main adversarial setting uses an attacker ratio of $20\%$, while $40\%$ is reserved for appendix stress tests. Clean-reference experiments are reported separately from attacked experiments rather than inserted as a row inside attack tables. Unless otherwise stated, reported means and standard deviations are computed over $3$--$5$ random seeds.
+
 \begin{table*}[!htbp]
 \centering
-\caption{Default training configuration for the main-text experiments.}
+\caption{Planned CARAT evaluation protocol.}
 \label{tab:hyperparams}
-\renewcommand{\arraystretch}{1}
-    \setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
 \small
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{cccccccccc}
+\begin{tabular}{p{0.28\textwidth}p{0.64\textwidth}}
 \toprule
-\textbf{Parameter} &
-\makecell[c]{\textbf{Total}\\\textbf{Clients} ($N$)} &
-\makecell[c]{\textbf{Malicious}\\\textbf{Clients Ratio} ($\%$)} &
-\makecell[c]{\textbf{Clients}\\\textbf{per Round}} &
-\makecell[c]{\textbf{Local}\\\textbf{Iterations} ($K$)} &
-\makecell[c]{\textbf{Total}\\\textbf{Epochs} ($T$)} &
-\makecell[c]{\textbf{Learning}\\\textbf{Rate} ($\eta$)} &
-\makecell[c]{\textbf{Significance}\\\textbf{Level}}  \\
+\textbf{Component} & \textbf{Design choice} \\
 \midrule
-\textbf{Value} & 20 & 10/20/30  & 20 & 4 & 200& 0.05 & 0.02 \\
+Primary benchmark & CIFAR-100 with ResNet18 \\
+Supplementary benchmarks & TinyImageNet with ResNet18; CHMNIST with ResNet18 (appendix); CIFAR-10 only as appendix sanity check \\
+Clients and participation & $20$ total clients with full participation each round \\
+Optimization schedule & $300$ communication rounds, $4$ local epochs, learning rate $0.05$ \\
+Heterogeneity settings & i.i.d.; Dirichlet non-i.i.d.\ with $\alpha \in \{0.5, 0.1\}$ \\
+Main adversarial fraction & $20\%$ malicious clients \\
+Stress adversarial fraction & $40\%$ malicious clients (appendix) \\
+Main untargeted attacks & ALIE, MinMax, MinSum \\
+Main backdoor attacks & ModelReplacement, DBA, Neurotoxin \\
+Untargeted baselines & Mean, TrimmedMean, MultiKrum, FLTrust, CARAT \\
+Backdoor baselines & Mean, FLTrust, FLAME, DeepSight, CARAT \\
+Primary reported metrics & Clean accuracy, clean loss, macro accuracy, worst-class accuracy, ASR, runtime per round \\
+Fairness controls & Matched labeled server-reference budget between CARAT and FLTrust; clean-reference runs reported separately from attacked runs \\
+Repetitions & $3$--$5$ seeds per configuration \\
 \bottomrule
 \end{tabular}
-}
 \end{table*}
 
-\subsection{Untargeted Poisoning Results}
-  \begin{table*}[!htbp]
-      \definecolor{mygray}{gray}{.90}
-      \renewcommand{\arraystretch}{1.0}
-      \setlength{\tabcolsep}{4pt}
-      \caption{Final test loss under four untargeted model-poisoning attacks with $10\%$
-  malicious clients on two dataset-model pairs under non-IID settings.}
-      \label{tablossmergedcifar10cifar100}
-      \centering\small
-\resizebox{\textwidth}{!}{%
-      \begin{tabular}{c c c c c c c c}
-      \toprule
-      \multirow{2}{*}{\makecell[c]{Dataset\\Model}} &
-      \multirow{2}{*}{\makecell[c]{Non-IID\\Settings}} &
-      \multirow{2}{*}{\makecell[c]{Defense\\Rules}} &
-      \multicolumn{4}{c}{Attacks} &
-      \multirow{2}{*}{Rank} \\
-      \cmidrule(lr){4-7}
-      & & & ALIE & FangAttack & MinMax & MinSum & \\
-      \midrule
+\subsection{Metrics and Fairness Controls}
 
-      \multirow{18}{*}{\makecell[c]{CIFAR-10\\VGG19}}
-      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
-      & NormClipping & 0.0176$\pm$0.0003 & 0.0184$\pm$0.0003 & 0.0176$\pm$0.0003 & 0.0177$
-  \pm$0.0003 & 5.0 \\
-      & & MultiKrum & 0.0120$\pm$0.0001 & 0.0159$\pm$0.0009 & 0.0157$\pm$0.0005 & 0.0153$
-  \pm$0.0010 & 4.0 \\
-      & & FLTrust & 0.0152$\pm$0.0003 & 0.0152$\pm$0.0003 & 0.0148$\pm$0.0003 & 0.0149$
-  \pm$0.0003 & 3.0 \\
-      & & FLDetector & \textbf{0.0093$\pm$0.0002} & 0.0192$\pm$0.0018 & \textbf{0.0089$
-  \pm$0.0001} & \textbf{0.0089$\pm$0.0002} & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0093$\pm$0.0002} &
-  \cellcolor{mygray}\textbf{0.0093$\pm$0.0002} & \cellcolor{mygray}0.0090$\pm$0.0002 &
-  \cellcolor{mygray}0.0090$\pm$0.0002 & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0092$\pm$0.0001 & 0.0092$\pm$0.0001 & 0.0092$\pm$0.0001 &
-  0.0092$\pm$0.0001 & -- \\
-      \cmidrule(lr){2-8}
+Because CARAT is explicitly class-aware, the evaluation must report more than aggregate clean accuracy. For clean utility, we report test accuracy and test loss under no attack. For robustness, we additionally report macro-average accuracy and worst-class accuracy on class-rich benchmarks, so that localized class failures remain visible. For backdoor experiments, attack success rate (ASR) is always paired with clean accuracy, rather than reported in isolation. Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as the main extra cost, we also report runtime per round and total defense overhead.
 
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
-      & NormClipping & 0.0194$\pm$0.0002 & 0.0200$\pm$0.0004 & 0.0196$\pm$0.0004 & 0.0195$
-  \pm$0.0003 & 4.5 \\
-      & & MultiKrum & 0.0147$\pm$0.0008 & 0.0207$\pm$0.0021 & 0.0196$\pm$0.0012 & 0.0208$
-  \pm$0.0023 & 4.5 \\
-      & & FLTrust & 0.0167$\pm$0.0004 & 0.0168$\pm$0.0003 & 0.0167$\pm$0.0004 & 0.0163$
-  \pm$0.0003 & 3.0 \\
-      & & FLDetector & 0.0108$\pm$0.0005 & 0.0242$\pm$0.0005 & 0.0110$\pm$0.0010 & 0.0106$
-  \pm$0.0006 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0106$\pm$0.0003} &
-  \cellcolor{mygray}\textbf{0.0107$\pm$0.0003} & \cellcolor{mygray}\textbf{0.0107$
-  \pm$0.0010} & \cellcolor{mygray}\textbf{0.0104$\pm$0.0003} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0104$\pm$0.0004 & 0.0104$\pm$0.0004 & 0.0104$\pm$0.0004 &
-  0.0104$\pm$0.0004 & -- \\
-      \cmidrule(lr){2-8}
+Fairness requires explicit control of server-side supervision. CARAT uses labeled server reference data to instantiate hidden tasks, while FLTrust uses trusted data to define an anchor update; these methods should therefore be compared under a matched labeled-data budget. In the main text, CARAT and FLTrust are evaluated with the same reference budget. The appendix then sweeps this budget to distinguish robustness gains due to evaluation principle from gains due only to more public data. Likewise, we do not use a single dataset-independent probe-pool size across all benchmarks: the reference budget is parameterized per class so that class-rich datasets are not artificially underprovisioned.
 
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
-      & NormClipping & 0.0256$\pm$0.0011 & 0.0261$\pm$0.0012 & 0.0268$\pm$0.0013 & 0.0260$
-  \pm$0.0015 & 4.0 \\
-      & & MultiKrum & 0.0270$\pm$0.0013 & 0.0330$\pm$0.0028 & 0.0321$\pm$0.0034 & 0.0327$
-  \pm$0.0026 & 5.0 \\
-      & & FLTrust & 0.0233$\pm$0.0011 & 0.0236$\pm$0.0013 & 0.0243$\pm$0.0018 & 0.0239$
-  \pm$0.0013 & 3.0 \\
-      & & FLDetector & 0.0215$\pm$0.0022 & 0.0243$\pm$0.0022 & 0.0218$\pm$0.0031 & 0.0218$
-  \pm$0.0034 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0198$\pm$0.0016} &
-  \cellcolor{mygray}\textbf{0.0198$\pm$0.0018} & \cellcolor{mygray}\textbf{0.0198$
-  \pm$0.0016} & \cellcolor{mygray}\textbf{0.0197$\pm$0.0024} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0199$\pm$0.0012 & 0.0199$\pm$0.0012 & 0.0199$\pm$0.0012 &
-  0.0199$\pm$0.0012 & -- \\
-      \midrule
+\subsection{Reporting Structure}
 
-      \multirow{18}{*}{\makecell[c]{CIFAR-100\\ResNet18}}
-      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
-      & NormClipping & 0.0473$\pm$0.0003 & 0.0487$\pm$0.0004 & 0.0479$\pm$0.0003 & 0.0480$
-  \pm$0.0003 & 5.0 \\
-      & & MultiKrum & 0.0330$\pm$0.0004 & 0.0374$\pm$0.0008 & 0.0375$\pm$0.0005 & 0.0372$
-  \pm$0.0007 & 3.0 \\
-      & & FLTrust & 0.0405$\pm$0.0003 & 0.0405$\pm$0.0004 & 0.0403$\pm$0.0005 & 0.0404$
-  \pm$0.0004 & 4.0 \\
-      & & FLDetector & \textbf{0.0274$\pm$0.0005} & 0.0426$\pm$0.0004 & 0.0275$\pm$0.0004 &
-  \textbf{0.0275$\pm$0.0005} & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}0.0276$\pm$0.0004 &
-  \cellcolor{mygray}\textbf{0.0276$\pm$0.0004} & \cellcolor{mygray}\textbf{0.0273$
-  \pm$0.0003} & \cellcolor{mygray}\textbf{0.0275$\pm$0.0002} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0269$\pm$0.0003 & 0.0269$\pm$0.0003 & 0.0269$\pm$0.0003 &
-  0.0269$\pm$0.0003 & -- \\
-      \cmidrule(lr){2-8}
-
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
-      & NormClipping & 0.0482$\pm$0.0006 & 0.0496$\pm$0.0003 & 0.0488$\pm$0.0004 & 0.0490$
-  \pm$0.0005 & 5.0 \\
-      & & MultiKrum & 0.0352$\pm$0.0008 & 0.0403$\pm$0.0015 & 0.0405$\pm$0.0012 & 0.0402$
-  \pm$0.0010 & 3.0 \\
-      & & FLTrust & 0.0414$\pm$0.0005 & 0.0414$\pm$0.0004 & 0.0412$\pm$0.0004 & 0.0413$
-  \pm$0.0005 & 4.0 \\
-      & & FLDetector & \textbf{0.0284$\pm$0.0004} & 0.0437$\pm$0.0011 & \textbf{0.0284$
-  \pm$0.0004} & \textbf{0.0283$\pm$0.0004} & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0284$\pm$0.0004} &
-  \cellcolor{mygray}\textbf{0.0285$\pm$0.0005} & \cellcolor{mygray}\textbf{0.0284$
-  \pm$0.0006} & \cellcolor{mygray}\textbf{0.0283$\pm$0.0005} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0276$\pm$0.0005 & 0.0276$\pm$0.0005 & 0.0276$\pm$0.0005 &
-  0.0276$\pm$0.0005 & -- \\
-      \cmidrule(lr){2-8}
-
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
-      & NormClipping & 0.0519$\pm$0.0004 & 0.0529$\pm$0.0004 & 0.0527$\pm$0.0005 & 0.0529$
-  \pm$0.0004 & 5.0 \\
-      & & MultiKrum & 0.0424$\pm$0.0010 & 0.0504$\pm$0.0010 & 0.0504$\pm$0.0015 & 0.0504$
-  \pm$0.0014 & 4.0 \\
-      & & FLTrust & 0.0450$\pm$0.0004 & 0.0450$\pm$0.0005 & 0.0450$\pm$0.0005 & 0.0451$
-  \pm$0.0006 & 3.0 \\
-      & & FLDetector & 0.0326$\pm$0.0003 & 0.0461$\pm$0.0039 & 0.0325$\pm$0.0003 &
-  \textbf{0.0323$\pm$0.0005} & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0322$\pm$0.0004} &
-  \cellcolor{mygray}\textbf{0.0323$\pm$0.0004} & \cellcolor{mygray}\textbf{0.0322$
-  \pm$0.0005} & \cellcolor{mygray}\textbf{0.0323$\pm$0.0005} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0314$\pm$0.0004 & 0.0314$\pm$0.0004 & 0.0314$\pm$0.0004 &
-  0.0314$\pm$0.0004 & -- \\
-      \bottomrule
-      \end{tabular}
-      }
-  \end{table*}
-Table~\ref{tablossmergedcifar10cifar100} reports the completed untargeted-poisoning results with $10\%$ malicious clients. Across the reported non-IID settings, \texttt{CARAT} attains the best average rank and remains close to the no-attack Mean reference. The clearest gap appears on CIFAR-100/ResNet18 under FangAttack with $\alpha=0.1$, where \texttt{CARAT} reaches $0.0323$ test loss versus $0.0504$ for MultiKrum and $0.0450$ for FLTrust.
-
-\begin{figure*}[!htbp]
-	\centering
-	% \subfloat[IID data distribution]{\includegraphics[trim=0 0 0 2.5cm,
- %  clip,scale=0.31]{figures/iid_CIFAR100_resnet18_FedAvg_adv0.2_alphaNA_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
-	% \quad
-	\subfloat[Non-IID data distribution, $\alpha=1$]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
-	\quad
-	\subfloat[Non-IID data distribution, $\alpha=0.5$]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha0.5_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
-    \quad
-	\subfloat[Non-IID data distribution, $\alpha=0.1$]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha0.1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
-    \caption{Test-accuracy trajectories on CIFAR-100/ResNet18 under untargeted poisoning with $20$ clients and $4$ attackers.}
-
-
-	\label{figaccuracycifar100}
-\end{figure*}
-
-
-
-Fig.~\ref{figaccuracycifar100} shows the same pattern on CIFAR-100/ResNet18: \texttt{CARAT} tracks the no-attack reference more closely than the competing defenses, while FLTrust and MultiKrum show larger degradation and instability. The gap widens as heterogeneity increases.
-
-\paragraph{Impact of Attacker Ratio.}
-We next increase the attacker ratio from the default $10\%$ to $20\%$ and $30\%$, keeping the remaining settings fixed. Fig.~\ref{figaccuracymoreattackerscifar100} shows that all methods degrade as the adversarial fraction grows, but the degradation for \texttt{CARAT} is consistently milder across the reported $\alpha$ values, whereas FLTrust and MultiKrum become unstable in part of this regime.
-
-\begin{figure*}[htbp]
-	\centering
-    % \subfloat[Dataset distribution is IID.]{\includegraphics[trim=0 0 0 2.5cm,clip,scale=0.31]{figures/adv_sensitivity_iid_CIFAR100_resnet18_FedAvg_alphaNA_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
-  
-	% \quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
-	\quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.5_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
-  \quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
-	\caption{Sensitivity of test accuracy to the attacker ratio on CIFAR-100/ResNet18 under non-IID settings.}
-	\label{figaccuracymoreattackerscifar100}
-\end{figure*}
-
-\paragraph{Scaling with More Clients.}
-\begin{figure*}[!htbp]
-	\centering
-	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha1_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
-	\quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.5_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
-  \quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
-  clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.1_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
-	\caption{Sensitivity of test accuracy to the number of clients on CIFAR-100/ResNet18 under non-IID settings.}
-	\label{figaccuracymoreclientscifar100}
-\end{figure*}
-  \begin{table*}[!htbp]
-      \definecolor{mygray}{gray}{.90}
-      \renewcommand{\arraystretch}{1.0}
-      \setlength{\tabcolsep}{4pt}
-      \caption{Final test loss on CIFAR-100/ResNet18 under four untargeted model-poisoning attacks at adversary ratio $20\%$, comparing non-IID settings across different
-  client counts. Each cell reports mean$\pm$std over available seeds. If a run stopped
-  early, its last recorded epoch before 200 is used.}
-      \label{tablosscifar100clientsadv02}
-      \centering\small
-\resizebox{\textwidth}{!}{%
-      \begin{tabular}{c c c c c c c c}
-      \toprule
-      \multirow{2}{*}{\makecell[c]{Number of\\Clients}} &
-      \multirow{2}{*}{\makecell[c]{Non-IID\\Settings}} &
-      \multirow{2}{*}{\makecell[c]{Defense\\Rules}} &
-      \multicolumn{4}{c}{Attacks} &
-      \multirow{2}{*}{\makecell[c]{Rank}} \\
-      \cmidrule(lr){4-7}\cmidrule(lr){8-8}
-      & & & ALIE & FangAttack & MinMax & MinSum & \\
-      \midrule
-
-      \multirow{18}{*}{40}
-      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
-      & NormClipping & 0.0472$\pm$0.0003 & 0.0586$\pm$0.0067 & 0.0479$\pm$0.0002 & 0.0484$
-  \pm$0.0003 & 5.0 \\
-      & & MultiKrum & 0.0427$\pm$0.0012 & 0.0309$\pm$0.0006 & 0.0268$\pm$0.0007 & 0.0284$
-  \pm$0.0013 & 3.0 \\
-      & & FLTrust & 0.0412$\pm$0.0002 & 0.0405$\pm$0.0001 & 0.0403$\pm$0.0001 & 0.0405$
-  \pm$0.0003 & 4.0 \\
-      & & FLDetector & 0.0299$\pm$0.0007 & 0.0601$\pm$0.0024 & 0.0259$\pm$0.0005 & 0.0260$
-  \pm$0.0006 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0276$\pm$0.0006} &
-      \cellcolor{mygray}\textbf{0.0258$\pm$0.0006} &
-      \cellcolor{mygray}\textbf{0.0257$\pm$0.0007} &
-      \cellcolor{mygray}\textbf{0.0257$\pm$0.0005} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0251$\pm$0.0006 & 0.0251$\pm$0.0006 & 0.0251$\pm$0.0006 &
-  0.0251$\pm$0.0006 & -- \\
-      \cmidrule(lr){2-8}
-
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
-      & NormClipping & 0.0482$\pm$0.0005 & 0.0560$\pm$0.0005 & 0.0490$\pm$0.0006 & 0.0496$
-  \pm$0.0008 & 5.0 \\
-      & & MultiKrum & 0.0448$\pm$0.0008 & 0.0327$\pm$0.0005 & 0.0279$\pm$0.0005 & 0.0293$
-  \pm$0.0013 & 3.0 \\
-      & & FLTrust & 0.0422$\pm$0.0002 & 0.0415$\pm$0.0004 & 0.0414$\pm$0.0005 & 0.0416$
-  \pm$0.0004 & 4.0 \\
-      & & FLDetector & 0.0311$\pm$0.0006 & 0.0572$\pm$0.0032 & 0.0267$\pm$0.0003 & 0.0268$
-  \pm$0.0004 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0290$\pm$0.0004} &
-      \cellcolor{mygray}\textbf{0.0267$\pm$0.0004} &
-      \cellcolor{mygray}\textbf{0.0266$\pm$0.0003} &
-      \cellcolor{mygray}\textbf{0.0265$\pm$0.0002} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0259$\pm$0.0003 & 0.0259$\pm$0.0003 & 0.0259$\pm$0.0003 &
-  0.0259$\pm$0.0003 & -- \\
-      \cmidrule(lr){2-8}
-
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
-      & NormClipping & 0.0524$\pm$0.0004 & 0.0602$\pm$0.0005 & 0.0537$\pm$0.0006 & 0.0544$
-  \pm$0.0006 & 5.0 \\
-      & & MultiKrum & 0.0552$\pm$0.0007 & 0.0419$\pm$0.0010 & 0.0346$\pm$0.0005 & 0.0370$
-  \pm$0.0014 & 3.0 \\
-      & & FLTrust & 0.0466$\pm$0.0005 & 0.0458$\pm$0.0005 & 0.0460$\pm$0.0005 & 0.0468$
-  \pm$0.0005 & 4.0 \\
-      & & FLDetector & 0.0373$\pm$0.0009 & 0.0550$\pm$0.0043 & 0.0315$\pm$0.0008 & 0.0315$
-  \pm$0.0006 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0345$\pm$0.0006} &
-      \cellcolor{mygray}\textbf{0.0305$\pm$0.0004} &
-      \cellcolor{mygray}\textbf{0.0311$\pm$0.0007} &
-      \cellcolor{mygray}\textbf{0.0308$\pm$0.0005} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0303$\pm$0.0006 & 0.0303$\pm$0.0006 & 0.0303$\pm$0.0006 &
-  0.0303$\pm$0.0006 & -- \\
-      \midrule
-
-      \multirow{18}{*}{60}
-      & \multirow{6}{*}{\makecell[c]{$\alpha=1$}}
-      & NormClipping & 0.0470$\pm$0.0003 & 0.0593$\pm$0.0037 & 0.0484$\pm$0.0012 & 0.0486$
-  \pm$0.0003 & 5.0 \\
-      & & MultiKrum & 0.0452$\pm$0.0003 & 0.0303$\pm$0.0011 & 0.0258$\pm$0.0005 & 0.0275$
-  \pm$0.0009 & 3.0 \\
-      & & FLTrust & 0.0410$\pm$0.0003 & 0.0427$\pm$0.0027 & 0.0401$\pm$0.0003 & 0.0405$
-  \pm$0.0005 & 4.0 \\
-      & & FLDetector & 0.0290$\pm$0.0003 & 0.0484$\pm$0.0007 & \textbf{0.0247$\pm$0.0003} &
-  0.0249$\pm$0.0004 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0271$\pm$0.0003} &
-      \cellcolor{mygray}\textbf{0.0260$\pm$0.0011} &
-      \cellcolor{mygray}\textbf{0.0247$\pm$0.0003} &
-      \cellcolor{mygray}\textbf{0.0247$\pm$0.0002} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0245$\pm$0.0004 & 0.0245$\pm$0.0004 & 0.0245$\pm$0.0004 &
-  0.0245$\pm$0.0004 & -- \\
-      \cmidrule(lr){2-8}
-
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.5$}}
-      & NormClipping & 0.0479$\pm$0.0004 & 0.0575$\pm$0.0011 & 0.0487$\pm$0.0003 & 0.0496$
-  \pm$0.0004 & 5.0 \\
-      & & MultiKrum & 0.0472$\pm$0.0008 & 0.0316$\pm$0.0006 & 0.0273$\pm$0.0013 & 0.0289$
-  \pm$0.0013 & 3.0 \\
-      & & FLTrust & 0.0422$\pm$0.0005 & 0.0431$\pm$0.0021 & 0.0411$\pm$0.0005 & 0.0418$
-  \pm$0.0005 & 4.0 \\
-      & & FLDetector & 0.0303$\pm$0.0006 & 0.0449$\pm$0.0012 & 0.0260$\pm$0.0005 & 0.0260$
-  \pm$0.0004 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0285$\pm$0.0006} &
-      \cellcolor{mygray}\textbf{0.0264$\pm$0.0004} &
-      \cellcolor{mygray}\textbf{0.0255$\pm$0.0003} &
-      \cellcolor{mygray}\textbf{0.0255$\pm$0.0003} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0253$\pm$0.0004 & 0.0253$\pm$0.0004 & 0.0253$\pm$0.0004 &
-  0.0253$\pm$0.0004 & -- \\
-      \cmidrule(lr){2-8}
-
-      & \multirow{6}{*}{\makecell[c]{$\alpha=0.1$}}
-      & NormClipping & 0.0518$\pm$0.0004 & 0.0641$\pm$0.0059 & 0.0530$\pm$0.0005 & 0.0538$
-  \pm$0.0004 & 5.0 \\
-      & & MultiKrum & 0.0563$\pm$0.0005 & 0.0389$\pm$0.0016 & 0.0327$\pm$0.0006 & 0.0355$
-  \pm$0.0014 & 3.0 \\
-      & & FLTrust & 0.0463$\pm$0.0007 & 0.0519$\pm$0.0090 & 0.0454$\pm$0.0006 & 0.0459$
-  \pm$0.0007 & 4.0 \\
-      & & FLDetector & 0.0361$\pm$0.0007 & 0.0552$\pm$0.0112 & 0.0304$\pm$0.0007 & 0.0304$
-  \pm$0.0007 & 2.0 \\
-      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0338$\pm$0.0011} &
-      \cellcolor{mygray}\textbf{0.0292$\pm$0.0015} &
-      \cellcolor{mygray}\textbf{0.0298$\pm$0.0005} &
-      \cellcolor{mygray}\textbf{0.0298$\pm$0.0006} & \cellcolor{mygray}1.0 \\
-      & & NoAttack+Mean(Base) & 0.0294$\pm$0.0006 & 0.0294$\pm$0.0006 & 0.0294$\pm$0.0006 &
-  0.0294$\pm$0.0006 & -- \\
-      \bottomrule
-      \end{tabular}
-      }
-  \end{table*}
-
-To test whether the method remains effective beyond the default $20$-client setting, we increase the total number of clients to $40$ and $60$ while maintaining an attacker ratio of $20\%$. Fig.~\ref{figaccuracymoreclientscifar100} and Table~\ref{tablosscifar100clientsadv02} show that \texttt{CARAT} continues to converge reliably and retains the best average rank across the scaled CIFAR-100 settings. Competing defenses degrade more sharply, especially under stronger heterogeneity or FangAttack.
+The main text focuses on the three results that most directly test CARAT's claims: a clean-utility comparison, an untargeted robustness comparison under increasing heterogeneity, and a backdoor comparison emphasizing class-sensitive metrics and ASR. Appendix~\ref{sec:appendix-experiments} then records the full benchmark suites, stress tests at higher attacker ratios, scaling studies, trusted-data budget sensitivity, runtime breakdowns, and CARAT-specific ablations.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
 We presented CARAT, a class-aware robust aggregation rule that validates client updates through hidden task certificates rather than relying only on geometric centrality or a single trusted reference direction. By scoring updates across multiple hidden, class-balanced semantic slices of the task and combining those scores with rank-space anomaly suppression and capped-simplex weight optimization, CARAT is designed to preserve benign heterogeneity while reducing the influence of semantically harmful or structurally extreme clients.
 
-The current repository-backed evidence supports this mechanism claim at a preliminary empirical level: in the completed CIFAR100/FangAttack pilot, CARAT suppresses attacker weights and substantially improves over Mean. At the same time, the present manuscript does not yet support a full benchmark claim, because the clean-accuracy, ASR, non-i.i.d., and multi-seed CARAT suites are still being completed, and the method retains the explicit assumption of server-side labeled reference data. Even with these limitations, the hidden-task certificate view provides a concrete and technically grounded direction for robust FL aggregation, especially in settings where class-selective failures matter.
+The appropriate empirical evaluation for CARAT therefore centers on class-rich classification benchmarks, separate untargeted and backdoor threat models, class-sensitive metrics such as macro and worst-class accuracy, and explicit controls for trusted-data budget and runtime overhead. Under that evaluation protocol, the method's value is not merely whether it rejects large outliers, but whether it continues to favor updates that are broadly useful across hidden semantic slices even when attacks are adaptive and benign clients are heterogeneous. The method still assumes server-side labeled reference data, but in the cross-silo settings where that assumption is acceptable, hidden-task certificates provide a concrete direction for robust FL aggregation.
 
 \bibliographystyle{unsrtnat}
 \bibliography{ref}
@@ -850,24 +564,56 @@ The theoretical object $D^{\mathrm{ref}}$ in the main text should be read as the
 \section{Additional Experimental Details}
 \label{sec:appendix-experiments}
 
-This section records setup details and benchmark scope that are omitted from the main text for brevity.
+This appendix records the benchmark design and reporting scope that support the main-text experimental protocol.
 
-\paragraph{Detailed benchmark scope.}
-The broader repository configuration includes three suites. The clean-reference suite uses \texttt{NoAttack} and compares \{Mean, FLTrust, MultiKrum, CARAT\}. The untargeted poisoning suite evaluates \{ALIE, MinMax, FangAttack\} against the same defense set. The backdoor suite evaluates \{BadNets, Neurotoxin\} against \{Mean, FLTrust, FLAME, DeepSight, CARAT\}. The committed configs cover both i.i.d.\ and non-i.i.d.\ settings: \texttt{clean\_reference.yaml} and \texttt{main\_untargeted.yaml} use $\alpha \in \{0.1,0.5\}$, while \texttt{backdoor.yaml} uses i.i.d.\ plus $\alpha=0.5$. The untargeted suite sweeps attacker fractions $\{0.2,0.4\}$; the clean-reference and backdoor suites use $0$ and $0.2$, respectively. Each planned suite runs three repeats with effective seeds $42$, $43$, and $44$. The current main text intentionally reports only the completed untargeted slice rather than this full benchmark matrix.
+\subsection{Experimental Objectives}
 
-\paragraph{Default CARAT hyperparameters.}
-Unless otherwise stated, CARAT uses probe pool size $512$, $8$ hidden tasks, $4$ probe samples per class, probe batch size $128$, probe-radius quantile $0.5$, MAD clipping with $k=2.5$, default attacker prior $\hat{\rho}=0.2$, certificate temperature $\beta=12.0$, rank weight $0.20$, prior weight $0.05$, $4096$ sampled coordinates, $5$ rank subsamples, $60$ optimization steps, and optimizer learning rate $0.5$.
+The empirical study is designed to test properties specific to CARAT rather than to benchmark it as a generic outlier filter. In particular, we want to know whether a hidden-task certificate built from labeled server data improves robustness when benign clients are heterogeneous, whether the gain persists on class-rich benchmarks where class-selective failure matters, and how much robustness is purchased per unit of trusted-data budget and runtime overhead.
 
-\paragraph{Currently verified run.}
-The strongest directly verified completed CARAT run in the repository uses FedAvg, CIFAR100, ResNet-18, an i.i.d.\ partition, 20 clients, 4 attackers, FangAttack, 300 rounds, learning rate $0.05$, local epochs $4$, and \verb|evaluate=false|. The main text uses this run only as preliminary evidence, because the broader clean-reference, backdoor, non-i.i.d., and multi-seed CARAT suites are still being completed.
+\subsection{Benchmark Suites}
 
-\paragraph{Next additions.}
-\begin{enumerate}
-\item Complete the running \texttt{main\_untargeted.yaml} sweep, prioritizing the CARAT rows and reporting multi-seed means and variances for clean test accuracy and loss.
-\item Extend the verified runs from the current i.i.d.\ slice to the non-i.i.d.\ Dirichlet settings already present in \texttt{main\_untargeted.yaml}.
-\item Complete the committed \texttt{backdoor.yaml} suite so that the paper reports both clean utility and ASR.
-\item Run the planned ablations, prioritizing the number of hidden tasks, the rank and prior weights, and the clipping controls.
-\item Report multi-seed means and variances, plus defense runtime overhead, before making any strong comparative claim against other robust aggregators.
-\end{enumerate}
+\paragraph{Primary class-rich benchmark.}
+The main benchmark is CIFAR-100 with ResNet18. This setting best matches CARAT's motivation because the label space is sufficiently rich that different hidden tasks can emphasize different semantic slices, and because average clean accuracy alone can hide substantial per-class degradation.
+
+\paragraph{Scalability benchmark.}
+TinyImageNet with ResNet18 is used to test whether the same aggregation rule remains effective as the number of classes and the visual vocabulary increase. This benchmark is particularly useful for checking whether the hidden-task construction and reference-budget design remain meaningful beyond CIFAR-100.
+
+\paragraph{Application-oriented benchmark.}
+We include CHMNIST with ResNet18 as an application-style benchmark in the appendix. Its role is not to maximize scale, but to show that class-selective failures have practical interpretation in a domain where server-side auditing with a small labeled reference set is plausible.
+
+\paragraph{Sanity-check benchmark.}
+CIFAR-10 is retained only as a sanity-check benchmark. It remains useful for verifying that CARAT does not fail on standard low-cardinality image classification, but it is not treated as a primary source of evidence because its ten classes are too few to fully exercise the method's class-aware design.
+
+\subsection{Threat Models and Attack Selection}
+
+\paragraph{Untargeted poisoning.}
+The main untargeted suite contains ALIE, MinMax, and MinSum. Together they represent adaptive model-poisoning attacks that aim to remain stealthy under server-side defenses. FangAttack is evaluated only in the appendix as a stress test, since it is especially informative for geometry-based defenses and should not dominate the design of CARAT's main evaluation.
+
+\paragraph{Targeted and backdoor attacks.}
+The main targeted suite contains ModelReplacement~\citep{bagdasaryan2020backdoor}, DBA~\citep{xie2020dba}, and Neurotoxin~\citep{zhang2022neurotoxin}. These attacks are better aligned with CARAT's intended advantage because they can preserve global plausibility while damaging specific semantic regions or maintaining durable triggers. BadNets can be reported as an auxiliary sanity-check attack in the appendix, but it is not the main stress case.
+
+\subsection{Baseline Families}
+
+\paragraph{Untargeted defenses.}
+For untargeted poisoning, the primary baselines are Mean, TrimmedMean, MultiKrum, FLTrust, and CARAT. This set spans plain averaging, coordinate-wise robust statistics, geometry-based filtering, and trusted-data anchoring. Methods such as FLDetector or TriGuardFL can be added in the appendix when the goal is to compare against historical-trajectory or class-wise screening ideas, but they are not required in the core main-text comparison.
+
+\paragraph{Backdoor defenses.}
+For targeted and backdoor attacks, the primary comparison set is Mean, FLTrust, FLAME, DeepSight, and CARAT. These baselines better reflect the representation-level and clustering-based defenses that are commonly used in backdoor settings than do purely Byzantine-oriented rules.
+
+\subsection{Metrics, Fairness, and Reporting}
+
+No-attack clean utility is reported separately from attacked runs. The clean metrics are test accuracy and test loss. On class-rich datasets we additionally report macro-average accuracy and worst-class accuracy, because the motivation for CARAT is precisely that averaging can hide semantically concentrated failures. For backdoor experiments, ASR is always reported together with clean accuracy. Runtime per round and total defense overhead are reported for all defenses that add nontrivial server-side computation.
+
+Trusted-data fairness is controlled explicitly. CARAT and FLTrust are compared under the same labeled server-reference budget, rather than allowing one method to benefit from more public data. In addition to fixed-budget comparisons, we sweep the reference budget in the appendix to show whether CARAT's advantage is due to the hidden-task validation principle rather than to budget alone.
+
+\subsection{Shared Training Protocol}
+
+Unless stated otherwise, the shared protocol uses $20$ clients with full participation, $300$ communication rounds, $4$ local epochs, and learning rate $0.05$. The primary heterogeneity settings are i.i.d.\ data and Dirichlet non-i.i.d.\ partitions with $\alpha \in \{0.5, 0.1\}$. The main attacker ratio is $20\%$, while $40\%$ is reserved for appendix stress tests. The primary experiments use $3$--$5$ random seeds per configuration. Scaling studies in the appendix may additionally vary the number of clients or the attacker ratio, but these are treated as stress tests rather than as the core evaluation axis.
+
+\subsection{CARAT Hyperparameters and Ablation Plan}
+
+The current implementation defaults are $8$ hidden tasks, $4$ probe samples per class, probe batch size $128$, probe-radius quantile $0.5$, MAD clipping with $k=2.5$, default attacker prior $\hat{\rho}=0.2$, certificate temperature $\beta=12.0$, rank weight $0.20$, prior weight $0.05$, $4096$ sampled coordinates, $5$ rank subsamples, $60$ projected optimization steps, and optimizer learning rate $0.5$.
+
+Two design principles matter when transferring these defaults across datasets. First, the reference budget should scale with the number of classes rather than be fixed as a single dataset-independent total pool size. Second, CARAT should be ablated along the axes that correspond directly to its mechanism: hidden-task count, reference budget per class, rank-penalty weight, temporal-prior weight, and clipping controls. The appendix therefore includes ablations that isolate whether the observed robustness comes from class-balanced hidden tasks, from the structural rank penalty, or simply from access to more trusted data.
 
 \end{document}

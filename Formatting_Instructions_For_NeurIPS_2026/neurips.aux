@@ -40,33 +40,35 @@
 \newlabel{eq:objective}{{7}{4}{Weight Optimization and Aggregation}{equation.15}{}}
 \newlabel{eq:softmin}{{8}{4}{Weight Optimization and Aggregation}{equation.16}{}}
 \newlabel{eq:aggregate}{{9}{4}{Weight Optimization and Aggregation}{equation.17}{}}
-\citation{simonyan2015verydeep}
 \citation{he2016deep}
-\citation{cao2021fltrust}
-\citation{zhang2022fldetector}
-\citation{blanchard2017krum}
 \citation{baruch2019alie}
 \citation{shejwalkar2021manipulating}
 \citation{shejwalkar2021manipulating}
+\citation{yin2018median}
+\citation{blanchard2017krum}
+\citation{cao2021fltrust}
 \citation{fang2020local}
+\citation{bagdasaryan2020backdoor}
+\citation{xie2020dba}
+\citation{zhang2022neurotoxin}
+\citation{nguyen2022flame}
+\citation{rieger2022deepsight}
 \def\@LN@column{1}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Experiments}{5}{section.18}\protected@file@percent }
 \newlabel{sec:experiments}{{4}{5}{Experiments}{section.18}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experimental Setup}{5}{subsection.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Datasets, models, and heterogeneity.}{5}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Baselines, attacks, and default training setting.}{5}{section*.21}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Default training configuration for the main-text experiments.}}{5}{table.23}\protected@file@percent }
-\newlabel{tab:hyperparams}{{1}{5}{Default training configuration for the main-text experiments}{table.23}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Untargeted Poisoning Results}{5}{subsection.24}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Test-accuracy trajectories on CIFAR-100/ResNet18 under untargeted poisoning with $20$ clients and $4$ attackers.}}{5}{figure.28}\protected@file@percent }
-\newlabel{figaccuracycifar100}{{1}{5}{Test-accuracy trajectories on CIFAR-100/ResNet18 under untargeted poisoning with $20$ clients and $4$ attackers}{figure.28}{}}
-\@writefile{toc}{\contentsline {paragraph}{Impact of Attacker Ratio.}{5}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Evaluation Questions}{5}{subsection.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Benchmark Design}{5}{subsection.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Datasets and models.}{5}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Untargeted poisoning suite.}{5}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Targeted and backdoor suite.}{5}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Shared protocol.}{5}{section*.24}\protected@file@percent }
 \def\@LN@column{1}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Final test loss under four untargeted model-poisoning attacks with $10\%$ malicious clients on two dataset-model pairs under non-IID settings.}}{6}{table.26}\protected@file@percent }
-\newlabel{tablossmergedcifar10cifar100}{{2}{6}{Final test loss under four untargeted model-poisoning attacks with $10\%$ malicious clients on two dataset-model pairs under non-IID settings}{table.26}{}}
-\@writefile{toc}{\contentsline {paragraph}{Scaling with More Clients.}{6}{table.36}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{6}{section.37}\protected@file@percent }
-\newlabel{sec:conclusion}{{5}{6}{Conclusion}{section.37}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Planned CARAT evaluation protocol.}}{6}{table.26}\protected@file@percent }
+\newlabel{tab:hyperparams}{{1}{6}{Planned CARAT evaluation protocol}{table.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Metrics and Fairness Controls}{6}{subsection.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Reporting Structure}{6}{subsection.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{6}{section.29}\protected@file@percent }
+\newlabel{sec:conclusion}{{5}{6}{Conclusion}{section.29}{}}
 \bibstyle{unsrtnat}
 \bibdata{ref}
 \bibcite{mcmahan2017fedavg}{{1}{2017}{{McMahan et~al.}}{{McMahan, Moore, Ramage, Hampson, and Ag{\"u}era~y Arcas}}}
@@ -75,23 +77,16 @@
 \bibcite{bhagoji2019adversarial}{{4}{2019}{{Bhagoji et~al.}}{{Bhagoji, Chakraborty, Mittal, and Calo}}}
 \bibcite{fang2020local}{{5}{2020}{{Fang et~al.}}{{Fang, Cao, Jia, and Gong}}}
 \bibcite{shejwalkar2021manipulating}{{6}{2021}{{Shejwalkar and Houmansadr}}{{}}}
-\def\@LN@column{1}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Sensitivity of test accuracy to the attacker ratio on CIFAR-100/ResNet18 under non-IID settings.}}{7}{figure.31}\protected@file@percent }
-\newlabel{figaccuracymoreattackerscifar100}{{2}{7}{Sensitivity of test accuracy to the attacker ratio on CIFAR-100/ResNet18 under non-IID settings}{figure.31}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Sensitivity of test accuracy to the number of clients on CIFAR-100/ResNet18 under non-IID settings.}}{7}{figure.34}\protected@file@percent }
-\newlabel{figaccuracymoreclientscifar100}{{3}{7}{Sensitivity of test accuracy to the number of clients on CIFAR-100/ResNet18 under non-IID settings}{figure.34}{}}
 \bibcite{baruch2019alie}{{7}{2019}{{Baruch et~al.}}{{Baruch, Baruch, and Goldberg}}}
 \bibcite{bagdasaryan2020backdoor}{{8}{2020}{{Bagdasaryan et~al.}}{{Bagdasaryan, Veit, Hua, Estrin, and Shmatikov}}}
 \bibcite{xie2020dba}{{9}{2020}{{Xie et~al.}}{{Xie, Huang, Chen, and Li}}}
 \bibcite{wang2020tails}{{10}{2020}{{Wang et~al.}}{{Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal, Sohn, Lee, and Papailiopoulos}}}
 \bibcite{zhang2022neurotoxin}{{11}{2022{}}{{Zhang et~al.}}{{Zhang, Panda, Song, Yang, Mahoney, Mittal, Kannan, and Gonzalez}}}
 \bibcite{zhao2018noniid}{{12}{2018}{{Zhao et~al.}}{{Zhao, Li, Lai, Suda, et~al.}}}
-\def\@LN@column{1}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Final test loss on CIFAR-100/ResNet18 under four untargeted model-poisoning attacks at adversary ratio $20\%$, comparing non-IID settings across different client counts. Each cell reports mean$\pm $std over available seeds. If a run stopped early, its last recorded epoch before 200 is used.}}{8}{table.36}\protected@file@percent }
-\newlabel{tablosscifar100clientsadv02}{{3}{8}{Final test loss on CIFAR-100/ResNet18 under four untargeted model-poisoning attacks at adversary ratio $20\%$, comparing non-IID settings across different client counts. Each cell reports mean$\pm $std over available seeds. If a run stopped early, its last recorded epoch before 200 is used}{table.36}{}}
 \bibcite{li2020fedprox}{{13}{2020}{{Li et~al.}}{{Li, Sahu, Zaheer, Sanjabi, Talwalkar, and Smith}}}
 \bibcite{karimireddy2020scaffold}{{14}{2020}{{Karimireddy et~al.}}{{Karimireddy, Kale, Mohri, Reddi, Stich, and Suresh}}}
 \bibcite{zhu2021noniidsurvey}{{15}{2021}{{Zhu et~al.}}{{Zhu, Xu, Liu, and Jin}}}
+\def\@LN@column{1}
 \bibcite{blanchard2017krum}{{16}{2017}{{Blanchard et~al.}}{{Blanchard, El~Mhamdi, Guerraoui, and Stainer}}}
 \bibcite{elmhamdi2018bulyan}{{17}{2018}{{El~Mhamdi et~al.}}{{El~Mhamdi, Guerraoui, and Rouault}}}
 \bibcite{yin2018median}{{18}{2018}{{Yin et~al.}}{{Yin, Chen, Kannan, and Bartlett}}}
@@ -107,10 +102,10 @@
 \bibcite{data2021localsgd}{{28}{2021}{{Data and Diggavi}}{{}}}
 \bibcite{liu2023gas}{{29}{2023}{{Liu et~al.}}{{Liu, Chen, Lyu, Wu, Wu, and Chen}}}
 \bibcite{allouah2023fixing}{{30}{2023}{{Allouah et~al.}}{{Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and Stephan}}}
-\def\@LN@column{1}
 \bibcite{bao2024boba}{{31}{2024}{{Bao et~al.}}{{Bao, Wu, and He}}}
 \bibcite{huang2024sdea}{{32}{2024}{{Huang et~al.}}{{Huang, Shi, Ye, Li, and Du}}}
 \bibcite{shen2016auror}{{33}{2016}{{Shen et~al.}}{{Shen, Tople, and Saxena}}}
+\def\@LN@column{1}
 \bibcite{fung2020foolsgold}{{34}{2020}{{Fung et~al.}}{{Fung, Yoon, and Beschastnikh}}}
 \bibcite{zhang2022fldetector}{{35}{2022{}}{{Zhang et~al.}}{{Zhang, Xu, Jia, Jagielski, Joshi, Hong, and Gunter}}}
 \bibcite{wang2022flare}{{36}{2022}{{Wang et~al.}}{{Wang, Xiao, Chen, Hu, Lou, and Hou}}}
@@ -124,40 +119,55 @@
 \bibcite{he2016deep}{{44}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
 \def\@LN@column{1}
 \def\@LN@column{1}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces CARAT server aggregation at round $r$}}{11}{algorithm.41}\protected@file@percent }
-\newlabel{alg:carat-round}{{1}{11}{Round-Level Pseudocode}{algorithm.41}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Algorithmic Details}{11}{appendix.39}\protected@file@percent }
-\newlabel{sec:appendix-algorithm}{{A}{11}{Algorithmic Details}{appendix.39}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Round-Level Pseudocode}{11}{subsection.40}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Implementation Notes}{11}{subsection.80}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Inputs.}{11}{section*.81}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces CARAT server aggregation at round $r$}}{10}{algorithm.33}\protected@file@percent }
+\newlabel{alg:carat-round}{{1}{10}{Round-Level Pseudocode}{algorithm.33}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Algorithmic Details}{10}{appendix.31}\protected@file@percent }
+\newlabel{sec:appendix-algorithm}{{A}{10}{Algorithmic Details}{appendix.31}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Round-Level Pseudocode}{10}{subsection.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Implementation Notes}{10}{subsection.72}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Inputs.}{10}{section*.73}\protected@file@percent }
 \def\@LN@column{1}
-\@writefile{toc}{\contentsline {paragraph}{Persistent state.}{12}{section*.82}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Initialization.}{12}{section*.83}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Reference-pool construction and hidden-task sampling.}{12}{section*.84}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Robust score calibration.}{12}{section*.85}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Projected optimization details.}{12}{section*.86}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Round invariants and failure handling.}{12}{section*.87}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Persistent state.}{11}{section*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Initialization.}{11}{section*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reference-pool construction and hidden-task sampling.}{11}{section*.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Robust score calibration.}{11}{section*.77}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Projected optimization details.}{11}{section*.78}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Round invariants and failure handling.}{11}{section*.79}\protected@file@percent }
 \def\@LN@column{1}
-\@writefile{toc}{\contentsline {paragraph}{Outputs.}{13}{section*.88}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Practical diagnostics.}{13}{section*.89}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Theoretical Analysis}{13}{appendix.90}\protected@file@percent }
-\newlabel{sec:appendix-theory}{{B}{13}{Theoretical Analysis}{appendix.90}{}}
-\newlabel{prop:capped-simplex}{{B.1}{13}{Feasibility and support of the capped simplex}{proposition.91}{}}
-\newlabel{prop:softmin}{{B.2}{13}{Softmin bounds and gradient form}{proposition.92}{}}
+\@writefile{toc}{\contentsline {paragraph}{Outputs.}{12}{section*.80}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Practical diagnostics.}{12}{section*.81}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Theoretical Analysis}{12}{appendix.82}\protected@file@percent }
+\newlabel{sec:appendix-theory}{{B}{12}{Theoretical Analysis}{appendix.82}{}}
+\newlabel{prop:capped-simplex}{{B.1}{12}{Feasibility and support of the capped simplex}{proposition.83}{}}
+\newlabel{prop:softmin}{{B.2}{12}{Softmin bounds and gradient form}{proposition.84}{}}
 \def\@LN@column{1}
-\newlabel{prop:directional-invariance}{{B.3}{14}{Directional invariance of certificate scoring}{proposition.93}{}}
-\newlabel{prop:task-standardization}{{B.4}{14}{Task-wise standardization preserves within-task ordering}{proposition.94}{}}
-\newlabel{prop:temporal-prior}{{B.5}{14}{Temporal prior and projected-iterate invariants}{proposition.95}{}}
+\newlabel{prop:directional-invariance}{{B.3}{13}{Directional invariance of certificate scoring}{proposition.85}{}}
+\newlabel{prop:task-standardization}{{B.4}{13}{Task-wise standardization preserves within-task ordering}{proposition.86}{}}
+\newlabel{prop:temporal-prior}{{B.5}{13}{Temporal prior and projected-iterate invariants}{proposition.87}{}}
 \def\@LN@column{1}
-\newlabel{prop:aggregate-bound}{{B.6}{15}{Norm bound for the final aggregate}{proposition.96}{}}
-\newlabel{prop:complexity}{{B.7}{15}{Per-round complexity}{proposition.97}{}}
-\@writefile{toc}{\contentsline {paragraph}{Remark on assumptions.}{15}{section*.98}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C}Additional Experimental Details}{15}{appendix.99}\protected@file@percent }
-\newlabel{sec:appendix-experiments}{{C}{15}{Additional Experimental Details}{appendix.99}{}}
-\@writefile{toc}{\contentsline {paragraph}{Detailed benchmark scope.}{15}{section*.100}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Default CARAT hyperparameters.}{15}{section*.101}\protected@file@percent }
+\newlabel{prop:aggregate-bound}{{B.6}{14}{Norm bound for the final aggregate}{proposition.88}{}}
+\newlabel{prop:complexity}{{B.7}{14}{Per-round complexity}{proposition.89}{}}
+\@writefile{toc}{\contentsline {paragraph}{Remark on assumptions.}{14}{section*.90}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C}Additional Experimental Details}{14}{appendix.91}\protected@file@percent }
+\newlabel{sec:appendix-experiments}{{C}{14}{Additional Experimental Details}{appendix.91}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.1}Experimental Objectives}{14}{subsection.92}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.2}Benchmark Suites}{14}{subsection.93}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Primary class-rich benchmark.}{14}{section*.94}\protected@file@percent }
+\citation{bagdasaryan2020backdoor}
+\citation{xie2020dba}
+\citation{zhang2022neurotoxin}
 \def\@LN@column{1}
-\@writefile{toc}{\contentsline {paragraph}{Currently verified run.}{16}{section*.102}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Next additions.}{16}{section*.103}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scalability benchmark.}{15}{section*.95}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Application-oriented benchmark.}{15}{section*.96}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sanity-check benchmark.}{15}{section*.97}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.3}Threat Models and Attack Selection}{15}{subsection.98}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Untargeted poisoning.}{15}{section*.99}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Targeted and backdoor attacks.}{15}{section*.100}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.4}Baseline Families}{15}{subsection.101}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Untargeted defenses.}{15}{section*.102}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Backdoor defenses.}{15}{section*.103}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.5}Metrics, Fairness, and Reporting}{15}{subsection.104}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.6}Shared Training Protocol}{16}{subsection.105}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.7}CARAT Hyperparameters and Ablation Plan}{16}{subsection.106}\protected@file@percent }
 \gdef \@abspage@last{16}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  16 APR 2026 17:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  16 APR 2026 18:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -139,6 +139,7 @@ File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
 )
+Package hyperref Info: Option `hypertexnames' set `false' on input line 4072.
 Package hyperref Info: Hyper figures OFF on input line 4201.
 Package hyperref Info: Link nesting OFF on input line 4206.
 Package hyperref Info: Hyper index ON on input line 4209.
@@ -291,6 +292,15 @@ Package: amsthm 2020/05/29 v2.20.6
 \thm@postskip=\skip60
 \thm@headsep=\skip61
 \dth@everypar=\toks34
+) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/tools/bm.sty
+Package: bm 2025/10/21 v1.2g Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup6
+\symboldletters=\mathgroup7
+\symboldsymbols=\mathgroup8
+Package bm Info: No bold for \OMX/cmex/m/n, using \pmb.
+Package bm Info: No bold for \U/msa/m/n, using \pmb.
+Package bm Info: No bold for \U/msb/m/n, using \pmb.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 ) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/microtype/microtype.sty
 Package: microtype 2026/03/01 v3.2d Micro-typographical refinements (RS)
 \MT@toks=\toks35
@@ -334,6 +344,19 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+ (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+ (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+)
+\Gin@req@height=\dimen191
+\Gin@req@width=\dimen192
 ) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/algorithms/algorithm.sty
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/float/float.sty
@@ -364,24 +387,24 @@ File: l3backend-pdftex.def 2026-02-18 L3 backend support: PDF output (pdfTeX)
 ) (./neurips.aux)
 \openout1 = `neurips.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -449,18 +472,18 @@ LaTeX Font Info:    ... okay on input line 31.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 31.
+Package hyperref Info: Link coloring OFF on input line 56.
 (./neurips.out) (./neurips.out)
 \@outlinefile=\write3
 \openout3 = `neurips.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 31.
-Package microtype Info: Applying patch `item' on input line 31.
-Package microtype Info: Applying patch `toc' on input line 31.
-Package microtype Info: Applying patch `eqnum' on input line 31.
-Package microtype Info: Applying patch `footnote' on input line 31.
-Package microtype Info: Applying patch `verbatim' on input line 31.
-LaTeX Info: Redefining \microtypesetup on input line 31.
+LaTeX Info: Redefining \microtypecontext on input line 56.
+Package microtype Info: Applying patch `item' on input line 56.
+Package microtype Info: Applying patch `toc' on input line 56.
+Package microtype Info: Applying patch `eqnum' on input line 56.
+Package microtype Info: Applying patch `footnote' on input line 56.
+Package microtype Info: Applying patch `verbatim' on input line 56.
+LaTeX Info: Redefining \microtypesetup on input line 56.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -473,16 +496,21 @@ Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/microtype/mt-ptm.cfg
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
-) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+)) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 34.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 59.
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 34.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 59.
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/microtype/mt-msb.cfg
@@ -492,7 +520,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Trying to load font information for T1+phv on input line 37.
+LaTeX Font Info:    Trying to load font information for T1+phv on input line 62.
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2020/03/25 scalable font definitions for T1/phv.
 )
@@ -504,46 +532,38 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 {/home/cnlab-pu/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/home/cnlab-pu/.TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 51.
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 76.
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [2] [3] [4] [5] [6
-pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.206 
-      ] [7
-pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.253 
-      ] (./neurips.bbl [8] [9])
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 269.
- [10] [11] [12] [13] [14] [15] (./neurips.aux)
+) [2] [3] [4] [5] [6] (./neurips.bbl [7] [8] [9]) [10]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 546.
+
+Underfull \vbox (badness 8170) has occurred while \output is active []
+
+
+Underfull \vbox (badness 8170) has occurred while \output is active []
+
+ [11] [12] [13] [14] [15] [16] (./neurips.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `neurips.out' has not changed.
-(rerunfilecheck)             Checksum: D8C3F8C9E3742054C3D8331A27573E31;2194.
+(rerunfilecheck)             Checksum: D7E15129FB221F3137D7400AAB975017;2227.
  ) 
 Here is how much of TeX's memory you used:
- 14210 strings out of 469339
- 218649 string characters out of 5466426
- 685476 words of memory out of 5000000
- 42403 multiletter control sequences out of 15000+600000
- 681406 words of font info for 269 fonts, out of 8000000 for 9000
+ 14779 strings out of 469339
+ 229977 string characters out of 5466426
+ 731869 words of memory out of 5000000
+ 42917 multiletter control sequences out of 15000+600000
+ 687265 words of font info for 291 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,9n,79p,2426b,644s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk> </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on neurips.pdf (15 pages, 262682 bytes).
+ 72i,15n,79p,2426b,646s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on neurips.pdf (16 pages, 305997 bytes).
 PDF statistics:
- 473 PDF objects out of 1000 (max. 8388607)
- 372 compressed objects within 4 object streams
- 158 named destinations out of 1000 (max. 500000)
- 54393 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 506 PDF objects out of 1000 (max. 8388607)
+ 414 compressed objects within 5 object streams
+ 169 named destinations out of 1000 (max. 500000)
+ 55929 words of extra memory for PDF output out of 61914 (max. 10000000)
 

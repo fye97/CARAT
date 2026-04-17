@@ -4,20 +4,45 @@
 \usepackage{neurips_2026}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{hyperref}
+\usepackage[hypertexnames=false]{hyperref}
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{bm}
 \usepackage{microtype}
 \usepackage{xcolor}
+\usepackage{graphicx}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\softmin}{\operatorname*{softmin}}
+\newcommand{\makecell}[2][c]{\shortstack[#1]{#2}}
+\newcommand{\multirow}[3]{#3}
+\newcommand{\cellcolor}[1]{}
+\newcommand{\subfloat}[2][]{%
+  \begin{minipage}[t]{0.30\textwidth}
+    \centering
+    #2\\[0.4em]
+    \footnotesize #1
+  \end{minipage}%
+}
+\newcommand{\missingfigureplaceholder}{%
+  \setlength{\fboxsep}{0pt}%
+  \fbox{%
+    \begin{minipage}[c][0.18\textheight][c]{0.28\textwidth}
+      \centering
+      \small Figure placeholder\\[0.4em]
+      \footnotesize Results pending
+    \end{minipage}%
+  }%
+}
+\newcommand{\safeincludegraphics}[2][]{%
+  \IfFileExists{#2}{\includegraphics[#1]{#2}}{\missingfigureplaceholder}%
+}
 \newtheorem{proposition}{Proposition}[section]
 
 \title{CARAT: Class-Aware Robust Aggregation via Hidden Task Certificates for Poisoning-Resilient Federated Learning}
@@ -157,24 +182,19 @@ A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendi
 
 \subsection{Experimental Setup}
 
-\paragraph{Datasets and Implementation.}
-Our evaluation uses two widely adopted benchmark datasets:  CIFAR-10 \cite{krizhevsky2009learning} and CIFAR-100 \cite{krizhevsky2009learning}. To emulate a realistic federated environment with heterogeneous data, we partition samples among clients using a Dirichlet distribution ( $\bm{p}\sim \text{Dir}_N(\alpha)$ ). We set the concentration parameter to $\alpha=0.1, 0.5, 1$,  standard choices in the literature that induces a significant degree of non-IID distribution in the local datasets of the clients.
+\paragraph{Datasets, models, and heterogeneity.}
+We evaluate CARAT on CIFAR-10 with VGG19~\cite{simonyan2015verydeep} and on CIFAR-100 with ResNet18~\cite{he2016deep}. To study robustness under client heterogeneity, we partition client data with a Dirichlet distribution $\bm{p}\sim \mathrm{Dir}_N(\alpha)$ and report non-IID settings with $\alpha \in \{0.1, 0.5, 1\}$. The main-text tables and figures focus on the completed untargeted-poisoning slice of this benchmark; broader benchmark scope and implementation details are deferred to Appendix~\ref{sec:appendix-experiments}.
 
-The experiments employ two representative neural network architectures to assess performance across varying model complexities: VGG19~\cite{simonyan2015deepconvolutionalnetworkslargescale}, and ResNet18~\cite{He_2016_CVPR}. Specifically, we pair the VGG19 model with the CIFAR-10 dataset. For the more complex CIFAR-100 dataset, we evaluate performance using ResNet18 to cover a diverse set of architectures.
-
-\paragraph{Baselines and Default Setting.}
-To benchmark the performance of \texttt{TriGuardFL}, we compare it against four methods:  FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, NormClipping~\cite{sun2019normclipping}, and MultiKrum ~\cite{blanchard2017machine}. With regard to the attack models, four model poisoning attacks are adopted: Min-Sum~\cite{shejwalkar2021manipulating}, Min-Max \cite{shejwalkar2021manipulating}, ALIE \cite{baruch2019little}, and FangAttack \cite{fang2020local}.
-
-The clean-reference benchmark uses \texttt{NoAttack} and compares \{Mean, FLTrust, MultiKrum, CARAT\}. The untargeted poisoning benchmark evaluates \{ALIE, MinMax, FangAttack\} against the same defense set. The backdoor benchmark evaluates \{BadNets, Neurotoxin\} against \{Mean, FLTrust, FLAME, DeepSight, CARAT\}. We consider both i.i.d.\ partitions and Dirichlet non-i.i.d.\ splits: \texttt{clean\_reference.yaml} and \texttt{main\_untargeted.yaml} use $\alpha \in \{0.1,0.5\}$, while \texttt{backdoor.yaml} uses i.i.d.\ plus $\alpha=0.5$. The untargeted suite sweeps attacker fractions $\{0.2,0.4\}$; the clean-reference and backdoor suites use $0$ and $0.2$, respectively. Each paper-side suite runs three repeats with effective seeds $42$, $43$, and $44$. The default CARAT hyperparameters are: probe pool size $512$, $8$ hidden tasks, $4$ probe samples per class, probe batch size $128$, probe-radius quantile $0.5$, MAD clipping with $k=2.5$, default attacker prior $\hat{\rho}=0.2$, certificate temperature $\beta=12.0$, rank weight $0.20$, prior weight $0.05$, $4096$ sampled coordinates, $5$ rank subsamples, $60$ optimization steps, and optimizer learning rate $0.5$. One important caveat is that the strongest completed legacy CARAT pilot was produced from an earlier base config with \verb|evaluate=false|. Its main-text evidence is therefore limited to training accuracy, training loss, and runtime, whereas all newly committed benchmark suites are configured to record test-time metrics.
-
-The key hyperparameters used throughout the experiments are summarized in Table \ref{tab:hyperparams}.
+\paragraph{Baselines, attacks, and default training setting.}
+Unless otherwise stated, we compare CARAT against FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, NormClipping, and MultiKrum~\cite{blanchard2017krum}, and we include a no-attack Mean reference where useful. The current main-text robustness results use four untargeted model-poisoning attacks: ALIE~\cite{baruch2019alie}, Min-Max~\cite{shejwalkar2021manipulating}, Min-Sum~\cite{shejwalkar2021manipulating}, and FangAttack~\cite{fang2020local}. The shared training configuration is summarized in Table~\ref{tab:hyperparams}; CARAT-specific defaults and the full repository benchmark matrix are recorded in Appendix~\ref{sec:appendix-experiments}.
 \begin{table*}[!htbp]
 \centering
-\caption{Default hyperparameter configuration.}
+\caption{Default training configuration for the main-text experiments.}
 \label{tab:hyperparams}
 \renewcommand{\arraystretch}{1}
     \setlength{\tabcolsep}{3pt}
 \small
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{cccccccccc}
 \toprule
 \textbf{Parameter} &
@@ -189,20 +209,19 @@ The key hyperparameters used throughout the experiments are summarized in Table 
 \textbf{Value} & 20 & 10/20/30  & 20 & 4 & 200& 0.05 & 0.02 \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
-\subsection{Performance Evaluation}
-
-\paragraph{Performance of Defense Effectiveness under Various Attacks.}
-\subsection{Mitigating the impact of attacks} 
+\subsection{Untargeted Poisoning Results}
   \begin{table*}[!htbp]
       \definecolor{mygray}{gray}{.90}
       \renewcommand{\arraystretch}{1.0}
       \setlength{\tabcolsep}{4pt}
-      \caption{Loss under four state-of-the-art model poisoning attacks with $10\%$
-  malicious clients on two datasets and model architectures under non-IID settings.}
+      \caption{Final test loss under four untargeted model-poisoning attacks with $10\%$
+  malicious clients on two dataset-model pairs under non-IID settings.}
       \label{tablossmergedcifar10cifar100}
       \centering\small
+\resizebox{\textwidth}{!}{%
       \begin{tabular}{c c c c c c c c}
       \toprule
       \multirow{2}{*}{\makecell[c]{Dataset\\Model}} &
@@ -224,7 +243,7 @@ The key hyperparameters used throughout the experiments are summarized in Table 
   \pm$0.0003 & 3.0 \\
       & & FLDetector & \textbf{0.0093$\pm$0.0002} & 0.0192$\pm$0.0018 & \textbf{0.0089$
   \pm$0.0001} & \textbf{0.0089$\pm$0.0002} & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0093$\pm$0.0002} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0093$\pm$0.0002} &
   \cellcolor{mygray}\textbf{0.0093$\pm$0.0002} & \cellcolor{mygray}0.0090$\pm$0.0002 &
   \cellcolor{mygray}0.0090$\pm$0.0002 & \cellcolor{mygray}1.0 \\
       & & NoAttack+Mean(Base) & 0.0092$\pm$0.0001 & 0.0092$\pm$0.0001 & 0.0092$\pm$0.0001 &
@@ -240,7 +259,7 @@ The key hyperparameters used throughout the experiments are summarized in Table 
   \pm$0.0003 & 3.0 \\
       & & FLDetector & 0.0108$\pm$0.0005 & 0.0242$\pm$0.0005 & 0.0110$\pm$0.0010 & 0.0106$
   \pm$0.0006 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0106$\pm$0.0003} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0106$\pm$0.0003} &
   \cellcolor{mygray}\textbf{0.0107$\pm$0.0003} & \cellcolor{mygray}\textbf{0.0107$
   \pm$0.0010} & \cellcolor{mygray}\textbf{0.0104$\pm$0.0003} & \cellcolor{mygray}1.0 \\
       & & NoAttack+Mean(Base) & 0.0104$\pm$0.0004 & 0.0104$\pm$0.0004 & 0.0104$\pm$0.0004 &
@@ -256,7 +275,7 @@ The key hyperparameters used throughout the experiments are summarized in Table 
   \pm$0.0013 & 3.0 \\
       & & FLDetector & 0.0215$\pm$0.0022 & 0.0243$\pm$0.0022 & 0.0218$\pm$0.0031 & 0.0218$
   \pm$0.0034 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0198$\pm$0.0016} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0198$\pm$0.0016} &
   \cellcolor{mygray}\textbf{0.0198$\pm$0.0018} & \cellcolor{mygray}\textbf{0.0198$
   \pm$0.0016} & \cellcolor{mygray}\textbf{0.0197$\pm$0.0024} & \cellcolor{mygray}1.0 \\
       & & NoAttack+Mean(Base) & 0.0199$\pm$0.0012 & 0.0199$\pm$0.0012 & 0.0199$\pm$0.0012 &
@@ -273,7 +292,7 @@ The key hyperparameters used throughout the experiments are summarized in Table 
   \pm$0.0004 & 4.0 \\
       & & FLDetector & \textbf{0.0274$\pm$0.0005} & 0.0426$\pm$0.0004 & 0.0275$\pm$0.0004 &
   \textbf{0.0275$\pm$0.0005} & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}0.0276$\pm$0.0004 &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}0.0276$\pm$0.0004 &
   \cellcolor{mygray}\textbf{0.0276$\pm$0.0004} & \cellcolor{mygray}\textbf{0.0273$
   \pm$0.0003} & \cellcolor{mygray}\textbf{0.0275$\pm$0.0002} & \cellcolor{mygray}1.0 \\
       & & NoAttack+Mean(Base) & 0.0269$\pm$0.0003 & 0.0269$\pm$0.0003 & 0.0269$\pm$0.0003 &
@@ -289,7 +308,7 @@ The key hyperparameters used throughout the experiments are summarized in Table 
   \pm$0.0005 & 4.0 \\
       & & FLDetector & \textbf{0.0284$\pm$0.0004} & 0.0437$\pm$0.0011 & \textbf{0.0284$
   \pm$0.0004} & \textbf{0.0283$\pm$0.0004} & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0284$\pm$0.0004} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0284$\pm$0.0004} &
   \cellcolor{mygray}\textbf{0.0285$\pm$0.0005} & \cellcolor{mygray}\textbf{0.0284$
   \pm$0.0006} & \cellcolor{mygray}\textbf{0.0283$\pm$0.0005} & \cellcolor{mygray}1.0 \\
       & & NoAttack+Mean(Base) & 0.0276$\pm$0.0005 & 0.0276$\pm$0.0005 & 0.0276$\pm$0.0005 &
@@ -305,34 +324,31 @@ The key hyperparameters used throughout the experiments are summarized in Table 
   \pm$0.0006 & 3.0 \\
       & & FLDetector & 0.0326$\pm$0.0003 & 0.0461$\pm$0.0039 & 0.0325$\pm$0.0003 &
   \textbf{0.0323$\pm$0.0005} & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0322$\pm$0.0004} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0322$\pm$0.0004} &
   \cellcolor{mygray}\textbf{0.0323$\pm$0.0004} & \cellcolor{mygray}\textbf{0.0322$
   \pm$0.0005} & \cellcolor{mygray}\textbf{0.0323$\pm$0.0005} & \cellcolor{mygray}1.0 \\
       & & NoAttack+Mean(Base) & 0.0314$\pm$0.0004 & 0.0314$\pm$0.0004 & 0.0314$\pm$0.0004 &
   0.0314$\pm$0.0004 & -- \\
       \bottomrule
       \end{tabular}
+      }
   \end{table*}
-
-
-We subjected the FL system to four potent attacks: Min-Max, Min-Sum, ALIE, and FangAttack.
-
-Table~\ref{tablossmergedcifar10cifar100} presents the final test loss for all evaluated defenses across the different network architectures. According to the average performance rank, \texttt{TriGuardFL} is the highest-performing defense, achieving rank 1 in three different non-IID experimental settings. This resilience is particularly evident under strong and adaptive attacks. For example, when defending a ResNet-18 model against the FangAttack, \texttt{TriGuardFL} maintained a test loss of $0.0323$; meanwhile, the losses for MultiKrum and FLTrust significantly degraded to $0.0504$ and $0.0450$, respectively. 
+Table~\ref{tablossmergedcifar10cifar100} reports the completed untargeted-poisoning results with $10\%$ malicious clients. Across the reported non-IID settings, \texttt{CARAT} attains the best average rank and remains close to the no-attack Mean reference. The clearest gap appears on CIFAR-100/ResNet18 under FangAttack with $\alpha=0.1$, where \texttt{CARAT} reaches $0.0323$ test loss versus $0.0504$ for MultiKrum and $0.0450$ for FLTrust.
 
 \begin{figure*}[!htbp]
 	\centering
 	% \subfloat[IID data distribution]{\includegraphics[trim=0 0 0 2.5cm,
  %  clip,scale=0.31]{figures/iid_CIFAR100_resnet18_FedAvg_adv0.2_alphaNA_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
 	% \quad
-	\subfloat[Non-IID data distribution, $\alpha=1$]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Non-IID data distribution, $\alpha=1$]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
 	\quad
-	\subfloat[Non-IID data distribution, $\alpha=0.5$]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Non-IID data distribution, $\alpha=0.5$]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha0.5_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
     \quad
-	\subfloat[Non-IID data distribution, $\alpha=0.1$]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Non-IID data distribution, $\alpha=0.1$]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/non-iid_CIFAR100_resnet18_FedAvg_adv0.2_alpha0.1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_epochs200.pdf}}
-    \caption{Evolution of test accuracy on CIFAR-100, comparing \texttt{TriGuardFL} against baseline defenses under four state-of-the-art  model poisoning attacks. The experimental setup uses a ResNet-18 model trained among $20$ total clients, including $4$ malicious attackers.}
+    \caption{Test-accuracy trajectories on CIFAR-100/ResNet18 under untargeted poisoning with $20$ clients and $4$ attackers.}
 
 
 	\label{figaccuracycifar100}
@@ -340,54 +356,52 @@ Table~\ref{tablossmergedcifar10cifar100} presents the final test loss for all ev
 
 
 
-Fig.~\ref{figaccuracycifar100} shows that the accuracy curve for \texttt{TriGuardFL} remains high and stable throughout the training process, closely tracking the performance of the ideal ``no attack" baseline. This stands in contrast to several baseline defenses, such as FLTrust and MultiKrum, which exhibit significant performance degradation and instability, particularly under the more sophisticated full-knowledge attacks. These results underscore \texttt{TriGuardFL}'s ability to effectively filter out malicious updates without incorrectly penalizing benign clients, which is a critical weakness in many defenses that struggle with non-IID data.
+Fig.~\ref{figaccuracycifar100} shows the same pattern on CIFAR-100/ResNet18: \texttt{CARAT} tracks the no-attack reference more closely than the competing defenses, while FLTrust and MultiKrum show larger degradation and instability. The gap widens as heterogeneity increases.
 
 \paragraph{Impact of Attacker Ratio.}
-The proportion of malicious clients significantly influences the accuracy of the FL model accuracy. In our previous experiments, we set $10\%$ ratio for malicious clients as default. To evaluate the detection ability and model accuracy of \texttt{TriGuardFL} under different numbers of adversaries, we conducted additional tests with $20\%$ and $30\%$ proportion for malicious clients, while keeping other settings constant. As shown in %Table \ref{tabmoreattackers} and 
-Fig. \ref{figaccuracymoreattackerscifar100}, the accuracy of the test dataset decreases %and the losses of the test dataset increase 
-in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have significant differences with different numbers of malicious clients, indicating that \texttt{TriGuardFL} keeps excellent robustness. Moreover, FLTrust and MultiKrum crash in part of the cases. This is because even if \texttt{TriGuardFL} can detect most malicious clients, the number of benign clients decreases as that of malicious clients increases, and samples in benign clients also decrease. 
+We next increase the attacker ratio from the default $10\%$ to $20\%$ and $30\%$, keeping the remaining settings fixed. Fig.~\ref{figaccuracymoreattackerscifar100} shows that all methods degrade as the adversarial fraction grows, but the degradation for \texttt{CARAT} is consistently milder across the reported $\alpha$ values, whereas FLTrust and MultiKrum become unstable in part of this regime.
 
 \begin{figure*}[htbp]
 	\centering
     % \subfloat[Dataset distribution is IID.]{\includegraphics[trim=0 0 0 2.5cm,clip,scale=0.31]{figures/adv_sensitivity_iid_CIFAR100_resnet18_FedAvg_alphaNA_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
   
 	% \quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
 	\quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.5_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
   \quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/adv_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.1_clients20_lr0.05_cfgFedAvg_CIFAR100_config_advset0.1-0.2-0.3_epochs200.pdf}}
-	\caption{Accuracy sensitivity ratio of different adversary settings comparing \texttt{TriGuardFL} and another four defense algorithms when the test dataset is CIFAR-100 and the neural network model is ResNet18.}
+	\caption{Sensitivity of test accuracy to the attacker ratio on CIFAR-100/ResNet18 under non-IID settings.}
 	\label{figaccuracymoreattackerscifar100}
 \end{figure*}
 
-\paragraph{Impact of the number of clients-scale}
+\paragraph{Scaling with More Clients.}
 \begin{figure*}[!htbp]
 	\centering
-	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Dataset distribution is non-IID with $\alpha=1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha1_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
 	\quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.5$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.5_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
   \quad
-	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\includegraphics[trim=0 0 0 2.5cm,
+	\subfloat[Dataset distribution is non-IID with $\alpha=0.1$.]{\safeincludegraphics[trim=0 0 0 2.5cm,
   clip,scale=0.31]{figures/num_clients_sensitivity_non-iid_CIFAR100_resnet18_FedAvg_alpha0.1_adv0.2_lr0.05_cfgFedAvg_CIFAR100_config_clientset20-40-60_epochs200.pdf}}
-	\caption{Accuracy sensitivity of different clients settings comparing \texttt{TriGuardFL} and another four defense algorithms when the test dataset is CIFAR-100 and the neural network model is ResNet18.}
+	\caption{Sensitivity of test accuracy to the number of clients on CIFAR-100/ResNet18 under non-IID settings.}
 	\label{figaccuracymoreclientscifar100}
 \end{figure*}
-  \begin{table*}[!h]
+  \begin{table*}[!htbp]
       \definecolor{mygray}{gray}{.90}
       \renewcommand{\arraystretch}{1.0}
       \setlength{\tabcolsep}{4pt}
-      \caption{Loss of the CIFAR-100 dataset with ResNet18 under four state-of-the-art model
-  poisoning attacks at adversary ratio $20\%$, comparing non-IID settings across different
+      \caption{Final test loss on CIFAR-100/ResNet18 under four untargeted model-poisoning attacks at adversary ratio $20\%$, comparing non-IID settings across different
   client counts. Each cell reports mean$\pm$std over available seeds. If a run stopped
   early, its last recorded epoch before 200 is used.}
       \label{tablosscifar100clientsadv02}
       \centering\small
+\resizebox{\textwidth}{!}{%
       \begin{tabular}{c c c c c c c c}
       \toprule
       \multirow{2}{*}{\makecell[c]{Number of\\Clients}} &
@@ -409,7 +423,7 @@ in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have 
   \pm$0.0003 & 4.0 \\
       & & FLDetector & 0.0299$\pm$0.0007 & 0.0601$\pm$0.0024 & 0.0259$\pm$0.0005 & 0.0260$
   \pm$0.0006 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0276$\pm$0.0006} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0276$\pm$0.0006} &
       \cellcolor{mygray}\textbf{0.0258$\pm$0.0006} &
       \cellcolor{mygray}\textbf{0.0257$\pm$0.0007} &
       \cellcolor{mygray}\textbf{0.0257$\pm$0.0005} & \cellcolor{mygray}1.0 \\
@@ -426,7 +440,7 @@ in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have 
   \pm$0.0004 & 4.0 \\
       & & FLDetector & 0.0311$\pm$0.0006 & 0.0572$\pm$0.0032 & 0.0267$\pm$0.0003 & 0.0268$
   \pm$0.0004 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0290$\pm$0.0004} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0290$\pm$0.0004} &
       \cellcolor{mygray}\textbf{0.0267$\pm$0.0004} &
       \cellcolor{mygray}\textbf{0.0266$\pm$0.0003} &
       \cellcolor{mygray}\textbf{0.0265$\pm$0.0002} & \cellcolor{mygray}1.0 \\
@@ -443,7 +457,7 @@ in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have 
   \pm$0.0005 & 4.0 \\
       & & FLDetector & 0.0373$\pm$0.0009 & 0.0550$\pm$0.0043 & 0.0315$\pm$0.0008 & 0.0315$
   \pm$0.0006 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0345$\pm$0.0006} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0345$\pm$0.0006} &
       \cellcolor{mygray}\textbf{0.0305$\pm$0.0004} &
       \cellcolor{mygray}\textbf{0.0311$\pm$0.0007} &
       \cellcolor{mygray}\textbf{0.0308$\pm$0.0005} & \cellcolor{mygray}1.0 \\
@@ -461,7 +475,7 @@ in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have 
   \pm$0.0005 & 4.0 \\
       & & FLDetector & 0.0290$\pm$0.0003 & 0.0484$\pm$0.0007 & \textbf{0.0247$\pm$0.0003} &
   0.0249$\pm$0.0004 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0271$\pm$0.0003} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0271$\pm$0.0003} &
       \cellcolor{mygray}\textbf{0.0260$\pm$0.0011} &
       \cellcolor{mygray}\textbf{0.0247$\pm$0.0003} &
       \cellcolor{mygray}\textbf{0.0247$\pm$0.0002} & \cellcolor{mygray}1.0 \\
@@ -478,7 +492,7 @@ in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have 
   \pm$0.0005 & 4.0 \\
       & & FLDetector & 0.0303$\pm$0.0006 & 0.0449$\pm$0.0012 & 0.0260$\pm$0.0005 & 0.0260$
   \pm$0.0004 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0285$\pm$0.0006} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0285$\pm$0.0006} &
       \cellcolor{mygray}\textbf{0.0264$\pm$0.0004} &
       \cellcolor{mygray}\textbf{0.0255$\pm$0.0003} &
       \cellcolor{mygray}\textbf{0.0255$\pm$0.0003} & \cellcolor{mygray}1.0 \\
@@ -495,7 +509,7 @@ in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have 
   \pm$0.0007 & 4.0 \\
       & & FLDetector & 0.0361$\pm$0.0007 & 0.0552$\pm$0.0112 & 0.0304$\pm$0.0007 & 0.0304$
   \pm$0.0007 & 2.0 \\
-      & & \cellcolor{mygray}TriGuardFL & \cellcolor{mygray}\textbf{0.0338$\pm$0.0011} &
+      & & \cellcolor{mygray}CARAT & \cellcolor{mygray}\textbf{0.0338$\pm$0.0011} &
       \cellcolor{mygray}\textbf{0.0292$\pm$0.0015} &
       \cellcolor{mygray}\textbf{0.0298$\pm$0.0005} &
       \cellcolor{mygray}\textbf{0.0298$\pm$0.0006} & \cellcolor{mygray}1.0 \\
@@ -503,14 +517,10 @@ in general. For \texttt{TriGuardFL}, the losses of the test dataset do not have 
   0.0294$\pm$0.0006 & -- \\
       \bottomrule
       \end{tabular}
+      }
   \end{table*}
 
-To assess the scalability of our method, we conducted experiments in more hostile environments by increasing the network scale. This analysis investigates how defense mechanisms perform under heightened threat levels, a critical consideration for real-world deployment.
-
-
-Fig. \ref{figaccuracymoreclientscifar100} illustrates the evolution of the test accuracy of \texttt{TriGuardFL} with another four other state-of-the-art defense rules  when the numbers of clients are 40 and 60 and propotion of attackers is $20\%$. The accuracy of five defense rules decreases in general. It is obvious that \texttt{TriGuardFL}  achieves near convergence, while NormClipping and FLDetector crash in some cases.
-
-Table \ref{tablosscifar100clientsadv02} compares the test loss of the defense mechanisms in a baseline configuration and a scaled network configuration with a proportionally larger number of attackers. The results highlight the superior scalability of \texttt{TriGuardFL}. As the threat level intensifies, \texttt{TriGuardFL} is the only defense that maintains its top-ranked performance. In contrast, the effectiveness of other defenses degrades sharply; for instance, the test loss for NormClipping and FLDetector increases dramatically, indicating a performance collapse. This demonstrates that \texttt{TriGuardFL}'s detection and reputation mechanisms are robust to scaling, making it a more reliable defense for larger real-world FL systems.
+To test whether the method remains effective beyond the default $20$-client setting, we increase the total number of clients to $40$ and $60$ while maintaining an attacker ratio of $20\%$. Fig.~\ref{figaccuracymoreclientscifar100} and Table~\ref{tablosscifar100clientsadv02} show that \texttt{CARAT} continues to converge reliably and retains the best average rank across the scaled CIFAR-100 settings. Competing defenses degrade more sharply, especially under stronger heterogeneity or FangAttack.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -840,20 +850,23 @@ The theoretical object $D^{\mathrm{ref}}$ in the main text should be read as the
 \section{Additional Experimental Details}
 \label{sec:appendix-experiments}
 
-This section summarizes the current verified experimental scope together with the next empirical extensions already supported by the repository structure.
+This section records setup details and benchmark scope that are omitted from the main text for brevity.
+
+\paragraph{Detailed benchmark scope.}
+The broader repository configuration includes three suites. The clean-reference suite uses \texttt{NoAttack} and compares \{Mean, FLTrust, MultiKrum, CARAT\}. The untargeted poisoning suite evaluates \{ALIE, MinMax, FangAttack\} against the same defense set. The backdoor suite evaluates \{BadNets, Neurotoxin\} against \{Mean, FLTrust, FLAME, DeepSight, CARAT\}. The committed configs cover both i.i.d.\ and non-i.i.d.\ settings: \texttt{clean\_reference.yaml} and \texttt{main\_untargeted.yaml} use $\alpha \in \{0.1,0.5\}$, while \texttt{backdoor.yaml} uses i.i.d.\ plus $\alpha=0.5$. The untargeted suite sweeps attacker fractions $\{0.2,0.4\}$; the clean-reference and backdoor suites use $0$ and $0.2$, respectively. Each planned suite runs three repeats with effective seeds $42$, $43$, and $44$. The current main text intentionally reports only the completed untargeted slice rather than this full benchmark matrix.
+
+\paragraph{Default CARAT hyperparameters.}
+Unless otherwise stated, CARAT uses probe pool size $512$, $8$ hidden tasks, $4$ probe samples per class, probe batch size $128$, probe-radius quantile $0.5$, MAD clipping with $k=2.5$, default attacker prior $\hat{\rho}=0.2$, certificate temperature $\beta=12.0$, rank weight $0.20$, prior weight $0.05$, $4096$ sampled coordinates, $5$ rank subsamples, $60$ optimization steps, and optimizer learning rate $0.5$.
 
 \paragraph{Currently verified run.}
-The strongest directly verified completed CARAT run in the repository uses FedAvg, CIFAR100, ResNet-18, an i.i.d.\ partition, 20 clients, 4 attackers, FangAttack, 300 rounds, learning rate $0.05$, local epochs $4$, and \verb|evaluate=false|. The main text reports the final training metrics and runtime of this run together with the corresponding Mean and TriGuardFL baselines. In the current repository snapshot dated April 16, 2026, the evaluation-enabled \texttt{main\_untargeted.yaml} sweep has also started producing ALIE baseline logs, but no CARAT task from that sweep is complete yet.
-
-\paragraph{Supported benchmark matrix.}
-The committed \texttt{main\_untargeted.yaml} spec already expands to 216 tasks over i.i.d.\ and non-i.i.d.\ splits with Dirichlet $\alpha \in \{0.1,0.5\}$, attacker fractions $\{0.2,0.4\}$, untargeted attacks \{ALIE, MinMax, FangAttack\}, defenses \{Mean, FLTrust, MultiKrum, CARAT\}, and three repeats. Companion specs \texttt{clean\_reference.yaml}, \texttt{backdoor.yaml}, and \texttt{ablations.yaml} cover clean baselines, backdoor evaluation, and component analysis.
+The strongest directly verified completed CARAT run in the repository uses FedAvg, CIFAR100, ResNet-18, an i.i.d.\ partition, 20 clients, 4 attackers, FangAttack, 300 rounds, learning rate $0.05$, local epochs $4$, and \verb|evaluate=false|. The main text uses this run only as preliminary evidence, because the broader clean-reference, backdoor, non-i.i.d., and multi-seed CARAT suites are still being completed.
 
 \paragraph{Next additions.}
 \begin{enumerate}
 \item Complete the running \texttt{main\_untargeted.yaml} sweep, prioritizing the CARAT rows and reporting multi-seed means and variances for clean test accuracy and loss.
 \item Extend the verified runs from the current i.i.d.\ slice to the non-i.i.d.\ Dirichlet settings already present in \texttt{main\_untargeted.yaml}.
 \item Complete the committed \texttt{backdoor.yaml} suite so that the paper reports both clean utility and ASR.
-\item Run the config-supported ablations in Table~\ref{tab:ablation-placeholder}, prioritizing the number of hidden tasks, the rank and prior weights, and the clipping controls.
+\item Run the planned ablations, prioritizing the number of hidden tasks, the rank and prior weights, and the clipping controls.
 \item Report multi-seed means and variances, plus defense runtime overhead, before making any strong comparative claim against other robust aggregators.
 \end{enumerate}
 

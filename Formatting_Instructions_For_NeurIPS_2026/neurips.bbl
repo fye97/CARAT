@@ -1,4 +1,4 @@
-\begin{thebibliography}{42}
+\begin{thebibliography}{44}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -120,6 +120,16 @@ Xiaoyu Cao, Minghong Fang, Jia Liu, Neil~Zhenqiang Gong, and Yixin Gong.
 \newblock {FLTrust}: {B}yzantine-robust federated learning via trust bootstrapping.
 \newblock In \emph{Network and Distributed System Security Symposium}, 2021.
 
+\bibitem[Liu et~al.(2022)Liu, Xu, and Wang]{liu2022threats}
+Pengrui Liu, Xiangrui Xu, and Wei Wang.
+\newblock Threats, attacks and defenses to federated learning: Issues, taxonomy and perspectives.
+\newblock \emph{Cybersecurity}, 5\penalty0 (4), 2022.
+
+\bibitem[Yin et~al.(2019)Yin, Chen, Kannan, and Bartlett]{yin2019saddle}
+Dong Yin, Yudong Chen, Ramchandran Kannan, and Peter Bartlett.
+\newblock Defending against saddle point attack in byzantine-robust distributed learning.
+\newblock In \emph{International Conference on Machine Learning}, pages 7074--7084, 2019.
+
 \bibitem[He et~al.(2021)He, Karimireddy, and Jaggi]{he2021resampling}
 Lie He, Sai~Praneeth Karimireddy, and Martin Jaggi.
 \newblock Byzantine-robust learning on heterogeneous datasets via resampling.
@@ -154,6 +164,11 @@ Wenxuan Bao, Jun Wu, and Jingrui He.
 Wenke Huang, Zekun Shi, Mang Ye, He~Li, and Bo~Du.
 \newblock Self-driven entropy aggregation for byzantine-robust heterogeneous federated learning.
 \newblock In \emph{International Conference on Machine Learning}, pages 20096--20110, 2024.
+
+\bibitem[Shen et~al.(2016)Shen, Tople, and Saxena]{shen2016auror}
+Shiqi Shen, Shruti Tople, and Prateek Saxena.
+\newblock {AUROR}: Defending against poisoning attacks in collaborative deep learning systems.
+\newblock In \emph{Annual Computer Security Applications Conference}, 2016.
 
 \bibitem[Fung et~al.(2020)Fung, Yoon, and Beschastnikh]{fung2020foolsgold}
 Clement Fung, Chris J.~M. Yoon, and Ivan Beschastnikh.
@@ -190,21 +205,6 @@ Kaiyuan Zhang, Guanhong Tao, Qiuling Xu, Siyuan Cheng, Shengwei An, Yingqi Liu, 
 \newblock {FLIP}: A provable defense framework for backdoor mitigation in federated learning.
 \newblock In \emph{International Conference on Learning Representations}, 2023.
 
-\bibitem[Liu et~al.(2022)Liu, Xu, and Wang]{liu2022threats}
-Pengrui Liu, Xiangrui Xu, and Wei Wang.
-\newblock Threats, attacks and defenses to federated learning: Issues, taxonomy and perspectives.
-\newblock \emph{Cybersecurity}, 5\penalty0 (4), 2022.
-
-\bibitem[Yin et~al.(2019)Yin, Chen, Kannan, and Bartlett]{yin2019saddle}
-Dong Yin, Yudong Chen, Ramchandran Kannan, and Peter Bartlett.
-\newblock Defending against saddle point attack in byzantine-robust distributed learning.
-\newblock In \emph{International Conference on Machine Learning}, pages 7074--7084, 2019.
-
-\bibitem[Shen et~al.(2016)Shen, Tople, and Saxena]{shen2016auror}
-Shiqi Shen, Shruti Tople, and Prateek Saxena.
-\newblock {AUROR}: Defending against poisoning attacks in collaborative deep learning systems.
-\newblock In \emph{Annual Computer Security Applications Conference}, 2016.
-
 \bibitem[Allouah et~al.(2025)Allouah, Guerraoui, Gupta, Jellouli, Rizk, and Stephan]{allouah2025arc}
 Youssef Allouah, Rachid Guerraoui, Nirupam Gupta, Ahmed Jellouli, Geovani Rizk, and John Stephan.
 \newblock Adaptive gradient clipping for robust federated learning.
@@ -214,5 +214,15 @@ Youssef Allouah, Rachid Guerraoui, Nirupam Gupta, Ahmed Jellouli, Geovani Rizk, 
 Yi-Rui Yang, Chang-Wei Shi, and Wu-Jun Li.
 \newblock On the tension between byzantine robustness and no-attack accuracy in distributed learning.
 \newblock In \emph{International Conference on Machine Learning}, 2025.
+
+\bibitem[Simonyan and Zisserman(2015)]{simonyan2015verydeep}
+Karen Simonyan and Andrew Zisserman.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock In \emph{International Conference on Learning Representations}, 2015.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016deep}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{IEEE Conference on Computer Vision and Pattern Recognition}, pages 770--778, 2016.
 
 \end{thebibliography}

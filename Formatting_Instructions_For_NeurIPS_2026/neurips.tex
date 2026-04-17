@@ -13,7 +13,8 @@
 \usepackage{amsthm}
 \usepackage{microtype}
 \usepackage{xcolor}
-\usepackage{framed}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\softmin}{\operatorname*{softmin}}
@@ -264,48 +265,54 @@ The current repository-backed evidence supports this mechanism claim at a prelim
 
 \subsection{Round-Level Pseudocode}
 
-The following boxed pseudocode summarizes the server-side CARAT procedure for one communication round.
+Algorithm~\ref{alg:carat-round} gives a standard round-level pseudocode view of one CARAT server round.
 
-\begin{framed}
-\small
-\noindent\textbf{Pseudocode: CARAT server aggregation at round $r$}
-
-\noindent\textbf{Input:} current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, probe pool $\mathcal{P}$, CARAT hyperparameters.
-
-\noindent\textbf{Output:} aggregated update $\Delta_{\mathrm{agg}}$, updated temporal prior $\alpha^{\mathrm{prev}}$.
-
-\begin{tabbing}
-\hspace{1.6em}\=\hspace{1.6em}\=\hspace{1.6em}\=\kill
-\textbf{if} $\mathcal{P}$ is uninitialized \textbf{then} build a balanced probe pool from the server-visible training dataset \\
-\textbf{if} $r=1$ \textbf{then} $\alpha^{\mathrm{prev}} \gets \frac{1}{n}\mathbf{1}$ \\
-\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
-\> convert $u_i^r$ into a vector-form delta $\Delta_i^r$ \\
-compute client norms and the clipping threshold $\tau_r$ \\
-\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
-\> $\bar{\Delta}_i^r \gets \min\!\left(1,\frac{\tau_r}{\|\Delta_i^r\|_2+\varepsilon}\right)\Delta_i^r$ \\
-choose the evaluation radius $q_r$ from a quantile of positive clipped norms \\
-\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
-\> $\tilde{\Delta}_i^r \gets q_r \bar{\Delta}_i^r / (\|\bar{\Delta}_i^r\|_2+\varepsilon)$ \\
-sample $T$ class-balanced hidden tasks from $\mathcal{P}$ \\
-\> with replacement/subset fallback if strict balanced sampling fails \\
-\textbf{for each} task $t=1,\dots,T$ \textbf{do} evaluate baseline loss $\ell_t(w_r)$ \\
-\textbf{for each} client $i=1,\dots,n$ \textbf{do} \\
-\> \textbf{for each} task $t=1,\dots,T$ \textbf{do} \\
-\>\> $c_{i,t} \gets \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i^r)$ \\
-robustly standardize certificate columns to obtain $C^{\mathrm{std}}$ \\
-compute rank penalties $r$ from repeated coordinate subsamples of the clipped updates \\
-$\alpha^{(0)} \gets \alpha^{\mathrm{prev}}$ \\
-\textbf{for} $k=0,\dots,K-1$ \textbf{do} \\
-\> $z \gets (C^{\mathrm{std}})^\top \alpha^{(k)}$ \\
-\> $\pi_t \gets \exp(-\beta z_t) \big/ \sum_{\ell=1}^T \exp(-\beta z_\ell)$ for each task $t$ \\
-\> $g \gets C^{\mathrm{std}}\pi - \lambda_r r - 2\lambda_p(\alpha^{(k)}-\alpha^{\mathrm{prev}})$ \\
-\> $\alpha^{(k+1)} \gets \Pi_{\mathcal{A}(\hat{\rho})}\!\left(\alpha^{(k)} + \eta g\right)$ \\
-$\alpha^\star \gets \alpha^{(K)}$ and $\alpha^{\mathrm{prev}} \gets \alpha^\star$ \\
-$\Delta_{\mathrm{agg}} \gets \sum_{i=1}^n \alpha_i^\star \bar{\Delta}_i^r$ \\
-\textbf{return} $\Delta_{\mathrm{agg}}, \alpha^{\mathrm{prev}}$
-\end{tabbing}
-\normalsize
-\end{framed}
+\begin{algorithm}[t]
+\caption{CARAT server aggregation at round $r$}
+\label{alg:carat-round}
+\begin{algorithmic}[1]
+\REQUIRE Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, probe pool $\mathcal{P}$, CARAT hyperparameters
+\ENSURE Aggregated update $\Delta_{\mathrm{agg}}$, updated temporal prior $\alpha^{\mathrm{prev}}$
+\IF{$\mathcal{P}$ is uninitialized}
+    \STATE Build a balanced probe pool from the server-visible training dataset
+\ENDIF
+\IF{$r=1$}
+    \STATE $\alpha^{\mathrm{prev}} \leftarrow \frac{1}{n}\mathbf{1}$
+\ENDIF
+\FOR{$i=1$ to $n$}
+    \STATE Convert $u_i^r$ into a vector-form delta $\Delta_i^r$
+\ENDFOR
+\STATE Compute the clipping threshold $\tau_r$ from $\{\|\Delta_i^r\|_2\}_{i=1}^n$
+\FOR{$i=1$ to $n$}
+    \STATE $\bar{\Delta}_i^r \leftarrow \min\!\left(1,\frac{\tau_r}{\|\Delta_i^r\|_2+\varepsilon}\right)\Delta_i^r$
+\ENDFOR
+\STATE Choose the evaluation radius $q_r$ from a quantile of positive clipped norms
+\FOR{$i=1$ to $n$}
+    \STATE $\tilde{\Delta}_i^r \leftarrow q_r \bar{\Delta}_i^r / (\|\bar{\Delta}_i^r\|_2+\varepsilon)$
+\ENDFOR
+\STATE Sample $T$ class-balanced hidden tasks from $\mathcal{P}$ with replacement/subset fallback if strict balanced sampling fails
+\FOR{$t=1$ to $T$}
+    \STATE Evaluate the baseline loss $\ell_t(w_r)$
+\ENDFOR
+\FOR{$i=1$ to $n$}
+    \FOR{$t=1$ to $T$}
+        \STATE $c_{i,t} \leftarrow \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i^r)$
+    \ENDFOR
+\ENDFOR
+\STATE Robustly standardize certificate columns to obtain $C^{\mathrm{std}}$
+\STATE Compute rank penalties $r$ from repeated coordinate subsamples of $\{\bar{\Delta}_i^r\}_{i=1}^n$
+\STATE $\alpha^{(0)} \leftarrow \alpha^{\mathrm{prev}}$
+\FOR{$k=0$ to $K-1$}
+    \STATE $z \leftarrow (C^{\mathrm{std}})^\top \alpha^{(k)}$
+    \STATE $\pi \leftarrow \softmin$ task weights induced by $z$ and $\beta$
+    \STATE $g \leftarrow C^{\mathrm{std}}\pi - \lambda_r r - 2\lambda_p(\alpha^{(k)}-\alpha^{\mathrm{prev}})$
+    \STATE $\alpha^{(k+1)} \leftarrow \Pi_{\mathcal{A}(\hat{\rho})}\!\left(\alpha^{(k)}+\eta g\right)$
+\ENDFOR
+\STATE $\alpha^\star \leftarrow \alpha^{(K)}$ and $\alpha^{\mathrm{prev}} \leftarrow \alpha^\star$
+\STATE $\Delta_{\mathrm{agg}} \leftarrow \sum_{i=1}^n \alpha_i^\star \bar{\Delta}_i^r$
+\STATE \textbf{return} $\Delta_{\mathrm{agg}}, \alpha^{\mathrm{prev}}$
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Implementation Notes}
 

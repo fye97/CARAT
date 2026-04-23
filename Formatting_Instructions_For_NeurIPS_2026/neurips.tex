@@ -180,30 +180,30 @@ This is the final server step. The aggregate inherits the robustness benefits of
 
 A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendix-algorithm}. Formal properties of the normalization step, capped-simplex feasibility, softmin behavior, temporal regularization, and per-round complexity are deferred to Appendix~\ref{sec:appendix-theory}.
 
-\section{Experimental Protocol}
+\section{Experimental Design}
 \label{sec:experiments}
 
-\subsection{Evaluation Objectives}
+We evaluate CARAT on class-rich federated benchmarks to test whether hidden-task certificates improve robustness beyond geometry-only and single-anchor defenses while preserving clean utility under heterogeneous client data. The study is organized around four questions: how much clean-utility cost CARAT incurs without attack, how well it resists untargeted model poisoning as heterogeneity increases, whether the same mechanism reduces class-selective and backdoor failures, and what robustness is obtained per unit of trusted-data budget and runtime overhead. The full benchmark matrix, appendix-only stress tests, and ablation scope are reported in Appendix~\ref{sec:appendix-experiments}.
 
-CARAT is intended for settings where the server has a small labeled audit set and where failures may concentrate on particular classes rather than appearing only as global geometric outliers. The empirical study therefore has four objectives: measure CARAT's clean-utility cost in the absence of attack, test robustness to untargeted model poisoning under increasing client heterogeneity, evaluate robustness to class-selective and backdoor attacks, and quantify the tradeoff between robustness, server-reference budget, and runtime overhead. The full benchmark matrix, appendix-only stress tests, and ablation scope are reported in Appendix~\ref{sec:appendix-experiments}.
+\subsection{Experimental Setup}
 
-\subsection{Benchmark Design}
-
-\paragraph{Datasets and models.}
+\paragraph{Benchmarks.}
 The primary benchmark is CIFAR-100 with ResNet18~\cite{he2016deep}. CIFAR-100 offers a class-rich label space in which hidden semantic slices are meaningful and class-selective failures are easier to expose than on low-cardinality datasets. We complement it with TinyImageNet, again using ResNet18, to test whether the method scales to a larger class vocabulary while keeping the backbone fixed. To anchor the method in a more application-oriented setting, we also include CHMNIST with the same backbone in the appendix, where class-selective degradation has a clearer domain interpretation. CIFAR-10 is retained only as an appendix sanity check rather than a primary source of evidence, because a ten-class benchmark is too coarse to serve as the main validation vehicle for a class-aware defense. Keeping the model family fixed across visual datasets helps attribute observed differences to aggregation rather than to backbone changes.
 
-\paragraph{Untargeted poisoning suite.}
-For untargeted model poisoning, the main threat models are ALIE~\cite{baruch2019alie}, MinMax~\cite{shejwalkar2021manipulating}, and MinSum~\cite{shejwalkar2021manipulating}. These attacks represent stealthy optimization-based adversaries that try to stay near the benign update manifold while degrading global learning. The primary untargeted baselines are Mean, TrimmedMean~\cite{yin2018median}, MultiKrum~\cite{blanchard2017krum}, and FLTrust~\cite{cao2021fltrust}. FangAttack~\cite{fang2020local} is treated as an appendix stress test rather than a core main-text attack because it is especially tied to Krum-style geometry.
+\paragraph{Threat models.}
+For untargeted model poisoning, the main threat models are ALIE~\cite{baruch2019alie}, MinMax~\cite{shejwalkar2021manipulating}, and MinSum~\cite{shejwalkar2021manipulating}. These attacks represent stealthy optimization-based adversaries that try to stay near the benign update manifold while degrading global learning. FangAttack~\cite{fang2020local} is treated as an appendix stress test rather than a core main-text attack because it is especially tied to Krum-style geometry.
 
-\paragraph{Targeted and backdoor suite.}
-The second core suite targets semantic corruption. We focus on ModelReplacement-style backdoors~\cite{bagdasaryan2020backdoor}, DBA~\cite{xie2020dba}, and Neurotoxin~\cite{zhang2022neurotoxin}, because these attacks directly test whether CARAT's hidden tasks can expose updates that preserve apparent global plausibility while damaging specific semantic regions. The main backdoor baselines are Mean, FLTrust, FLAME~\cite{nguyen2022flame}, DeepSight~\cite{rieger2022deepsight}, and CARAT. BadNets-style triggers can be retained in the appendix as a sanity check, but they are not the main stress case because they are typically easier to detect than adaptive distributed or persistent attacks.
+The second core suite targets semantic corruption. We focus on ModelReplacement-style backdoors~\cite{bagdasaryan2020backdoor}, DBA~\cite{xie2020dba}, and Neurotoxin~\cite{zhang2022neurotoxin}, because these attacks directly test whether CARAT's hidden tasks can expose updates that preserve apparent global plausibility while damaging specific semantic regions. BadNets-style triggers are retained only as an appendix sanity check, since they are usually easier to detect than adaptive distributed or persistent attacks.
 
-\paragraph{Shared protocol.}
+\paragraph{Baselines.}
+For untargeted poisoning, the primary baselines are Mean, TrimmedMean~\cite{yin2018median}, MultiKrum~\cite{blanchard2017krum}, FLTrust~\cite{cao2021fltrust}, and CARAT. For targeted and backdoor attacks, the main comparison set is Mean, FLTrust, FLAME~\cite{nguyen2022flame}, DeepSight~\cite{rieger2022deepsight}, and CARAT. This split keeps the baseline families aligned with the dominant defenses in each threat setting rather than forcing one comparison set across all attacks.
+
+\paragraph{Implementation details.}
 Across the primary suites, we use $20$ clients with full participation, $300$ global rounds, $4$ local epochs, and learning rate $0.05$. To probe heterogeneity, we evaluate i.i.d.\ partitions together with Dirichlet non-i.i.d.\ regimes $\alpha \in \{0.5,0.1\}$. The main adversarial setting uses an attacker ratio of $20\%$, while $40\%$ is reserved for appendix stress tests. Clean-reference experiments are reported separately from attacked experiments instead of being inserted as a row inside attack tables. Unless otherwise stated, reported means and standard deviations are computed over $3$--$5$ random seeds.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Experimental protocol for evaluating CARAT.}
+\caption{Experimental setup for evaluating CARAT.}
 \label{tab:hyperparams}
 \renewcommand{\arraystretch}{1.1}
 \small
@@ -229,15 +229,30 @@ Repetitions & $3$--$5$ seeds per configuration \\
 \end{tabular}
 \end{table*}
 
-\subsection{Metrics and Fairness Controls}
+\paragraph{Metrics and fairness.}
+Because CARAT is explicitly class-aware, the evaluation must report more than aggregate clean accuracy. For clean utility, we report test accuracy and test loss under no attack. For robustness, we additionally report macro-average accuracy and worst-class accuracy on class-rich benchmarks so that localized failures remain visible. For backdoor experiments, attack success rate (ASR) is always paired with clean accuracy rather than reported in isolation. Fairness requires explicit control of server-side supervision: CARAT and FLTrust are compared under a matched labeled-data budget, and the reference budget is parameterized per class rather than fixed as a dataset-independent total pool size.
 
-Because CARAT is explicitly class-aware, the evaluation must report more than aggregate clean accuracy. For clean utility, we report test accuracy and test loss under no attack. For robustness, we additionally report macro-average accuracy and worst-class accuracy on class-rich benchmarks so that localized failures remain visible. For backdoor experiments, attack success rate (ASR) is always paired with clean accuracy rather than reported in isolation. Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as the main extra cost, we also report runtime per round and total defense overhead.
+\subsection{Main Evaluation Comparisons}
 
-Fairness requires explicit control of server-side supervision. CARAT uses labeled server reference data to instantiate hidden tasks, while FLTrust uses trusted data to define an anchor update; these methods should therefore be compared under a matched labeled-data budget. In the main text, CARAT and FLTrust are evaluated with the same reference budget. The appendix then sweeps this budget to distinguish gains due to the evaluation principle from gains due only to more public data. Likewise, we do not use a single dataset-independent probe-pool size across all benchmarks: the reference budget is parameterized per class so that class-rich datasets are not artificially underprovisioned.
+\paragraph{Clean utility.}
+We first report no-attack performance to make the cost of robustness visible. These comparisons focus on test accuracy and test loss, with macro and worst-class accuracy added on class-rich benchmarks when aggregate accuracy alone could mask concentrated degradation.
 
-\subsection{Reporting Structure}
+\paragraph{Untargeted poisoning.}
+We then compare CARAT against Mean, TrimmedMean, MultiKrum, and FLTrust under ALIE, MinMax, and MinSum across i.i.d.\ and non-i.i.d.\ partitions. The main question is whether task-conditioned validation remains reliable when benign clients are dispersed and adaptive attackers stay close to the benign update manifold.
 
-The evaluation is organized around three result groups: a clean-utility comparison, an untargeted robustness comparison under increasing heterogeneity, and a backdoor comparison emphasizing class-sensitive metrics and ASR. Appendix~\ref{sec:appendix-experiments} records the full benchmark suites, stress tests at higher attacker ratios, scaling studies, trusted-data budget sensitivity, runtime breakdowns, and CARAT-specific ablations.
+\paragraph{Targeted and backdoor attacks.}
+Finally, we compare CARAT against Mean, FLTrust, FLAME, and DeepSight under ModelReplacement, DBA, and Neurotoxin. These experiments emphasize macro accuracy, worst-class accuracy, and ASR to test whether class-balanced hidden tasks expose updates that remain globally plausible while harming specific semantic regions.
+
+\subsection{Ablations, Stress Tests, and Overhead}
+
+\paragraph{Ablations.}
+We ablate the components that correspond directly to CARAT's mechanism: hidden-task count, reference budget per class, rank-penalty weight, temporal-prior weight, clipping controls, and common-radius evaluation. These studies isolate whether the observed robustness comes from class-balanced task validation, structural anomaly suppression, or simply from access to more trusted data.
+
+\paragraph{Stress tests.}
+Appendix-only stress tests raise the attacker fraction to $40\%$, add FangAttack and BadNets sanity checks, and vary the client count or class vocabulary. Their role is to probe failure modes and scaling behavior rather than to replace the main-text comparisons.
+
+\paragraph{Overhead analysis.}
+Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as the main extra cost, we report runtime per round, total defense overhead, and trusted-data budget sensitivity as first-class evaluation outcomes rather than as implementation footnotes.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -567,13 +582,13 @@ The object $\mathcal{D}^{\mathrm{ref}}$ in the main text denotes the labeled ser
 \section{Additional Experimental Details}
 \label{sec:appendix-experiments}
 
-This appendix records the benchmark design and reporting scope that support the main-text experimental protocol.
+This appendix records the benchmark design, sensitivity analyses, and reporting scope that support the main-text experimental design.
 
-\subsection{Experimental Objectives}
+\subsection{Experimental Goals}
 
-The empirical study is designed to test properties specific to CARAT rather than to benchmark it as a generic outlier filter. In particular, we want to know whether a hidden-task certificate built from labeled server data improves robustness when benign clients are heterogeneous, whether that gain persists on class-rich benchmarks where class-selective failure matters, and how much robustness is purchased per unit of trusted-data budget and runtime overhead.
+The empirical study is designed to test properties specific to CARAT rather than to benchmark it as a generic outlier filter. In particular, we ask whether hidden-task validation improves robustness when benign clients are heterogeneous, whether that advantage persists on class-rich benchmarks where class-selective failure matters, and how much robustness is purchased per unit of trusted-data budget and runtime overhead.
 
-\subsection{Benchmark Suites}
+\subsection{Benchmarks}
 
 \paragraph{Primary class-rich benchmark.}
 The main benchmark is CIFAR-100 with ResNet18. This setting best matches CARAT's motivation because the label space is rich enough for different hidden tasks to emphasize different semantic slices, and because average clean accuracy alone can hide substantial per-class degradation.
@@ -587,7 +602,7 @@ We include CHMNIST with ResNet18 as an application-style benchmark in the append
 \paragraph{Sanity-check benchmark.}
 CIFAR-10 is retained only as a sanity-check benchmark. It remains useful for verifying that CARAT does not fail on standard low-cardinality image classification, but it is not treated as a primary source of evidence because its ten classes are too few to fully exercise the method's class-aware design.
 
-\subsection{Threat Models and Attack Selection}
+\subsection{Threat Models}
 
 \paragraph{Untargeted poisoning.}
 The main untargeted suite contains ALIE, MinMax, and MinSum. Together they represent adaptive model-poisoning attacks that aim to remain stealthy under server-side defenses. FangAttack is evaluated only in the appendix as a stress test, since it is especially informative for geometry-based defenses and should not dominate the design of CARAT's main evaluation.
@@ -595,7 +610,7 @@ The main untargeted suite contains ALIE, MinMax, and MinSum. Together they repre
 \paragraph{Targeted and backdoor attacks.}
 The main targeted suite contains ModelReplacement~\citep{bagdasaryan2020backdoor}, DBA~\citep{xie2020dba}, and Neurotoxin~\citep{zhang2022neurotoxin}. These attacks are better aligned with CARAT's intended advantage because they can preserve global plausibility while damaging specific semantic regions or maintaining durable triggers. BadNets can be reported as an auxiliary sanity-check attack in the appendix, but it is not the main stress case.
 
-\subsection{Baseline Families}
+\subsection{Baselines}
 
 \paragraph{Untargeted defenses.}
 For untargeted poisoning, the primary baselines are Mean, TrimmedMean, MultiKrum, FLTrust, and CARAT. This set spans plain averaging, coordinate-wise robust statistics, geometry-based filtering, and trusted-data anchoring. Methods such as FLDetector or TriGuardFL can be added in the appendix when the goal is to compare against historical-trajectory or class-wise screening ideas, but they are not required in the core main-text comparison.
@@ -603,7 +618,7 @@ For untargeted poisoning, the primary baselines are Mean, TrimmedMean, MultiKrum
 \paragraph{Backdoor defenses.}
 For targeted and backdoor attacks, the primary comparison set is Mean, FLTrust, FLAME, DeepSight, and CARAT. These baselines better reflect the representation-level and clustering-based defenses commonly used in backdoor settings than purely Byzantine-oriented rules do.
 
-\subsection{Metrics, Fairness, and Reporting}
+\subsection{Metrics and Fairness}
 
 No-attack clean utility is reported separately from attacked runs. The clean metrics are test accuracy and test loss. On class-rich datasets we additionally report macro-average accuracy and worst-class accuracy, because the motivation for CARAT is precisely that averaging can hide semantically concentrated failures. For backdoor experiments, ASR is always reported together with clean accuracy. Runtime per round and total defense overhead are reported for all defenses that add nontrivial server-side computation.
 
@@ -613,10 +628,10 @@ Trusted-data fairness is controlled explicitly. CARAT and FLTrust are compared u
 
 Unless stated otherwise, the shared protocol uses $20$ clients with full participation, $300$ communication rounds, $4$ local epochs, and learning rate $0.05$. The primary heterogeneity settings are i.i.d.\ data and Dirichlet non-i.i.d.\ partitions with $\alpha \in \{0.5, 0.1\}$. The main attacker ratio is $20\%$, while $40\%$ is reserved for appendix stress tests. The primary experiments use $3$--$5$ random seeds per configuration. Scaling studies in the appendix may additionally vary the number of clients or the attacker ratio, but these are treated as stress tests rather than as the core evaluation axis.
 
-\subsection{CARAT Hyperparameters and Ablation Plan}
+\subsection{CARAT Hyperparameters, Stress Tests, and Ablation Plan}
 
 The current implementation defaults are $8$ hidden tasks, $4$ probe samples per class, probe batch size $128$, probe-radius quantile $0.5$, MAD clipping with $k=2.5$, default attacker prior $\hat{\rho}=0.2$, certificate temperature $\beta=12.0$, rank weight $0.20$, prior weight $0.05$, $4096$ sampled coordinates, $5$ rank subsamples, $60$ projected optimization steps, and optimizer learning rate $0.5$.
 
-Two design principles matter when transferring these defaults across datasets. First, the reference budget should scale with the number of classes rather than be fixed as a single dataset-independent total pool size. Second, CARAT should be ablated along the axes that correspond directly to its mechanism: hidden-task count, reference budget per class, rank-penalty weight, temporal-prior weight, and clipping controls. The appendix therefore includes ablations that isolate whether the observed robustness comes from class-balanced hidden tasks, from the structural rank penalty, or simply from access to more trusted data.
+Two design principles matter when transferring these defaults across datasets. First, the reference budget should scale with the number of classes rather than be fixed as a single dataset-independent total pool size. Second, CARAT should be ablated along the axes that correspond directly to its mechanism: hidden-task count, reference budget per class, rank-penalty weight, temporal-prior weight, and clipping controls. The appendix therefore includes ablations that isolate whether the observed robustness comes from class-balanced hidden tasks, from the structural rank penalty, or simply from access to more trusted data. It also records high-attacker stress tests, scaling analyses, and runtime breakdowns so that robustness, efficiency, and trusted-data dependence are evaluated together.
 
 \end{document}

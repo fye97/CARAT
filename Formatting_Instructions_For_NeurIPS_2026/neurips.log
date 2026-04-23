@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  23 APR 2026 14:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  23 APR 2026 14:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -535,8 +535,14 @@ Package microtype Info: Loading generic protrusion settings for font family
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 76.
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [2] [3] [4] [5] (./neurips.bbl [6] [7] [8]) [9]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 263.
+) [2] [3] [4]
+Underfull \vbox (badness 1946) has occurred while \output is active []
+
+
+Underfull \vbox (badness 1946) has occurred while \output is active []
+
+ [5] [6] (./neurips.bbl [7] [8]) [9]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 278.
 
 Underfull \vbox (badness 8170) has occurred while \output is active []
 
@@ -549,21 +555,21 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
 Package rerunfilecheck Info: File `neurips.out' has not changed.
-(rerunfilecheck)             Checksum: 2A5EA010DF68102F64F8D6FF6BBF897F;3990.
+(rerunfilecheck)             Checksum: 1B9B2FCFC9B68008E808EC0884B65FF7;3715.
  ) 
 Here is how much of TeX's memory you used:
- 14735 strings out of 469339
- 226935 string characters out of 5466426
- 686389 words of memory out of 5000000
- 42873 multiletter control sequences out of 15000+600000
- 685188 words of font info for 288 fonts, out of 8000000 for 9000
+ 14749 strings out of 469339
+ 227061 string characters out of 5466426
+ 686384 words of memory out of 5000000
+ 42872 multiletter control sequences out of 15000+600000
+ 685569 words of font info for 294 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,11n,79p,1394b,658s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,11n,79p,1394b,650s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on neurips.pdf (16 pages, 274403 bytes).
+Output written on neurips.pdf (16 pages, 275656 bytes).
 PDF statistics:
- 495 PDF objects out of 1000 (max. 8388607)
- 431 compressed objects within 5 object streams
- 167 named destinations out of 1000 (max. 500000)
- 54977 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 498 PDF objects out of 1000 (max. 8388607)
+ 434 compressed objects within 5 object streams
+ 173 named destinations out of 1000 (max. 500000)
+ 54969 words of extra memory for PDF output out of 61914 (max. 10000000)
 

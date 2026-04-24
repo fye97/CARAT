@@ -228,6 +228,10 @@ INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/vf/adobe/times/ptmr8c.vf
+INPUT ./figures/carat_overview.pdf
+INPUT ./figures/carat_overview.pdf
+INPUT ./figures/carat_overview.pdf
+INPUT ./figures/carat_overview.pdf
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmr9.tfm
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmr6.tfm

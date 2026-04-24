@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  24 APR 2026 16:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  24 APR 2026 16:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -541,118 +541,123 @@ Underfull \vbox (badness 7925) has occurred while \output is active []
 
 Underfull \vbox (badness 7925) has occurred while \output is active []
 
- [2] [3] [4] [5] [6]
-<figures/cifar100_fangattack_curves.pdf, id=251, 760.03902pt x 254.14902pt>
+ [2]
+<figures/carat_overview.pdf, id=203, 696.91005pt x 184.1801pt>
+File: figures/carat_overview.pdf Graphic file (type pdf)
+<use figures/carat_overview.pdf>
+Package pdftex.def Info: figures/carat_overview.pdf  used on input line 142.
+(pdftex.def)             Requested size: 389.53358pt x 102.94621pt.
+ [3] [4 <./figures/carat_overview.pdf>] [5] [6] [7]
+<figures/cifar100_fangattack_curves.pdf, id=313, 760.03902pt x 254.14902pt>
 File: figures/cifar100_fangattack_curves.pdf Graphic file (type pdf)
 <use figures/cifar100_fangattack_curves.pdf>
-Package pdftex.def Info: figures/cifar100_fangattack_curves.pdf  used on input line 291.
+Package pdftex.def Info: figures/cifar100_fangattack_curves.pdf  used on input line 336.
 (pdftex.def)             Requested size: 389.53358pt x 130.25415pt.
-
-Underfull \vbox (badness 1960) has occurred while \output is active []
-
-
-Underfull \vbox (badness 1960) has occurred while \output is active []
-
- [7 <./figures/cifar100_fangattack_curves.pdf>]
-<figures/carat_verification.pdf, id=285, 767.26604pt x 297.511pt>
+<figures/carat_verification.pdf, id=316, 767.26604pt x 297.511pt>
 File: figures/carat_verification.pdf Graphic file (type pdf)
 <use figures/carat_verification.pdf>
-Package pdftex.def Info: figures/carat_verification.pdf  used on input line 302.
+Package pdftex.def Info: figures/carat_verification.pdf  used on input line 347.
 (pdftex.def)             Requested size: 389.53358pt x 151.0431pt.
- (./neurips.bbl [8 <./figures/carat_verification.pdf>] [9]) [10]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 328.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8 <./figures/cifar100_fangattack_curves.pdf>] (./neurips.bbl [9 <./figures/carat_verification.pdf>] [10]) [11]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 373.
 
 Underfull \vbox (badness 8170) has occurred while \output is active []
 
 
 Underfull \vbox (badness 8170) has occurred while \output is active []
 
- [11] [12] [13] [14] [15] [16]
-Underfull \hbox (badness 2005) in paragraph at lines 732--732
+ [12] [13] [14] [15] [16] [17] [18]
+Underfull \hbox (badness 2005) in paragraph at lines 860--860
 []\T1/ptm/b/n/9 (+20) Codebase-supported ex-ten-sion
  []
 
 
-Underfull \hbox (badness 3713) in paragraph at lines 732--732
+Underfull \hbox (badness 3713) in paragraph at lines 860--860
 []\T1/ptm/m/n/9 (+20) ALIE, Fan-gAt-tack, Min-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 732--732
+Underfull \hbox (badness 10000) in paragraph at lines 860--860
 \T1/ptm/m/n/9 (+20) round-wise ac-cu-racy
  []
 
 
-Underfull \hbox (badness 1735) in paragraph at lines 732--732
+Underfull \hbox (badness 1735) in paragraph at lines 860--860
 []\T1/ptm/m/n/9 (+20) Median, Trimmed-Mean, Krum,
  []
 
 
-Underfull \hbox (badness 1939) in paragraph at lines 732--732
+Underfull \hbox (badness 1939) in paragraph at lines 860--860
 []\T1/ptm/m/n/9 (+20) Dirichlet non-i.i.d. $\OML/cmm/m/it/9  \OMS/cmsy/m/n/9 2
  []
 
 
-Underfull \hbox (badness 4940) in paragraph at lines 732--732
+Underfull \hbox (badness 4940) in paragraph at lines 860--860
 []$\OML/cmm/m/it/9  \OT1/cmr/m/n/9 = 0\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 1$ \T1/ptm/m/n/9 (+20) com-ple-tion, i.i.d.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 732--732
+Underfull \hbox (badness 10000) in paragraph at lines 860--860
 []\T1/ptm/m/n/9 (+20) Robustness-vs-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 732--732
+Underfull \hbox (badness 10000) in paragraph at lines 860--860
 \T1/ptm/m/n/9 (+20) heterogeneity curves;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 732--732
+Underfull \hbox (badness 10000) in paragraph at lines 860--860
 \T1/ptm/m/n/9 (+20) bench-mark sum-mary
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 732--732
+Underfull \hbox (badness 10000) in paragraph at lines 860--860
 \T1/ptm/m/n/9 (+20) robustness-overhead
  []
 
 
-Underfull \hbox (badness 3815) in paragraph at lines 732--732
+Underfull \hbox (badness 3815) in paragraph at lines 860--860
 []\T1/ptm/m/n/9 (+20) Out-of-scope repo
  []
 
 
-Underfull \hbox (badness 7291) in paragraph at lines 732--732
+Underfull \hbox (badness 7291) in paragraph at lines 860--860
 []\T1/ptm/m/n/9 (+20) Keep out-side cur-rent
  []
 
 
-Underfull \hbox (badness 1917) in paragraph at lines 732--732
+Underfull \hbox (badness 1917) in paragraph at lines 860--860
 \T1/ptm/m/n/9 (+20) per scope is widened
  []
 
-[17] [18] (./neurips.aux)
+[19] [20] (./neurips.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
 Package rerunfilecheck Info: File `neurips.out' has not changed.
-(rerunfilecheck)             Checksum: 91E78AB1299CA7D82C538D3668B3CD18;4269.
+(rerunfilecheck)             Checksum: 5ACA3BA7CFB70EBDA6B83BFC63DA950A;5499.
  ) 
 Here is how much of TeX's memory you used:
- 14763 strings out of 469339
- 227352 string characters out of 5466426
- 691296 words of memory out of 5000000
- 42870 multiletter control sequences out of 15000+600000
+ 14798 strings out of 469339
+ 228015 string characters out of 5466426
+ 692199 words of memory out of 5000000
+ 42890 multiletter control sequences out of 15000+600000
  686039 words of font info for 304 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,12n,79p,1547b,630s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,12n,79p,1547b,634s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on neurips.pdf (18 pages, 359126 bytes).
+Output written on neurips.pdf (20 pages, 397316 bytes).
 PDF statistics:
- 591 PDF objects out of 1000 (max. 8388607)
- 470 compressed objects within 5 object streams
- 176 named destinations out of 1000 (max. 500000)
- 55003 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 665 PDF objects out of 1000 (max. 8388607)
+ 528 compressed objects within 6 object streams
+ 191 named destinations out of 1000 (max. 500000)
+ 55048 words of extra memory for PDF output out of 61914 (max. 10000000)
 

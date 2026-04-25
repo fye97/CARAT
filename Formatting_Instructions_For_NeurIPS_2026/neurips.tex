@@ -135,12 +135,12 @@ The server must assign aggregation weights that suppress harmful updates while p
 
 \subsection{Overview}
 
-CARAT divides each server round into three coordinated stages, as shown in Fig.~\ref{fig:carat-overview}. First, the server converts client messages into update vectors, clips their norms robustly, and rescales them to a common evaluation radius. Second, it evaluates each candidate update on multiple hidden class-balanced tasks and combines the resulting utility certificates with a coordinate-rank anomaly penalty. Third, it solves a capped-simplex optimization problem with a temporal prior to produce the aggregation weights. The evaluation geometry is normalized across clients, while the final server step remains conservative because it aggregates clipped updates.
+Figure~\ref{fig:carat-overview} organizes CARAT into four visual blocks: client updates, task-conditioned validation, robust weight optimization, and final aggregation. Algorithmically, these blocks correspond to three coordinated server-side stages. First, the server converts client messages into update vectors, clips their norms robustly, and rescales them to a common evaluation radius. Second, it evaluates each candidate update on multiple hidden class-balanced tasks and combines the resulting utility certificates with a coordinate-rank anomaly penalty. Third, it solves a capped-simplex optimization problem with a temporal prior to produce the aggregation weights and applies them to the clipped updates. The evaluation geometry is normalized across clients, while the final server step remains conservative because it aggregates clipped updates.
 
 \begin{figure*}[!htbp]
 \centering
-\safeincludegraphics[width=0.98\textwidth]{figures/carat_overview.pdf}
-\caption{Overview of CARAT. Client updates are first clipped and normalized for common-radius evaluation. Hidden class-balanced tasks produce semantic utility certificates, coordinate-rank subsamples provide structural anomaly penalties, and capped-simplex optimization converts these signals into aggregation weights for the final clipped update.}
+\safeincludegraphics[width=\textwidth]{figures/Carat_design_nocaption.png}
+\caption{Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates.}
 \label{fig:carat-overview}
 \end{figure*}
 
@@ -200,7 +200,7 @@ CARAT maps these signals to aggregation weights by solving a constrained optimiz
 \end{equation}
 where $\hat{\rho}$ is an estimate of the attacker fraction. The cap prevents any single client from dominating the aggregate and encodes a conservative trust budget at the weight level: even when a client appears useful, it cannot absorb arbitrary influence within one round.
 
-Let $r \in \R^n$ denote the positive rank penalties and let $\alpha^{\mathrm{prev}}$ be the previous round's weights. CARAT solves
+Let $r \in \R^n$ denote the positive rank penalties and let $\alpha^{\mathrm{prev}}$ be the previous round's weights. The diagram denotes the temporal penalty by $\mathrm{TV}$; in the implementation and analysis, CARAT uses the quadratic temporal-variation penalty $\mathrm{TV}_2(\alpha,\alpha^{\mathrm{prev}})=\|\alpha-\alpha^{\mathrm{prev}}\|_2^2$. CARAT solves
 \begin{equation}
 \max_{\alpha \in \mathcal{A}(\hat{\rho})}
 \;\softmin_{\beta}(C^\top \alpha)

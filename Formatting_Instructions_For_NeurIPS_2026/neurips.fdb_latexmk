@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex neurips"] 1777075605.32101 "neurips.aux" "neurips.bbl" "neurips" 1777075632.4034 0
+["bibtex neurips"] 1777076001.52606 "neurips.aux" "neurips.bbl" "neurips" 1777076002.17613 0
   "./ref.bib" 1776387581.39936 14290 93dc13e50c4fc3a62b535321c3dd10f8 ""
   "/home/cnlab-pu/.TinyTeX/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "neurips.aux" 1777075632.35061 21029 b1dc400bfd9aa4e7074ff1e813e7ae8c "pdflatex"
+  "neurips.aux" 1777076002.12387 21237 45eafe0b5c688c5b9a8186bec1106661 "pdflatex"
   (generated)
   "neurips.bbl"
   "neurips.blg"
   (rewritten before read)
-["pdflatex"] 1777075632.01988 "neurips.tex" "neurips.pdf" "neurips" 1777075632.40357 0
+["pdflatex"] 1777076001.53562 "neurips.tex" "neurips.pdf" "neurips" 1777076002.17632 0
   "/home/cnlab-pu/.TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/helvetic/phvr8r.tfm" 1136768653 4712 9ef4d7d106579d4b136e1529e1a4533c ""
   "/home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/helvetic/phvr8t.tfm" 1136768653 7040 b2bd27e2bfe6f6948cbc3239cae7444f ""
@@ -149,13 +149,13 @@
   "/home/cnlab-pu/.TinyTeX/texmf-var/web2c/pdftex/pdflatex.fmt" 1776312689 2241605 6cb58e7d15a098001c5d796e4a26cd4c ""
   "/home/cnlab-pu/.TinyTeX/texmf.cnf" 1776312661 637 edd806fb06a89761a6034e1968af9017 ""
   "checklist.tex" 1777075599.22514 24916 2309c40954460c61296750c5cb1a13ae ""
-  "figures/carat_overview.pdf" 1777074251.48696 28860 3857f645aeb704a5a6dfaca329500435 ""
+  "figures/Carat_design_nocaption.png" 1777075963.53832 813044 f95bd204e0cf1a46d06da5224428e02a ""
   "figures/carat_verification.pdf" 1776987059.75219 29284 d4cbdbed0d067fb76751342909de7f15 ""
   "figures/cifar100_fangattack_curves.pdf" 1777073646.70735 49630 3c17721f8e04a3778db6ec5cffc75fa3 ""
-  "neurips.aux" 1777075632.35061 21029 b1dc400bfd9aa4e7074ff1e813e7ae8c "pdflatex"
-  "neurips.bbl" 1777075605.32723 10978 57d3b8b88cfa0e6d9e78520587923bfb "bibtex neurips"
-  "neurips.out" 1777075632.35061 6004 ff9122f7a5ceb44a7e7453c06fa38383 "pdflatex"
-  "neurips.tex" 1777075628.31655 69570 0c312ae632ac25b5dc81788f757cb6d8 ""
+  "neurips.aux" 1777076002.12387 21237 45eafe0b5c688c5b9a8186bec1106661 "pdflatex"
+  "neurips.bbl" 1777076001.53286 10978 57d3b8b88cfa0e6d9e78520587923bfb "bibtex neurips"
+  "neurips.out" 1777076002.12387 6004 ff9122f7a5ceb44a7e7453c06fa38383 "pdflatex"
+  "neurips.tex" 1777075994.68077 70096 3e5db7310724718de37f412171030b33 ""
   "neurips_2026.sty" 1776320049.49936 13462 818d80447f57703e59b8270885421e82 ""
   (generated)
   "neurips.aux"

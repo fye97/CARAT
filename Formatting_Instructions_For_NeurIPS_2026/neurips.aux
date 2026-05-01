@@ -58,10 +58,10 @@
 \citation{fang2020local}
 \citation{shejwalkar2021manipulating}
 \citation{shejwalkar2021manipulating}
+\citation{yin2018median}
 \citation{blanchard2017krum}
 \citation{cao2021fltrust}
 \citation{zhang2022fldetector}
-\citation{yin2018median}
 \def\@LN@column{1}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{6}{section.30}\protected@file@percent }
 \newlabel{sec:experiments}{{5}{6}{Experiments}{section.30}{}}
@@ -81,12 +81,14 @@
 \@writefile{toc}{\contentsline {paragraph}{Ablations.}{7}{section*.43}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Stress tests.}{7}{section*.44}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Overhead analysis.}{7}{section*.45}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Main Results}{7}{subsection.46}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Protocol-Locked Evaluation Status}{7}{subsection.46}\protected@file@percent }
 \def\@LN@column{1}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Final test accuracy (\%) under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher is better. Baseline cells use five seeds. CARAT cells use $n=2$ for $\alpha =1$ ALIE, $n=1$ for $\alpha =0.5$ MinSum, and $n=3$ otherwise.}}{8}{table.48}\protected@file@percent }
-\newlabel{tab:cifar100-main-acc}{{2}{8}{Final test accuracy (\%) under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher is better. Baseline cells use five seeds. CARAT cells use $n=2$ for $\alpha =1$ ALIE, $n=1$ for $\alpha =0.5$ MinSum, and $n=3$ otherwise}{table.48}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Current final-accuracy audit (\%) under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher is better. Published legacy baseline cells use five seeds where available. The CARAT row is the earlier single-task pilot ($T=1$), not the final $T=8$ CARAT protocol. The matched-budget FLTrust and final CARAT rows are being regenerated under the locked public-baseline protocol.}}{8}{table.48}\protected@file@percent }
+\newlabel{tab:cifar100-main-acc}{{2}{8}{Current final-accuracy audit (\%) under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher is better. Published legacy baseline cells use five seeds where available. The CARAT row is the earlier single-task pilot ($T=1$), not the final $T=8$ CARAT protocol. The matched-budget FLTrust and final CARAT rows are being regenerated under the locked public-baseline protocol}{table.48}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show the mean over reported seeds; the CARAT band shows one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol.}}{8}{figure.50}\protected@file@percent }
 \newlabel{fig:cifar100-fangattack-curves}{{2}{8}{Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show the mean over reported seeds; the CARAT band shows one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol}{figure.50}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Limitations}{8}{section.51}\protected@file@percent }
+\newlabel{sec:limitations}{{6}{8}{Limitations}{section.51}{}}
 \bibstyle{unsrtnat}
 \bibdata{ref}
 \bibcite{mcmahan2017fedavg}{{1}{2017}{{McMahan et~al.}}{{McMahan, Moore, Ramage, Hampson, and Ag{\"u}era~y Arcas}}}
@@ -96,13 +98,11 @@
 \bibcite{fang2020local}{{5}{2020}{{Fang et~al.}}{{Fang, Cao, Jia, and Gong}}}
 \bibcite{shejwalkar2021manipulating}{{6}{2021}{{Shejwalkar and Houmansadr}}{{}}}
 \bibcite{baruch2019alie}{{7}{2019}{{Baruch et~al.}}{{Baruch, Baruch, and Goldberg}}}
-\def\@LN@column{1}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Limitations}{9}{section.51}\protected@file@percent }
-\newlabel{sec:limitations}{{6}{9}{Limitations}{section.51}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{9}{section.52}\protected@file@percent }
-\newlabel{sec:conclusion}{{7}{9}{Conclusion}{section.52}{}}
 \bibcite{zhao2018noniid}{{8}{2018}{{Zhao et~al.}}{{Zhao, Li, Lai, Suda, et~al.}}}
 \bibcite{li2020fedprox}{{9}{2020}{{Li et~al.}}{{Li, Sahu, Zaheer, Sanjabi, Talwalkar, and Smith}}}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{9}{section.52}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{9}{Conclusion}{section.52}{}}
 \bibcite{karimireddy2020scaffold}{{10}{2020}{{Karimireddy et~al.}}{{Karimireddy, Kale, Mohri, Reddi, Stich, and Suresh}}}
 \bibcite{zhu2021noniidsurvey}{{11}{2021}{{Zhu et~al.}}{{Zhu, Xu, Liu, and Jin}}}
 \bibcite{blanchard2017krum}{{12}{2017}{{Blanchard et~al.}}{{Blanchard, El~Mhamdi, Guerraoui, and Stainer}}}
@@ -119,8 +119,8 @@
 \bibcite{karimireddy2022bucketing}{{23}{2022}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
 \bibcite{data2021localsgd}{{24}{2021}{{Data and Diggavi}}{{}}}
 \bibcite{liu2023gas}{{25}{2023}{{Liu et~al.}}{{Liu, Chen, Lyu, Wu, Wu, and Chen}}}
-\def\@LN@column{1}
 \bibcite{allouah2023fixing}{{26}{2023}{{Allouah et~al.}}{{Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and Stephan}}}
+\def\@LN@column{1}
 \bibcite{bao2024boba}{{27}{2024}{{Bao et~al.}}{{Bao, Wu, and He}}}
 \bibcite{huang2024sdea}{{28}{2024}{{Huang et~al.}}{{Huang, Shi, Ye, Li, and Du}}}
 \bibcite{shen2016auror}{{29}{2016}{{Shen et~al.}}{{Shen, Tople, and Saxena}}}
@@ -182,8 +182,8 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {C.8}Verification-Scale Runtime Results}{18}{subsection.132}\protected@file@percent }
 \newlabel{sec:appendix-runtime}{{C.8}{18}{Verification-Scale Runtime Results}{subsection.132}{}}
 \def\@LN@column{1}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Baseline cells use five seeds. CARAT cells use $n=2$ for $\alpha =1$ ALIE, $n=1$ for $\alpha =0.5$ MinSum, and $n=3$ otherwise.}}{19}{table.131}\protected@file@percent }
-\newlabel{tab:cifar100-main-loss}{{3}{19}{Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Baseline cells use five seeds. CARAT cells use $n=2$ for $\alpha =1$ ALIE, $n=1$ for $\alpha =0.5$ MinSum, and $n=3$ otherwise}{table.131}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Current final-loss audit under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Published legacy baseline cells use five seeds where available. The CARAT row is the earlier single-task pilot ($T=1$), not the final $T=8$ CARAT protocol.}}{19}{table.131}\protected@file@percent }
+\newlabel{tab:cifar100-main-loss}{{3}{19}{Current final-loss audit under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Published legacy baseline cells use five seeds where available. The CARAT row is the earlier single-task pilot ($T=1$), not the final $T=8$ CARAT protocol}{table.131}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation.}}{19}{figure.134}\protected@file@percent }
 \newlabel{fig:verification-curves}{{3}{19}{Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation}{figure.134}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {C.9}Supplementary Experiment Scope}{19}{subsection.135}\protected@file@percent }

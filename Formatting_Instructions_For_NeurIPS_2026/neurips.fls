@@ -252,6 +252,7 @@ INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmmib
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy9.tfm
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm
+INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/times/ptmri8t.tfm
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/vf/adobe/times/ptmb8t.vf
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm
 INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf
@@ -260,6 +261,8 @@ INPUT ./figures/cifar100_fangattack_curves.pdf
 INPUT ./figures/cifar100_fangattack_curves.pdf
 INPUT ./figures/cifar100_fangattack_curves.pdf
 INPUT ./figures/cifar100_fangattack_curves.pdf
+INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/vf/adobe/times/ptmri8t.vf
+INPUT /home/cnlab-pu/.TinyTeX/texmf-dist/fonts/tfm/adobe/times/ptmri8r.tfm
 INPUT ./neurips.bbl
 INPUT ./neurips.bbl
 INPUT neurips.bbl

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  24 APR 2026 17:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  1 MAY 2026 15:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -536,10 +536,10 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 76
  (/home/cnlab-pu/.TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-Underfull \vbox (badness 7925) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Underfull \vbox (badness 7925) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
 <figures/Carat_design_nocaption.png, id=215, 1678.27pt x 797.98125pt>
@@ -548,17 +548,11 @@ File: figures/Carat_design_nocaption.png Graphic file (type png)
 Package pdftex.def Info: figures/Carat_design_nocaption.png  used on input line 142.
 (pdftex.def)             Requested size: 397.48499pt x 188.98676pt.
  [3] [4 <./figures/Carat_design_nocaption.png>] [5] [6] [7]
-<figures/cifar100_fangattack_curves.pdf, id=296, 760.03902pt x 254.14902pt>
+<figures/cifar100_fangattack_curves.pdf, id=293, 760.03902pt x 254.14902pt>
 File: figures/cifar100_fangattack_curves.pdf Graphic file (type pdf)
 <use figures/cifar100_fangattack_curves.pdf>
 Package pdftex.def Info: figures/cifar100_fangattack_curves.pdf  used on input line 336.
 (pdftex.def)             Requested size: 389.53358pt x 130.25415pt.
-
-Underfull \vbox (badness 1960) has occurred while \output is active []
-
-
-Underfull \vbox (badness 1960) has occurred while \output is active []
-
  [8 <./figures/cifar100_fangattack_curves.pdf>] (./neurips.bbl [9] [10]) [11]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 373.
 
@@ -568,7 +562,7 @@ Underfull \vbox (badness 8170) has occurred while \output is active []
 Underfull \vbox (badness 8170) has occurred while \output is active []
 
  [12] [13] [14] [15] [16] [17] [18]
-<figures/carat_verification.pdf, id=458, 767.26604pt x 297.511pt>
+<figures/carat_verification.pdf, id=455, 767.26604pt x 297.511pt>
 File: figures/carat_verification.pdf Graphic file (type pdf)
 <use figures/carat_verification.pdf>
 Package pdftex.def Info: figures/carat_verification.pdf  used on input line 845.
@@ -584,8 +578,23 @@ Underfull \hbox (badness 10000) in paragraph at lines 872--872
  []
 
 
-Underfull \hbox (badness 1735) in paragraph at lines 872--872
-[]\T1/ptm/m/n/9 (+20) Median, Trimmed-Mean, Krum,
+Underfull \hbox (badness 10000) in paragraph at lines 872--872
+[]\T1/ptm/m/n/9 (+20) Mean, Norm-Clip-ping,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 872--872
+\T1/ptm/m/n/9 (+20) FLTrust, FLDe-tec-tor,
+ []
+
+
+Underfull \hbox (badness 2726) in paragraph at lines 872--872
+[]\T1/ptm/m/n/9 (+20) Median, Krum, Bulyan, RFA,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 872--872
+\T1/ptm/m/n/9 (+20) Sign-Guard, Cen-tered-Clip-ping,
  []
 
 
@@ -634,21 +643,21 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
 Package rerunfilecheck Info: File `neurips.out' has not changed.
-(rerunfilecheck)             Checksum: FF9122F7A5CEB44A7E7453C06FA38383;6004.
+(rerunfilecheck)             Checksum: 62670C34ABD650BB8186EF2FF1052040;6112.
  ) 
 Here is how much of TeX's memory you used:
- 14855 strings out of 469339
- 228719 string characters out of 5466426
- 692334 words of memory out of 5000000
- 42903 multiletter control sequences out of 15000+600000
- 686328 words of font info for 307 fonts, out of 8000000 for 9000
+ 14857 strings out of 469339
+ 228763 string characters out of 5466426
+ 691545 words of memory out of 5000000
+ 42905 multiletter control sequences out of 15000+600000
+ 689239 words of font info for 307 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,12n,79p,1538b,815s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,12n,79p,1413b,815s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/cnlab-pu/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></home/cnlab-pu/.TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on neurips.pdf (28 pages, 1277181 bytes).
+Output written on neurips.pdf (28 pages, 1273547 bytes).
 PDF statistics:
- 765 PDF objects out of 1000 (max. 8388607)
- 602 compressed objects within 7 object streams
+ 761 PDF objects out of 1000 (max. 8388607)
+ 599 compressed objects within 6 object streams
  227 named destinations out of 1000 (max. 500000)
- 55072 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 59168 words of extra memory for PDF output out of 61914 (max. 10000000)
 

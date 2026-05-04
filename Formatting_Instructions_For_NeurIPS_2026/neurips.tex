@@ -130,7 +130,8 @@ CARAT assumes that the server maintains a small labeled reference set $\mathcal{
 
 The server must assign aggregation weights that suppress harmful updates while preserving legitimate client diversity. Formally, given a round-level update set $\{\Delta_i^r\}_{i\in\mathcal{S}_r}$ and reference data $\mathcal{D}^{\mathrm{ref}}$, the goal is to construct nonnegative weights $\alpha_i^r$ and an aggregate $\Delta_{\mathrm{agg}}^r$ such that malicious influence is bounded, benign non-i.i.d.\ specialization is not discarded merely for being geometrically atypical, and the resulting global model maintains clean utility under model-poisoning attacks. CARAT addresses this problem by validating updates through hidden-task utility rather than through centrality alone.
 
-\section{CARAT}\label{sec:method}
+\section{CARAT}
+\label{sec:method}
 
 \subsection{Overview}
 

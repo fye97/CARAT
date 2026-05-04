@@ -247,26 +247,41 @@ Across the primary comparison, we use $20$ clients with full participation, $200
 
 \begin{table*}[!htbp]
 \centering
-\caption{Experimental setup for evaluating CARAT.}
+\caption{Locked experimental setup used for the main CARAT evaluation. The table separates the training protocol, poisoning comparison, and reporting controls used throughout the CIFAR-100/ResNet18 result set.}
 \label{tab:hyperparams}
-\renewcommand{\arraystretch}{1.1}
+\definecolor{setupgray}{gray}{0.92}
+\renewcommand{\arraystretch}{1.08}
+\setlength{\tabcolsep}{5pt}
 \small
-\begin{tabular}{p{0.28\textwidth}p{0.64\textwidth}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{
+>{\raggedright\arraybackslash}p{0.19\textwidth}
+>{\raggedright\arraybackslash}p{0.31\textwidth}
+>{\raggedright\arraybackslash}p{0.40\textwidth}}
 \toprule
-\textbf{Component} & \textbf{Design choice} \\
+\textbf{Axis} & \textbf{Locked setting} & \textbf{Purpose in the comparison} \\
 \midrule
-Primary benchmark & CIFAR-100 with ResNet18 \\
-Clients and participation & $20$ total clients with full participation each round \\
-Optimization schedule & $200$ communication rounds, $4$ local epochs, learning rate $0.05$ \\
-Heterogeneity settings & Dirichlet non-i.i.d.\ with $\alpha \in \{1,0.5\}$ \\
-Main adversarial fraction & $20\%$ malicious clients \\
-Main untargeted attacks & ALIE, FangAttack, MinMax, MinSum \\
-Untargeted baselines & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT \\
-Primary reported metrics & Final test accuracy, final test loss, average rank \\
-Fairness controls & Matched labeled server-reference budget between CARAT and FLTrust; clean-reference runs reported separately from attacked runs \\
-Repetitions & Five seeds for compatible legacy rows; three seeds for locked FLTrust and CARAT rows \\
+\rowcolor{setupgray}
+\multicolumn{3}{l}{\textbf{Benchmark and federated training protocol}} \\
+Dataset / model & CIFAR-100 / ResNet18 & Class-rich image benchmark where hidden class-balanced tasks are meaningful. \\
+Clients & $20$ clients, full participation & Removes client-sampling noise from defense comparisons. \\
+Training schedule & $200$ rounds; $4$ local epochs; learning rate $0.05$ & Shared optimizer budget for all attacked runs. \\
+Heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5\}$ & Tests robustness as benign client updates become more dispersed. \\
+\midrule
+\rowcolor{setupgray}
+\multicolumn{3}{l}{\textbf{Poisoning setting and compared defenses}} \\
+Malicious clients & $20\%$ of clients & Main untargeted model-poisoning threat level. \\
+Attacks & ALIE, FangAttack, MinMax, MinSum & Stealthy and geometry-aware untargeted poisoning attacks. \\
+Main-text defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Public citable baselines spanning averaging, clipping, geometric filtering, trusted anchoring, and historical detection. \\
+\midrule
+\rowcolor{setupgray}
+\multicolumn{3}{l}{\textbf{Reporting controls}} \\
+Metrics & Final test accuracy; final test loss; average rank & Accuracy is the main robustness metric; loss and rank provide consistency checks. \\
+Trusted-data control & Matched labeled reference budget for FLTrust and CARAT & Prevents the proposed method from receiving more server-side supervision. \\
+Seed policy & Legacy rows: five seeds where available; locked FLTrust/CARAT rows: three seeds & Reuses compatible public-baseline logs while regenerating trusted-data rows under the locked protocol. \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 \paragraph{Metrics and fairness.}

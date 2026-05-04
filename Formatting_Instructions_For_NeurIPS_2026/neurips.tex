@@ -59,7 +59,7 @@
 \maketitle
 
 \begin{abstract}
-Federated learning is vulnerable to model-poisoning attacks because the server must aggregate client updates without inspecting client data. Existing robust aggregation rules often rely on update geometry, coordinate-wise robust statistics, or a single trusted reference direction, but these signals can confuse malicious behavior with benign client heterogeneity under non-i.i.d.\ data. We propose \textbf{CARAT}, a class-aware robust aggregation rule that uses a small labeled server reference set to sample hidden, class-balanced tasks and score each client update by its task-level loss reduction. CARAT combines these hidden-task certificates with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization to favor updates that remain useful across semantic slices while limiting structurally extreme clients. On CIFAR-100/ResNet18 with $20\%$ malicious clients, two non-i.i.d.\ regimes, and four untargeted model-poisoning attacks, CARAT achieves the best average rank among the reported public baselines and improves final accuracy by $1.9$--$5.5$ percentage points over the strongest non-CARAT baseline in each attack/heterogeneity setting. These results show that task-conditioned validation offers a practical alternative to purely geometric or single-anchor trust signals when a modest labeled server audit set is available.
+Federated learning is vulnerable to model-poisoning attacks because the server must aggregate client updates without inspecting client data. Existing robust aggregation rules often rely on update geometry, coordinate-wise robust statistics, or a single trusted reference direction, but these signals can confuse malicious behavior with benign client heterogeneity under non-i.i.d.\ data. We propose \textbf{CARAT}, a class-aware robust aggregation rule that uses a small labeled server reference set to sample hidden, class-balanced tasks and score each client update by its task-level loss reduction. CARAT combines these hidden-task certificates with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization to favor updates that remain useful across semantic slices while limiting structurally extreme clients. On CIFAR-100/ResNet18 with $20\%$ malicious clients, two non-i.i.d.\ regimes, and four untargeted model-poisoning attacks, CARAT achieves the best average rank among the reported public baselines and improves final accuracy by $1.9$--$5.5$ percentage points over the strongest non-CARAT baseline in each attack/heterogeneity setting. Within this scoped evaluation, the results show that task-conditioned validation is a practical alternative to purely geometric or single-anchor trust signals when a modest labeled server audit set is available.
 \end{abstract}
 
 \section{Introduction}
@@ -73,12 +73,12 @@ Existing Byzantine-robust defenses mitigate this threat through geometric select
 
 We propose \textbf{CARAT}, a class-aware robust aggregation rule that validates updates through hidden, class-balanced tasks sampled from a small labeled server reference set. The key idea is that a benign non-i.i.d.\ update need not be geometrically central, but it should provide useful evidence on semantic validation tasks that are hidden from the clients. CARAT first places candidate updates in a common scoring geometry through robust clipping and common-radius evaluation. It then measures task-level loss reduction to form hidden-task certificates, penalizes coordinate-rank anomalies, and solves a capped-simplex weight optimization problem with temporal regularization. The final update is computed from clipped client updates, so the server can preserve useful benign diversity while limiting clients that are semantically harmful or structurally extreme. This design explicitly targets settings where a modest labeled server audit set is available; it is not intended to be a fully data-free defense.
 
-We evaluate CARAT on CIFAR-100/ResNet18 under four untargeted model-poisoning attacks, two Dirichlet non-i.i.d.\ regimes, and a $20\%$ malicious-client ratio. CARAT achieves the best average rank among the reported public baselines and improves final accuracy by $1.9$--$5.5$ percentage points over the strongest non-CARAT baseline across the tested attack/heterogeneity settings. These results support the paper's central claim: class-conditioned validation provides a practical robustness signal that complements, and can outperform, purely geometric or single-anchor aggregation criteria. Our main contributions are as follows.
+We evaluate CARAT on CIFAR-100/ResNet18 under four untargeted model-poisoning attacks, two Dirichlet non-i.i.d.\ regimes, and a $20\%$ malicious-client ratio. CARAT achieves the best average rank among the reported public baselines and improves final accuracy by $1.9$--$5.5$ percentage points over the strongest non-CARAT baseline across the tested attack/heterogeneity settings. These results support a deliberately bounded claim: class-conditioned validation can provide a practical robustness signal that outperforms purely geometric or single-anchor criteria within the completed reference-assisted evaluation scope. Our main contributions are as follows.
 
 \begin{itemize}
 \item We introduce hidden-task certificates for robust FL aggregation, using class-balanced server-side validation tasks to evaluate whether each client update improves semantic slices of the learning problem.
 \item We develop the CARAT aggregation objective, which combines hidden-task utility, coordinate-rank anomaly penalties, capped per-client influence, and temporal regularization into a single robust weighting rule.
-\item We provide a locked CIFAR-100/ResNet18 evaluation against public robust-aggregation baselines under four untargeted poisoning attacks and non-i.i.d.\ partitions, with matched reference-data budgets and seed-level reporting.
+\item We provide an auditable CIFAR-100/ResNet18 evaluation against citable robust-aggregation baselines under four untargeted poisoning attacks and non-i.i.d.\ partitions, with matched server-reference budgets for reference-assisted defenses and seed-level reporting.
 \end{itemize}
 
 \section{Related Work}
@@ -122,6 +122,8 @@ FedAvg is recovered when $\mathcal{A}$ is the sample-size-weighted mean.
 
 The adversary controls a subset $\mathcal{M}_r\subseteq\mathcal{S}_r$ of selected clients and may replace their benign updates with arbitrary crafted messages $\widetilde{\Delta}_i^r$. We focus on untargeted model poisoning: malicious updates aim to degrade clean test accuracy while remaining plausible enough to evade robust aggregation. This setting is difficult under non-i.i.d.\ data because benign clients can naturally differ in update direction, norm, sparsity, and class emphasis. A robust aggregator must therefore reduce harmful influence without treating every geometrically atypical update as malicious client behavior.
 
+The adversary is assumed to know the training protocol, defense family, and public hyperparameters, but not the realized hidden validation tasks sampled by the server in a given round. This is the standard security boundary for CARAT's reference-assisted setting: the labeled reference set and task sampler are server-side audit resources, not public client inputs. Attackers that directly observe the reference examples or optimize against the exact hidden tasks are outside the empirical claim set, although the method still includes clipping, rank penalties, and capped weights to reduce overreliance on the reference signal.
+
 \subsection{Reference-Assisted Robust Aggregation}
 
 CARAT assumes that the server maintains a small labeled reference set $\mathcal{D}^{\mathrm{ref}}$ covering the task label space. From this data it constructs a probe pool $\mathcal{P}$ and samples hidden, class-balanced validation tasks during aggregation. This is a stronger setting than fully data-free robust aggregation and should be treated as part of the threat model. The distinction from single-anchor trusted-data methods is that CARAT does not compress $\mathcal{D}^{\mathrm{ref}}$ into one trusted update direction; instead, it uses the reference data to instantiate multiple semantic checks that are hidden from clients.
@@ -141,6 +143,30 @@ CARAT turns the requirements above into a server-side aggregation procedure with
 \caption{Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates.}
 \label{fig:carat-overview}
 \end{figure*}
+
+Table~\ref{tab:component-rationale} summarizes why each CARAT component is included. The design is not intended as an arbitrary stack of heuristics: each term targets a distinct failure mode that appears when heterogeneous benign drift and malicious manipulation coexist.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Design rationale for the CARAT aggregation pipeline. Each component addresses a different ambiguity in non-i.i.d.\ robust aggregation.}
+\label{tab:component-rationale}
+\renewcommand{\arraystretch}{1.08}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{0.23\textwidth}p{0.33\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Component} & \textbf{Failure mode addressed} & \textbf{Role in CARAT} \\
+\midrule
+MAD clipping and common-radius scoring & Large-norm or scale-manipulated updates can dominate validation scores, while benign non-i.i.d.\ clients may naturally have different update norms. & Separates the scoring copy from the final clipped update, making hidden-task evaluation less sensitive to update magnitude. \\
+Hidden class-balanced tasks & A single global score or trusted direction can miss class-local degradation and can confuse semantic usefulness with geometric centrality. & Scores each candidate by loss reduction on multiple hidden semantic slices, producing a task-level certificate matrix. \\
+Robust task standardization & Hidden tasks can have different baseline loss scales and difficulty levels. & Makes certificate columns comparable while preserving within-task ordering. \\
+Coordinate-rank penalty & A client may look useful on part of the reference signal while remaining structurally extreme in update space. & Penalizes consistently outlying coordinate ranks without rewarding unusual centrality. \\
+Capped-simplex weights & Even a high-scoring client should not receive unbounded influence in a Byzantine setting. & Limits per-client weight according to an attacker-fraction prior and bounds direct malicious mass. \\
+Temporal regularization & Round-to-round weight oscillations can overreact to noisy probe evaluations. & Encourages stable trust allocation unless hidden-task evidence supports a change. \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
 
 \subsection{Hidden-Task Certificates}
 
@@ -218,12 +244,12 @@ After optimization, CARAT aggregates the clipped updates:
 \end{equation}
 This is the final server step. The aggregate inherits the robustness benefits of clipping while using weights learned from the richer evaluation geometry defined above. In practice, the main additional computation comes from evaluating $n$ candidate updates over $T$ hidden tasks and computing rank penalties on coordinate subsamples. Probe-model forward passes dominate, while the ranking and optimization stages remain tunable through explicit budget parameters.
 
-A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendix-algorithm}. Formal properties of the normalization step, capped-simplex feasibility, softmin behavior, temporal regularization, pairwise weight transfer, malicious-weight influence, and per-round complexity are deferred to Appendix~\ref{sec:appendix-theory}.
+A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendix-algorithm}. Structural properties of feasible weighting, clipped aggregation, malicious-weight influence, hidden-task evaluation geometry, objective behavior, and per-round complexity are deferred to Appendix~\ref{sec:appendix-theory}.
 
 \section{Experiments}
 \label{sec:experiments}
 
-The experiments evaluate one deliberately scoped claim: whether hidden-task certificates improve robustness to untargeted model poisoning under heterogeneous client data, when compared against public robust-aggregation baselines under matched protocol controls. The main study uses CIFAR-100/ResNet18, matched trusted-data budgets for CARAT and FLTrust, final attacked accuracy/loss metrics, and average rank across attacks. Appendix~\ref{sec:appendix-experiments} provides the locked protocol details, final-loss results, runtime diagnostics, and reproducibility details.
+The experiments evaluate one deliberately scoped claim: whether hidden-task certificates improve robustness to untargeted model poisoning under heterogeneous client data, when compared against public robust-aggregation baselines under a fixed paper protocol and an explicit result-source policy. The main study uses CIFAR-100/ResNet18, matched trusted-data budgets for CARAT and FLTrust, final attacked accuracy/loss metrics, and average rank across attacks. Appendix~\ref{sec:appendix-experiments} provides protocol details, final-loss results, runtime diagnostics, and reproducibility details.
 
 \subsection{Evaluation Protocol}
 
@@ -234,11 +260,11 @@ We use CIFAR-100 with ResNet18~\cite{he2016deep}. CIFAR-100 has a class-rich lab
 The main-text comparison includes Mean, NormClipping, MultiKrum~\cite{blanchard2017krum}, FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, and CARAT. This set spans averaging, clipping, geometry-based filtering, trusted-data anchoring, historical detection, and hidden-task validation. We exclude unpublished or under-review defenses from the main claim so that every reported baseline is citable and publicly attributable. To isolate the effect of the aggregation rule, CARAT and FLTrust use matched labeled server-reference budgets.
 
 \paragraph{Training and reporting protocol.}
-All main attacked runs use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, learning rate $0.05$, and a $20\%$ malicious-client ratio. We evaluate Dirichlet non-i.i.d.\ regimes with $\alpha\in\{1,0.5\}$, where smaller $\alpha$ increases client heterogeneity. Clean no-attack runs are kept separate from attacked robustness tables so that clean utility is not mixed with poisoning resistance. Compatible legacy rows use five seeds where available; locked FLTrust and CARAT rows use three seeds under the regenerated protocol. We report final test accuracy as the primary metric, final test loss in the appendix as a consistency check, and average rank within each non-i.i.d.\ setting to summarize performance across attacks.
+All main attacked runs use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, learning rate $0.05$, and a $20\%$ malicious-client ratio. We evaluate Dirichlet non-i.i.d.\ regimes with $\alpha\in\{1,0.5\}$, where smaller $\alpha$ increases client heterogeneity. Clean no-attack runs are kept separate from attacked robustness tables so that clean utility is not mixed with poisoning resistance. Compatible legacy public-baseline rows use five seeds where available; regenerated FLTrust and CARAT rows use three seeds under the matched reference-assisted protocol. We disclose this source policy in the tables and use average rank to avoid overinterpreting any single seed count. Final test accuracy is the primary metric, final test loss in the appendix is a consistency check, and average rank within each non-i.i.d.\ setting summarizes performance across attacks.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Locked evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}
+\caption{Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}
 \label{tab:hyperparams}
 \definecolor{setupgray}{gray}{0.92}
 \renewcommand{\arraystretch}{1.08}
@@ -250,7 +276,7 @@ All main attacked runs use $20$ clients with full participation, $200$ global ro
 >{\raggedright\arraybackslash}p{0.31\textwidth}
 >{\raggedright\arraybackslash}p{0.40\textwidth}}
 \toprule
-\textbf{Axis} & \textbf{Locked setting} & \textbf{Purpose in the comparison} \\
+\textbf{Axis} & \textbf{Setting} & \textbf{Purpose in the comparison} \\
 \midrule
 \rowcolor{setupgray}
 \multicolumn{3}{l}{\textbf{Benchmark and federated training protocol}} \\
@@ -269,7 +295,7 @@ Main-text defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT &
 \multicolumn{3}{l}{\textbf{Reporting controls}} \\
 Metrics & Final test accuracy; final test loss; average rank & Accuracy is the main robustness metric; loss and rank provide consistency checks. \\
 Trusted-data control & Matched labeled reference budget for FLTrust and CARAT & Prevents the proposed method from receiving more server-side supervision. \\
-Seed policy & Legacy rows: five seeds where available; locked FLTrust/CARAT rows: three seeds & Reuses compatible public-baseline logs while regenerating trusted-data rows under the locked protocol. \\
+Seed policy & Legacy public-baseline rows: five seeds where available; regenerated FLTrust/CARAT rows: three seeds & Makes the result-source policy explicit while keeping the trusted-data budget matched for reference-assisted defenses. \\
 \bottomrule
 \end{tabular}
 }
@@ -277,11 +303,11 @@ Seed policy & Legacy rows: five seeds where available; locked FLTrust/CARAT rows
 
 \subsection{Main Robustness Results}
 
-Table~\ref{tab:cifar100-main-acc} reports the main attacked-accuracy comparison. The table uses the reported public baselines described above, reuses compatible five-seed legacy logs for Mean, NormClipping, MultiKrum, and FLDetector, and regenerates matched-budget FLTrust and the final $T=8$ CARAT protocol with three seeds under the locked configuration. The no-attack Mean run is not inserted as an attack-row baseline; it is shown only as a reference curve in Figure~\ref{fig:cifar100-fangattack-curves}.
+Table~\ref{tab:cifar100-main-acc} reports the main attacked-accuracy comparison. The table uses the reported public baselines described above, reuses protocol-compatible five-seed legacy logs for Mean, NormClipping, MultiKrum, and FLDetector, and regenerates matched-budget FLTrust and the final $T=8$ CARAT protocol with three seeds. The no-attack Mean run is not inserted as an attack-row baseline; it is shown only as a reference curve in Figure~\ref{fig:cifar100-fangattack-curves}.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the locked protocol with three seeds and matched reference budgets.}
+\caption{Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}
 \label{tab:cifar100-main-acc}
 \definecolor{caratrow}{gray}{0.91}
 \renewcommand{\arraystretch}{1.08}
@@ -322,7 +348,7 @@ Table~\ref{tab:cifar100-main-acc} reports the main attacked-accuracy comparison.
 }
 \end{table*}
 
-CARAT obtains average rank $1.0$ in both heterogeneity settings and is the strongest reported defense in every attack column. Relative to the best non-CARAT row in each column, CARAT improves mean final accuracy by $1.9$--$5.5$ percentage points across the eight attack/heterogeneity cells. The largest margins occur under FangAttack and under the more heterogeneous $\alpha=0.5$ MinMax/MinSum settings, where several non-CARAT defenses lose substantial accuracy. Appendix~\ref{sec:appendix-experiments} reports the corresponding final-loss table.
+Within this reported comparison, CARAT obtains average rank $1.0$ in both heterogeneity settings and is the strongest reported defense in every attack column. Relative to the best non-CARAT row in each column, CARAT improves mean final accuracy by $1.9$--$5.5$ percentage points across the eight attack/heterogeneity cells. The largest margins occur under FangAttack and under the more heterogeneous $\alpha=0.5$ MinMax/MinSum settings, where several non-CARAT defenses lose substantial accuracy. Appendix~\ref{sec:appendix-experiments} reports the corresponding final-loss table.
 
 Figure~\ref{fig:cifar100-fangattack-curves} shows the round-wise behavior under FangAttack, the attack where several non-CARAT defenses degrade most visibly in Table~\ref{tab:cifar100-main-acc}.
 
@@ -337,12 +363,12 @@ Figure~\ref{fig:cifar100-fangattack-curves} shows the round-wise behavior under 
 
 \subsection{Scope and Diagnostics}
 
-The completed evaluation supports a bounded claim: robustness against untargeted model poisoning on CIFAR-100/ResNet18 with $20\%$ malicious clients and Dirichlet non-i.i.d.\ partitions with $\alpha\in\{1,0.5\}$. More severe heterogeneity, larger client populations, additional datasets, backdoor attacks, and data-poisoning attacks remain outside the empirical claim set. Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as CARAT's main extra cost, Appendix~\ref{sec:appendix-runtime} reports verification-scale learning curves and runtime measurements as overhead diagnostics rather than as primary robustness claims.
+The completed evaluation supports a bounded claim: robustness against untargeted model poisoning on CIFAR-100/ResNet18 with $20\%$ malicious clients and Dirichlet non-i.i.d.\ partitions with $\alpha\in\{1,0.5\}$. More severe heterogeneity, larger client populations, additional datasets, backdoor attacks, data-poisoning attacks, and attackers that observe the exact hidden validation tasks remain outside the empirical claim set. This boundary is intentional: the paper evaluates whether class-aware hidden-task validation is a useful reference-assisted aggregation signal, not whether CARAT solves all Byzantine FL settings. Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as CARAT's main extra cost, Appendix~\ref{sec:appendix-runtime} reports verification-scale learning curves and runtime measurements as overhead diagnostics rather than as primary robustness claims.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented CARAT, a class-aware robust aggregation rule that validates client updates through hidden, class-balanced task certificates rather than relying only on geometric centrality or a single trusted reference direction. Across the locked CIFAR-100/ResNet18 non-i.i.d.\ evaluation with matched trusted-data budgets, CARAT achieves the strongest performance against the reported public baselines under four untargeted model-poisoning attacks. These results support CARAT as a practical defense for FL settings where a modest labeled server audit set is available and class-selective failures matter under heterogeneous client drift.
+We presented CARAT, a class-aware robust aggregation rule that validates client updates through hidden, class-balanced task certificates rather than relying only on geometric centrality or a single trusted reference direction. Across the completed CIFAR-100/ResNet18 non-i.i.d.\ evaluation with matched trusted-data budgets for reference-assisted defenses, CARAT achieves the strongest performance against the reported public baselines under four untargeted model-poisoning attacks. These results support CARAT as a practical defense for FL settings where a modest labeled server audit set is available and class-selective failures matter under heterogeneous client drift.
 
 \bibliographystyle{unsrtnat}
 \bibliography{ref}
@@ -351,26 +377,42 @@ We presented CARAT, a class-aware robust aggregation rule that validates client 
 \appendix
 
 \paragraph{Appendix organization.}
-The appendix is organized to make each claim auditable. Appendix~\ref{sec:appendix-algorithm-theory} gives the round-level algorithm, implementation invariants, and proofs of the structural properties used in the main text. Appendix~\ref{sec:appendix-experiments} gives only empirical support for the completed claim: locked protocol details, CARAT hyperparameters, final-loss results, runtime diagnostics, and reproducibility information.
+The appendix is organized to make each claim auditable. Appendix~\ref{sec:appendix-algorithm-theory} gives the round-level algorithm, implementation invariants, and proofs of the structural properties used in the main text. Appendix~\ref{sec:appendix-experiments} gives only empirical support for the completed claim: protocol details, CARAT hyperparameters, final-loss results, runtime diagnostics, and reproducibility information.
 
 \section{Algorithmic and Theoretical Details}
 \label{sec:appendix-algorithm-theory}
 
-This part collects method-level material that is needed to reproduce and interpret CARAT: executable server-side pseudocode, implementation details that affect the certificates, and structural propositions that explain the constrained weighting rule. The empirical protocol and additional results are separated into Appendix~\ref{sec:appendix-experiments}.
+This appendix provides the technical material needed to reproduce and interpret CARAT. It first fixes the round-level notation and server inputs, then gives executable pseudocode, implementation invariants, and structural propositions for the scoring and weighting rule. These results are deliberately stated as invariants and bounds for the proposed aggregation procedure, not as a complete Byzantine-robustness guarantee against arbitrary adaptive attackers.
 
-\subsection{Round-Level Algorithm}
+\subsection{Notation and Round Inputs}
+\label{sec:appendix-notation}
+
+All quantities in this appendix refer to one communication round $r$ unless stated otherwise. The server receives $n=|\mathcal{S}_r|$ client messages and converts them into vector updates $\Delta_i^r$. CARAT keeps three versions of each update:
+\[
+\Delta_i^r
+\quad\text{(raw client update)},\qquad
+\bar{\Delta}_i^r
+\quad\text{(clipped update)},\qquad
+\tilde{\Delta}_i^r
+\quad\text{(common-radius scoring copy)}.
+\]
+Only $\bar{\Delta}_i^r$ is used in the final server update. The normalized copy $\tilde{\Delta}_i^r$ is used only to evaluate hidden-task utility, so the validation score is less sensitive to residual norm differences after clipping.
+
+The server maintains a labeled reference set $\mathcal{D}^{\mathrm{ref}}$ and derives from it a working probe pool $\mathcal{P}$. Each hidden task is a small approximately class-balanced subset sampled from $\mathcal{P}$. The raw certificate matrix is $C^{\mathrm{raw}}\in\mathbb{R}^{n\times T}$, where $T$ is the number of hidden tasks and $C^{\mathrm{raw}}_{i,t}=c_{i,t}$ is the loss reduction obtained by candidate update $i$ on hidden task $t$. After robust column-wise standardization, the optimization uses $C\in\mathbb{R}^{n\times T}$. The vector $\gamma\in\mathbb{R}^n_{\ge 0}$ denotes coordinate-rank anomaly penalties. The vector $\alpha^{\mathrm{prev}}$ is the previous round's aggregation weight vector and acts as a temporal prior.
+
+\subsection{CARAT Round Algorithm}
 \label{sec:appendix-algorithm}
 
-Algorithm~\ref{alg:carat-round} summarizes one CARAT server round in standard pseudocode form.
+Algorithm~\ref{alg:carat-round} summarizes one CARAT server aggregation round. The algorithm is server-side: clients do not observe the realized hidden tasks sampled from $\mathcal{P}$.
 
 \begin{algorithm}[t]
 \caption{CARAT server aggregation at round $r$}
 \label{alg:carat-round}
 \begin{algorithmic}[1]
-\REQUIRE Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, probe pool $\mathcal{P}$, CARAT hyperparameters
+\REQUIRE Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, server reference set $\mathcal{D}^{\mathrm{ref}}$, probe pool $\mathcal{P}$, CARAT hyperparameters
 \ENSURE Aggregated update $\Delta_{\mathrm{agg}}$, updated temporal prior $\alpha^{\mathrm{prev}}$
 \IF{$\mathcal{P}$ is uninitialized}
-    \STATE Build a balanced probe pool from the server-visible training dataset
+    \STATE Construct a class-balanced probe pool $\mathcal{P}$ from $\mathcal{D}^{\mathrm{ref}}$
 \ENDIF
 \IF{$r=1$}
     \STATE $\alpha^{\mathrm{prev}} \leftarrow \frac{1}{n}\mathbf{1}$
@@ -386,7 +428,7 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server round in standard ps
 \FOR{$i=1$ to $n$}
     \STATE $\tilde{\Delta}_i^r \leftarrow q_r \bar{\Delta}_i^r / (\|\bar{\Delta}_i^r\|_2+\varepsilon)$
 \ENDFOR
-\STATE Sample $T$ class-balanced hidden tasks from $\mathcal{P}$ with replacement/subset fallback if strict balanced sampling fails
+\STATE Sample $T$ hidden tasks from $\mathcal{P}$ using class-balanced sampling
 \FOR{$t=1$ to $T$}
     \STATE Evaluate the baseline loss $\ell_t(w_r)$
 \ENDFOR
@@ -395,13 +437,13 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server round in standard ps
         \STATE $c_{i,t} \leftarrow \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i^r)$
     \ENDFOR
 \ENDFOR
-\STATE Robustly standardize certificate columns to obtain $C^{\mathrm{std}}$
+\STATE Robustly standardize certificate columns to obtain $C$
 \STATE Compute rank penalties $\gamma$ from repeated coordinate subsamples of $\{\bar{\Delta}_i^r\}_{i=1}^n$
 \STATE $\alpha^{(0)} \leftarrow \alpha^{\mathrm{prev}}$
 \FOR{$k=0$ to $K-1$}
-    \STATE $z \leftarrow (C^{\mathrm{std}})^\top \alpha^{(k)}$
+    \STATE $z \leftarrow C^\top \alpha^{(k)}$
     \STATE $\pi \leftarrow \softmin$ task weights induced by $z$ and $\beta$
-    \STATE $g \leftarrow C^{\mathrm{std}}\pi - \lambda_r \gamma - 2\lambda_p(\alpha^{(k)}-\alpha^{\mathrm{prev}})$
+    \STATE $g \leftarrow C\pi - \lambda_r \gamma - 2\lambda_p(\alpha^{(k)}-\alpha^{\mathrm{prev}})$
     \STATE $\alpha^{(k+1)} \leftarrow \Pi_{\mathcal{W}(\hat{\rho})}\!\left(\alpha^{(k)}+\eta g\right)$
 \ENDFOR
 \STATE $\alpha^\star \leftarrow \alpha^{(K)}$ and $\alpha^{\mathrm{prev}} \leftarrow \alpha^\star$
@@ -410,30 +452,24 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server round in standard ps
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Implementation Details and Diagnostics}
+\subsection{Implementation Invariants}
 \label{sec:appendix-implementation}
 
-This subsection fixes implementation choices that are easy to omit from the mathematical description but affect reproducibility: persistent state, probe construction, score calibration, projection behavior, and diagnostic logging.
+This subsection records implementation choices that affect reproducibility but are too low-level for the main method section. The purpose is to make the server-side scoring rule auditable, not to introduce additional assumptions beyond those stated in the threat model.
 
-\paragraph{Inputs.}
-Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, server-visible training dataset, and CARAT hyperparameters.
-
-\paragraph{Persistent state.}
-CARAT maintains two pieces of state across rounds: a balanced probe pool sampled at initialization from the server-visible training dataset, and the previous-round weight vector $\alpha^{\mathrm{prev}}$, which serves as the temporal prior for the current round.
-
-\paragraph{Initialization.}
-At the first round, the implementation initializes $\alpha^{\mathrm{prev}}$ to the uniform vector. This keeps the initial round unbiased across clients while still allowing later rounds to exploit temporal consistency once CARAT has observed several optimization trajectories.
+\paragraph{Persistent state and initialization.}
+CARAT maintains two state variables across rounds: the probe pool $\mathcal{P}$ derived from $\mathcal{D}^{\mathrm{ref}}$, and the previous-round weight vector $\alpha^{\mathrm{prev}}$. At the first round, $\alpha^{\mathrm{prev}}$ is initialized to the uniform vector. This makes the first aggregation unbiased across clients while allowing later rounds to use temporal consistency once weight trajectories have been observed.
 
 \paragraph{Reference-pool construction and hidden-task sampling.}
 Let $\mathcal{P}_c \subseteq \mathcal{P}$ denote the subset of probe examples with class label $c$. A hidden task is constructed by sampling a small number of examples from each available class pool and concatenating them into one balanced micro-task. If the desired number of samples per class is not available without replacement, CARAT falls back to replacement and, if needed, to a random subset of the probe pool rather than aborting the round. This fail-soft design preserves the intended semantic diversity of the task sampler while ensuring that the server always obtains a well-defined certificate matrix.
 
 \paragraph{Robust score calibration.}
-For notational economy, the main text reuses $C$ after standardization. In implementation terms, the raw certificate matrix is first transformed column-wise into
+The raw certificate matrix is transformed column-wise before optimization:
 \[
-C^{\mathrm{std}}_{i,t}
+C_{i,t}
 =
-\frac{c_{i,t}-\operatorname{median}_j(c_{j,t})}
-{1.4826 \cdot \operatorname{MAD}_j(c_{j,t})+\varepsilon}.
+\frac{C^{\mathrm{raw}}_{i,t}-\operatorname{median}_j(C^{\mathrm{raw}}_{j,t})}
+{1.4826 \cdot \operatorname{MAD}_j(C^{\mathrm{raw}}_{j,t})+\varepsilon}.
 \]
 This removes task-specific scale effects while preserving within-task ordering by Proposition~\ref{prop:task-standardization}. Rank penalties are calibrated similarly. For each coordinate subsample $S_s$, let
 \[
@@ -453,10 +489,10 @@ and aggregates subsamples through
 \[
 \gamma_i=\max\left(0,\operatorname{median}_s z_i^{(s)}\right).
 \]
-As a result, a client is penalized only when it is consistently extreme across repeated coordinate views, not because of a single noisy subsample.
+Thus a client is penalized only when it is consistently extreme across repeated coordinate views, not because of a single noisy subsample.
 
-\paragraph{Projected optimization details.}
-Again writing $C$ for the standardized certificate matrix, CARAT initializes the optimizer with $\alpha^{(0)}=\alpha^{\mathrm{prev}}$ after the first round, and with the uniform vector at initialization. If
+\paragraph{Projected optimization.}
+CARAT initializes the projected optimizer with $\alpha^{(0)}=\alpha^{\mathrm{prev}}$. If
 \[
 z(\alpha)=C^\top \alpha,
 \qquad
@@ -472,21 +508,15 @@ With optimizer step size $\eta$, one iteration takes the form
 \Pi_{\mathcal{W}(\hat{\rho})}
 \left(\alpha^{(k)}+\eta g(\alpha^{(k)})\right).
 \]
-The projection maintains feasibility throughout optimization, so every intermediate iterate already satisfies the nonnegativity, unit-sum, and per-client cap constraints described in the main text.
+The projection maintains feasibility throughout optimization, so every intermediate iterate satisfies nonnegativity, unit-sum, and per-client cap constraints.
 
-\paragraph{Round invariants and failure handling.}
-Two implementation choices are important for robustness. First, the optimizer never leaves the capped simplex, so every intermediate and final weight vector remains feasible. Second, probe-task construction is fail-soft rather than fail-stop: if strict class-balanced sampling is impossible, the code falls back to replacement or to a random subset, ensuring that the round can still proceed with a well-defined certificate matrix.
-
-\paragraph{Outputs.}
-Aggregated server update, updated temporal prior $\alpha^{\mathrm{prev}}$, and diagnostic logs including learned weights, task scores, softmin focus, rank penalties, evaluation radius, clipping threshold, and the identities of the hidden probe tasks used in the current round.
-
-\paragraph{Practical diagnostics.}
-The most useful round-level diagnostics for debugging and empirical interpretation are the learned weights, the weakest-task values emphasized by the softmin, the clip threshold $\tau_r$, the evaluation radius $q_r$, and the final rank penalties $\gamma_i$. In successful runs, these quantities help distinguish three qualitatively different cases: benign but diverse clients that retain moderate weight, clearly harmful clients that lose certificate support across multiple tasks, and structurally extreme clients whose influence is reduced primarily by the rank penalty.
+\paragraph{Diagnostics.}
+The implementation records learned weights, task scores, softmin task weights, rank penalties, clipping thresholds, evaluation radii, and hidden-task identifiers. These diagnostics distinguish three qualitatively different behaviors: benign but diverse clients that retain moderate weight, harmful clients that lose certificate support across hidden tasks, and structurally extreme clients whose influence is reduced mainly through the rank penalty.
 
 \subsection{Proofs and Structural Properties}
 \label{sec:appendix-theory}
 
-This appendix records the main structural properties used to interpret CARAT. These results are not presented as a complete robustness guarantee against arbitrary adaptive attackers. Instead, they clarify why the method decomposes into a normalized evaluation geometry, a task-aware utility objective, and a constrained robust aggregation step.
+The following propositions are grouped by the role they play in CARAT. Propositions~\ref{prop:capped-simplex}--\ref{prop:malicious-mass-bound} characterize feasible weighted aggregation and bounded influence after clipping. Propositions~\ref{prop:directional-invariance}--\ref{prop:task-standardization} characterize the hidden-task evaluation geometry. Propositions~\ref{prop:softmin}--\ref{prop:pairwise-transfer} characterize the optimization objective, and Proposition~\ref{prop:complexity} records the per-round cost.
 
 \begin{proposition}[Feasibility and support of the capped simplex]
 \label{prop:capped-simplex}
@@ -506,164 +536,12 @@ with $\hat{\rho}<1$. Then $\mathcal{W}(\hat{\rho})$ is non-empty, and every $\al
 \]
 \end{proposition}
 
-\begin{proof}[Proof sketch]
+\begin{proof}
 Let $u = 1/((1-\hat{\rho})n)$. Since $\hat{\rho}<1$, we have $u \ge 1/n$, so the uniform weight vector is feasible and the set is non-empty. For the support bound, if only $k$ coordinates of $\alpha$ are positive, then
 \[
 1=\sum_{i=1}^n \alpha_i \le k u = \frac{k}{(1-\hat{\rho})n},
 \]
 which implies $k \ge (1-\hat{\rho})n$. Therefore CARAT can suppress suspicious clients, but cannot collapse the aggregate onto an arbitrarily small subset of participants.
-\end{proof}
-
-\begin{proposition}[Softmin bounds and gradient form]
-\label{prop:softmin}
-Let $s \in \R^T$ and define
-\[
-\softmin_{\beta}(s)
-= -\frac{1}{\beta}\log\left(\frac{1}{T}\sum_{t=1}^T e^{-\beta s_t}\right).
-\]
-Then
-\[
-\min_t s_t \le \softmin_{\beta}(s) \le \min_t s_t + \frac{\log T}{\beta}.
-\]
-Moreover,
-\[
-\lim_{\beta \to \infty}\softmin_{\beta}(s)=\min_t s_t,
-\qquad
-\lim_{\beta \to 0}\softmin_{\beta}(s)=\frac{1}{T}\sum_{t=1}^T s_t.
-\]
-Moreover, if $z(\alpha)=C^\top\alpha$ and
-\[
-\pi_t(\alpha)=\frac{\exp(-\beta z_t(\alpha))}{\sum_{\ell=1}^T \exp(-\beta z_\ell(\alpha))},
-\]
-then
-\[
-\nabla_\alpha \softmin_{\beta}(C^\top\alpha)=C\pi(\alpha).
-\]
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-Let $m=\min_t s_t$. Since
-\[
-e^{-\beta m}/T \le \frac{1}{T}\sum_{t=1}^T e^{-\beta s_t} \le e^{-\beta m},
-\]
-applying $-(1/\beta)\log(\cdot)$ yields
-\[
-m \le \softmin_{\beta}(s) \le m+\frac{\log T}{\beta}.
-\]
-The limit $\beta \to \infty$ follows immediately from the vanishing gap bound. For $\beta \to 0$, a first-order expansion of the exponential average gives
-\[
-\frac{1}{T}\sum_{t=1}^T e^{-\beta s_t}
-=
-1-\beta \frac{1}{T}\sum_{t=1}^T s_t + o(\beta),
-\]
-so the softmin converges to the arithmetic mean. Differentiating the softmin expression with respect to $z_t$ yields the Gibbs weights $\pi_t(\alpha)$, and the chain rule then gives $C\pi(\alpha)$. Hence the ascent direction is a convex combination of certificate columns, with more weight placed on tasks whose current aggregate utility is smaller.
-\end{proof}
-
-\begin{proposition}[Directional invariance of certificate scoring]
-\label{prop:directional-invariance}
-Suppose two nonzero clipped updates satisfy $\bar{\Delta}_i = a \bar{\Delta}_j$ for some scalar $a>0$. Then their normalized versions in Eq.~\eqref{eq:normalize} coincide, i.e.,
-\[
-\tilde{\Delta}_i=\tilde{\Delta}_j.
-\]
-Consequently, their hidden-task certificates are identical:
-\[
-c_{i,t}=c_{j,t}\qquad \text{for all } t \in \{1,\dots,T\}.
-\]
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-Eq.~\eqref{eq:normalize} rescales every nonzero clipped update to the common radius $q_r$. Positive collinearity is therefore removed by normalization:
-\[
-q_r\frac{\bar{\Delta}_i}{\|\bar{\Delta}_i\|_2}
-=
-q_r\frac{a\bar{\Delta}_j}{\|a\bar{\Delta}_j\|_2}
-=
-q_r\frac{\bar{\Delta}_j}{\|\bar{\Delta}_j\|_2}.
-\]
-Substituting the resulting equality into Eq.~\eqref{eq:cert} gives identical task scores. Thus, after clipping, the certificate stage depends on direction rather than residual norm magnitude.
-\end{proof}
-
-\begin{proposition}[Task-wise standardization preserves within-task ordering]
-\label{prop:task-standardization}
-Fix a task $t$ and define a standardized certificate score
-\[
-\hat{c}_{i,t}=\frac{c_{i,t}-m_t}{s_t+\varepsilon},
-\]
-where $m_t \in \R$ and $s_t>0$ depend only on task $t$ and not on client $i$. Then for any clients $i,j$,
-\[
-c_{i,t} \ge c_{j,t}
-\quad \Longleftrightarrow \quad
-\hat{c}_{i,t} \ge \hat{c}_{j,t}.
-\]
-Moreover,
-\[
-\hat{c}_{i,t}-\hat{c}_{j,t}
-=
-\frac{c_{i,t}-c_{j,t}}{s_t+\varepsilon}.
-\]
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-For a fixed task $t$, the map $x \mapsto (x-m_t)/(s_t+\varepsilon)$ is affine with strictly positive slope because $s_t+\varepsilon>0$. Hence it preserves ordering. The difference identity follows by direct subtraction. Therefore column-wise robust standardization calibrates cross-task scale without changing the within-task ranking induced by the raw certificate scores.
-\end{proof}
-
-\begin{proposition}[Temporal prior and projected-iterate invariants]
-\label{prop:temporal-prior}
-Define
-\[
-f(\alpha)=\softmin_{\beta}(C^\top\alpha)-\lambda_r \gamma^\top\alpha-\lambda_p\|\alpha-\alpha^{\mathrm{prev}}\|_2^2.
-\]
-If $\alpha,\alpha' \in \mathcal{W}(\hat{\rho})$ satisfy $C^\top\alpha=C^\top\alpha'$ and $\gamma^\top\alpha=\gamma^\top\alpha'$, then
-\[
-f(\alpha)-f(\alpha')
-=
--\lambda_p\!\left(\|\alpha-\alpha^{\mathrm{prev}}\|_2^2-\|\alpha'-\alpha^{\mathrm{prev}}\|_2^2\right).
-\]
-In addition, under projected gradient ascent
-\[
-\alpha^{(k+1)}=\Pi_{\mathcal{W}(\hat{\rho})}\!\left(\alpha^{(k)}+\eta \nabla f(\alpha^{(k)})\right),
-\]
-every iterate remains in $\mathcal{W}(\hat{\rho})$.
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-The first statement follows by direct substitution: if the certificate and rank terms match, the only remaining difference in objective value is the quadratic prior term. CARAT therefore prefers, among utility-equivalent feasible weights, the solution closer to $\alpha^{\mathrm{prev}}$. The second statement is immediate from the projection operator. Hence the optimizer preserves three round invariants throughout: $\alpha_i \ge 0$, $\sum_i \alpha_i =1$, and $\alpha_i \le 1/((1-\hat{\rho})n)$.
-\end{proof}
-
-\begin{proposition}[Pairwise weight-transfer condition]
-\label{prop:pairwise-transfer}
-Let
-\[
-f(\alpha)=\softmin_{\beta}(C^\top\alpha)-\lambda_r \gamma^\top\alpha-\lambda_p\|\alpha-\alpha^{\mathrm{prev}}\|_2^2
-\]
-be the CARAT objective, and let $e_a,e_b$ be coordinate vectors for two clients $a$ and $b$. Suppose $\alpha+\epsilon(e_b-e_a)$ remains feasible for sufficiently small $\epsilon>0$. Define
-\[
-\pi_t(\alpha)=\frac{\exp(-\beta (C^\top\alpha)_t)}
-{\sum_{\ell=1}^T \exp(-\beta (C^\top\alpha)_\ell)}.
-\]
-Then moving infinitesimal weight from client $a$ to client $b$ increases the objective to first order whenever
-\[
-(C_b-C_a)^\top \pi(\alpha)
--\lambda_r(\gamma_b-\gamma_a)
--2\lambda_p\!\left[
-(\alpha_b-\alpha_b^{\mathrm{prev}})
--(\alpha_a-\alpha_a^{\mathrm{prev}})
-\right] > 0,
-\]
-where $C_i$ denotes row $i$ of the standardized certificate matrix.
-\end{proposition}
-
-\begin{proof}[Proof sketch]
-Let $d=e_b-e_a$. A first-order expansion gives
-\[
-f(\alpha+\epsilon d)-f(\alpha)
-=\epsilon d^\top\nabla f(\alpha)+o(\epsilon).
-\]
-Using Proposition~\ref{prop:softmin}, the gradient is
-\[
-\nabla f(\alpha)=C\pi(\alpha)-\lambda_r \gamma-2\lambda_p(\alpha-\alpha^{\mathrm{prev}}).
-\]
-Substituting $d=e_b-e_a$ yields exactly the displayed expression. Hence a client gains weight when its hidden-task utility advantage, measured through the current softmin focus $\pi(\alpha)$, outweighs its rank penalty and temporal-prior cost.
 \end{proof}
 
 \begin{proposition}[Norm bound for the final aggregate]
@@ -678,7 +556,7 @@ satisfies
 \]
 \end{proposition}
 
-\begin{proof}[Proof sketch]
+\begin{proof}
 Because $\alpha_i \ge 0$ and $\sum_i \alpha_i=1$, the aggregate is a convex combination of clipped updates. By the triangle inequality,
 \[
 \|\Delta_{\mathrm{agg}}\|_2
@@ -715,7 +593,7 @@ denotes the benign-only aggregate obtained by renormalizing the benign weights, 
 \]
 \end{proposition}
 
-\begin{proof}[Proof sketch]
+\begin{proof}
 The first inequality follows from the triangle inequality:
 \[
 \left\|\sum_{i\in\mathcal{M}}\alpha_i\bar{\Delta}_i\right\|_2
@@ -736,7 +614,159 @@ Therefore
 q_{\mathcal{M}}\|\Delta_{\mathcal{B}}\|_2
 +\left\|\sum_{i\in\mathcal{M}}\alpha_i\bar{\Delta}_i\right\|_2.
 \]
-Since $\Delta_{\mathcal{B}}$ is a convex combination of clipped benign updates, $\|\Delta_{\mathcal{B}}\|_2\le\tau_r$ by the same argument as Proposition~\ref{prop:aggregate-bound}. Combining this with the first inequality gives the bound.
+Since $\Delta_{\mathcal{B}}$ is a convex combination of clipped benign updates, $\|\Delta_{\mathcal{B}}\|_2\le\tau_r$ by Proposition~\ref{prop:aggregate-bound}. Combining this with the first inequality gives the stated bound.
+\end{proof}
+
+\begin{proposition}[Directional invariance of certificate scoring]
+\label{prop:directional-invariance}
+Suppose two nonzero clipped updates satisfy $\bar{\Delta}_i = a \bar{\Delta}_j$ for some scalar $a>0$. Then their normalized versions in Eq.~\eqref{eq:normalize} coincide, i.e.,
+\[
+\tilde{\Delta}_i=\tilde{\Delta}_j.
+\]
+Consequently, their hidden-task certificates are identical:
+\[
+c_{i,t}=c_{j,t}\qquad \text{for all } t \in \{1,\dots,T\}.
+\]
+\end{proposition}
+
+\begin{proof}
+Eq.~\eqref{eq:normalize} rescales every nonzero clipped update to the common radius $q_r$. Positive collinearity is therefore removed by normalization:
+\[
+q_r\frac{\bar{\Delta}_i}{\|\bar{\Delta}_i\|_2}
+=
+q_r\frac{a\bar{\Delta}_j}{\|a\bar{\Delta}_j\|_2}
+=
+q_r\frac{\bar{\Delta}_j}{\|\bar{\Delta}_j\|_2}.
+\]
+Substituting the resulting equality into Eq.~\eqref{eq:cert} gives identical task scores. Thus, after clipping, the certificate stage depends on direction rather than residual norm magnitude.
+\end{proof}
+
+\begin{proposition}[Task-wise standardization preserves within-task ordering]
+\label{prop:task-standardization}
+Fix a task $t$ and define a standardized certificate score
+\[
+\hat{c}_{i,t}=\frac{c_{i,t}-m_t}{s_t+\varepsilon},
+\]
+where $m_t \in \R$ and $s_t>0$ depend only on task $t$ and not on client $i$. Then for any clients $i,j$,
+\[
+c_{i,t} \ge c_{j,t}
+\quad \Longleftrightarrow \quad
+\hat{c}_{i,t} \ge \hat{c}_{j,t}.
+\]
+Moreover,
+\[
+\hat{c}_{i,t}-\hat{c}_{j,t}
+=
+\frac{c_{i,t}-c_{j,t}}{s_t+\varepsilon}.
+\]
+\end{proposition}
+
+\begin{proof}
+For a fixed task $t$, the map $x \mapsto (x-m_t)/(s_t+\varepsilon)$ is affine with strictly positive slope because $s_t+\varepsilon>0$. Hence it preserves ordering. The difference identity follows by direct subtraction. Therefore column-wise robust standardization calibrates cross-task scale without changing the within-task ranking induced by the raw certificate scores.
+\end{proof}
+
+\begin{proposition}[Softmin bounds and gradient form]
+\label{prop:softmin}
+Let $s \in \R^T$ and define
+\[
+\softmin_{\beta}(s)
+= -\frac{1}{\beta}\log\left(\frac{1}{T}\sum_{t=1}^T e^{-\beta s_t}\right).
+\]
+Then
+\[
+\min_t s_t \le \softmin_{\beta}(s) \le \min_t s_t + \frac{\log T}{\beta}.
+\]
+Moreover,
+\[
+\lim_{\beta \to \infty}\softmin_{\beta}(s)=\min_t s_t,
+\qquad
+\lim_{\beta \to 0}\softmin_{\beta}(s)=\frac{1}{T}\sum_{t=1}^T s_t.
+\]
+If $z(\alpha)=C^\top\alpha$ and
+\[
+\pi_t(\alpha)=\frac{\exp(-\beta z_t(\alpha))}{\sum_{\ell=1}^T \exp(-\beta z_\ell(\alpha))},
+\]
+then
+\[
+\nabla_\alpha \softmin_{\beta}(C^\top\alpha)=C\pi(\alpha).
+\]
+\end{proposition}
+
+\begin{proof}
+Let $m=\min_t s_t$. Since
+\[
+e^{-\beta m}/T \le \frac{1}{T}\sum_{t=1}^T e^{-\beta s_t} \le e^{-\beta m},
+\]
+applying $-(1/\beta)\log(\cdot)$ yields
+\[
+m \le \softmin_{\beta}(s) \le m+\frac{\log T}{\beta}.
+\]
+The limit $\beta \to \infty$ follows from the vanishing gap bound. For $\beta \to 0$, a first-order expansion of the exponential average gives
+\[
+\frac{1}{T}\sum_{t=1}^T e^{-\beta s_t}
+=
+1-\beta \frac{1}{T}\sum_{t=1}^T s_t + o(\beta),
+\]
+so the softmin converges to the arithmetic mean. Differentiating the softmin expression with respect to $z_t$ yields the Gibbs weights $\pi_t(\alpha)$, and the chain rule gives $C\pi(\alpha)$. Hence the ascent direction is a convex combination of certificate columns, with more weight placed on tasks whose current aggregate utility is smaller.
+\end{proof}
+
+\begin{proposition}[Temporal prior and projected-iterate invariants]
+\label{prop:temporal-prior}
+Define
+\[
+f(\alpha)=\softmin_{\beta}(C^\top\alpha)-\lambda_r \gamma^\top\alpha-\lambda_p\|\alpha-\alpha^{\mathrm{prev}}\|_2^2.
+\]
+If $\alpha,\alpha' \in \mathcal{W}(\hat{\rho})$ satisfy $C^\top\alpha=C^\top\alpha'$ and $\gamma^\top\alpha=\gamma^\top\alpha'$, then
+\[
+f(\alpha)-f(\alpha')
+=
+-\lambda_p\!\left(\|\alpha-\alpha^{\mathrm{prev}}\|_2^2-\|\alpha'-\alpha^{\mathrm{prev}}\|_2^2\right).
+\]
+In addition, under projected gradient ascent
+\[
+\alpha^{(k+1)}=\Pi_{\mathcal{W}(\hat{\rho})}\!\left(\alpha^{(k)}+\eta \nabla f(\alpha^{(k)})\right),
+\]
+every iterate remains in $\mathcal{W}(\hat{\rho})$.
+\end{proposition}
+
+\begin{proof}
+The first statement follows by direct substitution: if the certificate and rank terms match, the only remaining difference in objective value is the quadratic prior term. CARAT therefore prefers, among utility-equivalent feasible weights, the solution closer to $\alpha^{\mathrm{prev}}$. The second statement is immediate from the projection operator. Hence the optimizer preserves three round invariants throughout: $\alpha_i \ge 0$, $\sum_i \alpha_i =1$, and $\alpha_i \le 1/((1-\hat{\rho})n)$.
+\end{proof}
+
+\begin{proposition}[Pairwise weight-transfer condition]
+\label{prop:pairwise-transfer}
+Let
+\[
+f(\alpha)=\softmin_{\beta}(C^\top\alpha)-\lambda_r \gamma^\top\alpha-\lambda_p\|\alpha-\alpha^{\mathrm{prev}}\|_2^2
+\]
+be the CARAT objective, and let $e_a,e_b$ be coordinate vectors for two clients $a$ and $b$. Suppose $\alpha+\epsilon(e_b-e_a)$ remains feasible for sufficiently small $\epsilon>0$. Define
+\[
+\pi_t(\alpha)=\frac{\exp(-\beta (C^\top\alpha)_t)}
+{\sum_{\ell=1}^T \exp(-\beta (C^\top\alpha)_\ell)}.
+\]
+Then moving infinitesimal weight from client $a$ to client $b$ increases the objective to first order whenever
+\[
+(C_b-C_a)^\top \pi(\alpha)
+-\lambda_r(\gamma_b-\gamma_a)
+-2\lambda_p\!\left[
+(\alpha_b-\alpha_b^{\mathrm{prev}})
+-(\alpha_a-\alpha_a^{\mathrm{prev}})
+\right] > 0,
+\]
+where $C_i$ denotes row $i$ of the standardized certificate matrix.
+\end{proposition}
+
+\begin{proof}
+Let $d=e_b-e_a$. A first-order expansion gives
+\[
+f(\alpha+\epsilon d)-f(\alpha)
+=\epsilon d^\top\nabla f(\alpha)+o(\epsilon).
+\]
+Using Proposition~\ref{prop:softmin}, the gradient is
+\[
+\nabla f(\alpha)=C\pi(\alpha)-\lambda_r \gamma-2\lambda_p(\alpha-\alpha^{\mathrm{prev}}).
+\]
+Substituting $d=e_b-e_a$ yields exactly the displayed expression. Hence a client gains weight when its hidden-task utility advantage, measured through the current softmin focus $\pi(\alpha)$, outweighs its rank penalty and temporal-prior cost.
 \end{proof}
 
 \begin{proposition}[Per-round complexity]
@@ -747,12 +777,12 @@ Let $n$ be the number of clients, $T$ the number of hidden tasks, $m$ the number
 \]
 \end{proposition}
 
-\begin{proof}[Proof sketch]
+\begin{proof}
 CARAT performs one baseline probe evaluation plus $n$ candidate probe evaluations over the $T$ hidden tasks, then computes $S$ rank summaries over $m$ coordinates, and finally executes $K$ projected optimization steps over $n$ weights and $T$ task scores. In the prototype implementation, the probe-model forward passes dominate wall-clock time, while the rank and optimization stages are lower-order terms controlled by $m$, $S$, and $K$.
 \end{proof}
 
-\paragraph{Remark on assumptions.}
-The object $\mathcal{D}^{\mathrm{ref}}$ in the main text denotes the labeled server reference set, while the probe pool $\mathcal{P}$ used during each round is a subsampled working set derived from it. In practice, the server first constructs $\mathcal{P}$ from the full server-visible reference data and then samples hidden tasks from $\mathcal{P}$ at each round. This distinction should remain explicit because it is part of the method's server-side assumption and materially strengthens the setting relative to a fully data-free defense.
+\paragraph{Remark on the reference assumption.}
+The object $\mathcal{D}^{\mathrm{ref}}$ denotes the labeled server reference set, while $\mathcal{P}$ is a subsampled working pool derived from it for hidden-task construction. This distinction is part of CARAT's threat model and materially strengthens the setting relative to fully data-free robust aggregation.
 
 \section{Experimental Protocols and Additional Results}
 \label{sec:appendix-experiments}
@@ -761,22 +791,22 @@ This part records only empirical material that directly supports the main-text c
 
 \subsection{Completed Empirical Scope}
 
-The completed empirical scope is intentionally narrow. We evaluate untargeted model poisoning on CIFAR-100/ResNet18 with Dirichlet non-i.i.d.\ client partitions, $20\%$ malicious clients, and four attacks: ALIE, FangAttack, MinMax, and MinSum. The comparison uses Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. All claims are based on attacked final test accuracy, attacked final test loss, and average rank. CARAT and FLTrust use matched labeled server-reference budgets, and unpublished or under-review defenses are excluded from the claim set.
+The completed empirical scope is intentionally narrow. We evaluate untargeted model poisoning on CIFAR-100/ResNet18 with Dirichlet non-i.i.d.\ client partitions, $20\%$ malicious clients, and four attacks: ALIE, FangAttack, MinMax, and MinSum. The comparison uses Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. All claims are based on attacked final test accuracy, attacked final test loss, and average rank. CARAT and FLTrust use matched labeled server-reference budgets, unpublished or under-review defenses are excluded from the claim set, and the result-source policy is disclosed for each table rather than hidden in aggregate statistics.
 
-\subsection{Locked CIFAR-100 Protocol}
+\subsection{Reported CIFAR-100 Protocol}
 
-Unless stated otherwise, the CIFAR-100 comparison uses $20$ clients with full participation, $200$ communication rounds, $4$ local epochs, learning rate $0.05$, and Dirichlet non-i.i.d.\ partitions with $\alpha \in \{1,0.5\}$. Legacy public-baseline rows use five random seeds where available, while the locked FLTrust and CARAT rows use three random seeds.
+Unless stated otherwise, the CIFAR-100 comparison uses $20$ clients with full participation, $200$ communication rounds, $4$ local epochs, learning rate $0.05$, and Dirichlet non-i.i.d.\ partitions with $\alpha \in \{1,0.5\}$. Legacy public-baseline rows use five random seeds where available, while regenerated FLTrust and CARAT rows use three random seeds under the matched reference-assisted protocol.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Locked CIFAR-100/ResNet18 protocol used for the reported public-baseline result set.}
-\label{tab:locked-protocol}
+\caption{CIFAR-100/ResNet18 protocol used for the reported public-baseline result set.}
+\label{tab:reported-protocol}
 \renewcommand{\arraystretch}{1.08}
 \small
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{p{0.22\textwidth}p{0.30\textwidth}p{0.40\textwidth}}
 \toprule
-\textbf{Component} & \textbf{Locked setting} & \textbf{Role in the paper} \\
+\textbf{Component} & \textbf{Setting} & \textbf{Role in the paper} \\
 \midrule
 Dataset and model & CIFAR-100 / ResNet18 & Primary class-rich benchmark for the main robustness claim. \\
 Client population & $20$ clients, full participation & Keeps client sampling fixed so defense differences are not confounded with participation noise. \\
@@ -785,7 +815,7 @@ Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5\}$ & Completed hete
 Malicious clients & $20\%$ & Attacker fraction used in the completed result set. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum & Untargeted model-poisoning attacks used for final tables and ranks. \\
 Compared defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Public, citable baselines used in Table~\ref{tab:cifar100-main-acc}. \\
-Seeds and source policy & Legacy rows: five seeds where available; locked rows: three seeds & Compatible legacy logs are reused; FLTrust and CARAT are regenerated under the locked protocol. \\
+Seeds and source policy & Legacy rows: five seeds where available; regenerated FLTrust/CARAT rows: three seeds & Compatible legacy logs are reused with explicit source disclosure; reference-assisted rows are regenerated with matched trusted-data budgets. \\
 Trusted-data budget & Matched between FLTrust and CARAT & Prevents CARAT from receiving a larger labeled server-reference budget than the trusted-data baseline. \\
 \bottomrule
 \end{tabular}
@@ -794,11 +824,11 @@ Trusted-data budget & Matched between FLTrust and CARAT & Prevents CARAT from re
 
 \subsection{CARAT Hyperparameters}
 
-Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the locked CIFAR-100 result set. These values define the reported protocol and make the server-side evaluation budget explicit.
+Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the reported CIFAR-100 result set. These values define the reported protocol and make the server-side evaluation budget explicit.
 
 \begin{table*}[!htbp]
 \centering
-\caption{CARAT hyperparameters used in the locked CIFAR-100/ResNet18 public-baseline runs.}
+\caption{CARAT hyperparameters used in the reported CIFAR-100/ResNet18 public-baseline runs.}
 \label{tab:carat-hyperparameters}
 \renewcommand{\arraystretch}{1.08}
 \small
@@ -820,11 +850,11 @@ Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capp
 
 \subsection{Final-Loss Results}
 
-Table~\ref{tab:cifar100-main-loss} reports the final test loss corresponding to Table~\ref{tab:cifar100-main-acc}. It uses the same source policy: compatible legacy public-baseline logs are reused, while matched-budget FLTrust and $T=8$ CARAT are taken from the locked three-seed protocol.
+Table~\ref{tab:cifar100-main-loss} reports the final test loss corresponding to Table~\ref{tab:cifar100-main-acc}. It uses the same source policy: compatible legacy public-baseline logs are reused, while matched-budget FLTrust and $T=8$ CARAT are taken from the regenerated three-seed protocol.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the locked public-baseline protocol with three seeds and matched reference budgets.}
+\caption{Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}
 \label{tab:cifar100-main-loss}
 \renewcommand{\arraystretch}{1.05}
 \small

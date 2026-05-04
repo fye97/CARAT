@@ -135,20 +135,20 @@ Given the round-level update set $\{\Delta_i^r\}_{i\in\mathcal{S}_r}$ and refere
 
 \subsection{Overview}
 
-CARAT turns the requirements above into a server-side aggregation procedure with three components. Figure~\ref{fig:carat-overview} shows the pipeline. First, CARAT places candidate updates in a common scoring geometry by robustly clipping their norms and normalizing only the evaluation copies. Second, it scores each candidate by hidden-task loss reduction and augments this semantic signal with a coordinate-rank anomaly penalty. Third, it solves a capped-simplex optimization problem that favors worst-task utility while limiting structurally extreme and temporally unstable weights. The final server update is computed from clipped updates, not from the normalized evaluation copies.
+CARAT turns the requirements above into the three-stage server-side pipeline shown in Figure~\ref{fig:carat-overview}. First, the server constructs hidden class-balanced tasks from a labeled reference set, making the validation queries semantic and unavailable to clients. Second, CARAT evaluates each client update on these hidden tasks after placing updates in a common scoring geometry, producing a certificate matrix of task-level loss reductions. Third, CARAT learns bounded aggregation weights by optimizing worst-task utility under rank-anomaly, temporal-stability, and per-client influence constraints. The final server update is a weighted average of clipped client updates, not of the normalized evaluation copies.
 
 \begin{figure*}[!htbp]
 \centering
 \safeincludegraphics[width=\textwidth]{figures/Carat_design.png}
-\caption{Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates.}
+\caption{Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly, temporal-stability, and per-client cap constraints. The server updates the model using a weighted average of clipped client updates.}
 \label{fig:carat-overview}
 \end{figure*}
 
 Appendix~\ref{sec:appendix-component-rationale} summarizes how each component maps to a concrete failure mode in non-i.i.d.\ robust aggregation.
 
-\subsection{Hidden-Task Certificates}
+\subsection{Hidden Tasks and Task-Conditioned Validation}
 
-Within a round, CARAT first constructs a scale-controlled copy of each client update for scoring. We suppress the round superscript in this section. Before semantic evaluation, the server clips each update so that a small number of large-magnitude messages cannot dominate the comparison stage. Let $\|\Delta_i\|_2$ denote the norm of client $i$'s update. In our implementation, the clipping threshold $\tau_r$ is estimated by the MAD-based rule
+Within a round, CARAT first prepares client updates for task-conditioned validation. We suppress the round superscript in this section. Before semantic evaluation, the server clips each update so that a small number of large-magnitude messages cannot dominate the comparison stage. Let $\|\Delta_i\|_2$ denote the norm of client $i$'s update. In our implementation, the clipping threshold $\tau_r$ is estimated by the MAD-based rule
 \begin{equation}
 \tau_r = \operatorname{median}(\{\|\Delta_i\|_2\}) +
 k \cdot 1.4826 \cdot \operatorname{MAD}(\{\|\Delta_i\|_2\}),
@@ -165,7 +165,7 @@ CARAT then rescales each clipped update to a common evaluation radius $q_r$,
 \end{equation}
 where $q_r$ is chosen as a quantile of the positive clipped norms. The normalized vector $\tilde{\Delta}_i$ is used only to evaluate candidate utility; the final aggregation step uses $\bar{\Delta}_i$. This separation makes certificate scoring scale-neutral without changing the conservative clipped update applied to the global model.
 
-CARAT evaluates each normalized candidate on multiple hidden semantic slices of the reference data. It samples $T$ hidden tasks from the probe pool $\mathcal{P}$, with each task constructed to be approximately class-balanced. This class-balanced construction is the source of CARAT's class awareness: a malicious update may remain globally plausible while degrading only a subset of classes, whereas repeated balanced tasks make localized failures harder to hide. For task $t$, let $\ell_t(w)$ denote the average cross-entropy loss of model $w$ on that task. CARAT defines a \emph{hidden-task certificate}
+CARAT then constructs hidden semantic validation tasks from the server reference data. It samples $T$ hidden tasks from the probe pool $\mathcal{P}$, with each task constructed to be approximately class-balanced. This class-balanced construction is the source of CARAT's class awareness: a malicious update may remain globally plausible while degrading only a subset of classes, whereas repeated balanced tasks make localized failures harder to hide. For task $t$, let $\ell_t(w)$ denote the average cross-entropy loss of model $w$ on that task. CARAT defines a \emph{hidden-task certificate}
 \begin{equation}
 c_{i,t} = \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i).
 \label{eq:cert}
@@ -184,9 +184,9 @@ Task utility alone is insufficient, because a malicious client may overfit the p
 \end{equation}
 CARAT repeats this computation over several random coordinate subsets and aggregates the resulting values robustly. After robust standardization, only positive deviations are retained as the rank-penalty vector $\gamma\in\R^n$. This signal is intentionally asymmetric: suspicious extremeness is penalized, whereas unusual centrality is not explicitly rewarded. Together, the certificate matrix and rank penalty separate two notions that are often conflated in robust aggregation: whether an update is useful and whether it is structurally atypical.
 
-\subsection{Robust Weight Optimization}
+\subsection{Bounded Weight Learning}
 
-CARAT maps these signals to aggregation weights by solving a constrained optimization problem on the capped simplex
+CARAT maps task-conditioned validation signals to aggregation weights through a bounded optimization problem on the capped simplex
 \begin{equation}
 \mathcal{W}(\hat{\rho}) =
 \left\{

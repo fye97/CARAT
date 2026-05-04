@@ -66,15 +66,15 @@
 \@writefile{toc}{\contentsline {section}{\numberline {4}CARAT}{4}{section.12}\protected@file@percent }
 \newlabel{sec:method}{{4}{4}{CARAT}{section.12}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Overview}{4}{subsection.13}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates.}}{4}{figure.15}\protected@file@percent }
-\newlabel{fig:carat-overview}{{1}{4}{Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates}{figure.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hidden-Task Certificates}{4}{subsection.16}\protected@file@percent }
-\newlabel{eq:clip}{{5}{5}{Hidden-Task Certificates}{equation.17}{}}
-\newlabel{eq:normalize}{{7}{5}{Hidden-Task Certificates}{equation.19}{}}
-\newlabel{eq:cert}{{8}{5}{Hidden-Task Certificates}{equation.20}{}}
-\newlabel{eq:rank}{{9}{5}{Hidden-Task Certificates}{equation.21}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Robust Weight Optimization}{5}{subsection.22}\protected@file@percent }
-\newlabel{eq:capped-simplex}{{10}{5}{Robust Weight Optimization}{equation.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly, temporal-stability, and per-client cap constraints. The server updates the model using a weighted average of clipped client updates.}}{4}{figure.15}\protected@file@percent }
+\newlabel{fig:carat-overview}{{1}{4}{Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly, temporal-stability, and per-client cap constraints. The server updates the model using a weighted average of clipped client updates}{figure.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hidden Tasks and Task-Conditioned Validation}{5}{subsection.16}\protected@file@percent }
+\newlabel{eq:clip}{{5}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.17}{}}
+\newlabel{eq:normalize}{{7}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.19}{}}
+\newlabel{eq:cert}{{8}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.20}{}}
+\newlabel{eq:rank}{{9}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Bounded Weight Learning}{5}{subsection.22}\protected@file@percent }
+\newlabel{eq:capped-simplex}{{10}{5}{Bounded Weight Learning}{equation.23}{}}
 \citation{he2016deep}
 \citation{baruch2019alie}
 \citation{fang2020local}
@@ -83,15 +83,15 @@
 \citation{blanchard2017krum}
 \citation{cao2021fltrust}
 \citation{zhang2022fldetector}
-\newlabel{eq:objective}{{11}{6}{Robust Weight Optimization}{equation.24}{}}
-\newlabel{eq:softmin}{{12}{6}{Robust Weight Optimization}{equation.25}{}}
-\newlabel{eq:aggregate}{{13}{6}{Robust Weight Optimization}{equation.26}{}}
+\newlabel{eq:objective}{{11}{6}{Bounded Weight Learning}{equation.24}{}}
+\newlabel{eq:softmin}{{12}{6}{Bounded Weight Learning}{equation.25}{}}
+\newlabel{eq:aggregate}{{13}{6}{Bounded Weight Learning}{equation.26}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{6}{section.27}\protected@file@percent }
 \newlabel{sec:experiments}{{5}{6}{Experiments}{section.27}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Evaluation Protocol}{6}{subsection.28}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Benchmark and threat model.}{6}{section*.29}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Baselines and fairness controls.}{6}{section*.30}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Training and reporting protocol.}{6}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Training and reporting protocol.}{7}{section*.31}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}}{7}{table.33}\protected@file@percent }
 \newlabel{tab:hyperparams}{{1}{7}{Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls}{table.33}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Main Robustness Results}{7}{subsection.34}\protected@file@percent }

@@ -5,7 +5,7 @@
 \item {\bf Claims}
     \item[] Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
     \item[] Answer: \answerYes{}.
-    \item[] Justification: The abstract and introduction state the method, assumptions, benchmark scope, and main result. The limitations section narrows the claim to untargeted model poisoning with server-side reference data.
+    \item[] Justification: The abstract and introduction state the method, assumptions, benchmark scope, and main result. The threat model, evaluation scope, and conclusion narrow the claim to untargeted model poisoning with server-side reference data.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer \answerNA{} means that the abstract and introduction do not include the claims made in the paper.
@@ -17,7 +17,7 @@
 \item {\bf Limitations}
     \item[] Question: Does the paper discuss the limitations of the work performed by the authors?
     \item[] Answer: \answerYes{}.
-    \item[] Justification: Section~\ref{sec:limitations} discusses the server-side reference-data assumption, empirical scope, attack-family scope, and runtime overhead.
+    \item[] Justification: The main text discusses limitations where they affect interpretation: Section~\ref{sec:problem} states the server-side reference-data assumption, Section~\ref{sec:experiments} states the empirical and attack-family scope, and Appendix~\ref{sec:appendix-runtime} reports runtime overhead diagnostics.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer \answerNA{} means that the paper has no limitation while the answer \answerNo{} means that the paper has limitations, but those are not discussed in the paper. 

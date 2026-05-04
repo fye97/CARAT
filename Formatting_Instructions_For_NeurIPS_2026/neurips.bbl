@@ -1,4 +1,4 @@
-\begin{thebibliography}{34}
+\begin{thebibliography}{39}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -131,29 +131,80 @@ Xiaoyu Cao, Minghong Fang, Jia Liu, Neil~Zhenqiang Gong, and Yixin Gong.
   bootstrapping.
 \newblock In \emph{Network and Distributed System Security Symposium}, 2021.
 
-\bibitem[Liu et~al.(2022)Liu, Xu, and Wang]{liu2022threats}
-Pengrui Liu, Xiangrui Xu, and Wei Wang.
-\newblock Threats, attacks and defenses to federated learning: Issues, taxonomy
-  and perspectives.
-\newblock \emph{Cybersecurity}, 5\penalty0 (4), 2022.
-
-\bibitem[Yin et~al.(2019)Yin, Chen, Kannan, and Bartlett]{yin2019saddle}
-Dong Yin, Yudong Chen, Ramchandran Kannan, and Peter Bartlett.
-\newblock Defending against saddle point attack in byzantine-robust distributed
-  learning.
+\bibitem[Damaskinos et~al.(2018)Damaskinos, El~Mhamdi, Guerraoui, Patra, and
+  Taziki]{damaskinos2018asynchronous}
+Georgios Damaskinos, El~Mahdi El~Mhamdi, Rachid Guerraoui, Rhicheek Patra, and
+  Mahsa Taziki.
+\newblock Asynchronous {B}yzantine machine learning (the case of {SGD}).
 \newblock In \emph{International Conference on Machine Learning}, pages
-  7074--7084, 2019.
+  1145--1154, 2018.
 
-\bibitem[He et~al.(2021)He, Karimireddy, and Jaggi]{he2021resampling}
-Lie He, Sai~Praneeth Karimireddy, and Martin Jaggi.
-\newblock Byzantine-robust learning on heterogeneous datasets via resampling.
-\newblock In \emph{International Conference on Learning Representations}, 2021.
+\bibitem[Xie et~al.(2020{\natexlab{a}})Xie, Koyejo, and Gupta]{xie2020ipm}
+Cong Xie, Oluwasanmi Koyejo, and Indranil Gupta.
+\newblock Fall of empires: Breaking {B}yzantine-tolerant {SGD} by inner product
+  manipulation.
+\newblock In \emph{Conference on Uncertainty in Artificial Intelligence}, pages
+  261--270, 2020{\natexlab{a}}.
 
 \bibitem[Karimireddy et~al.(2022)Karimireddy, He, and
   Jaggi]{karimireddy2022bucketing}
 Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
 \newblock Byzantine-robust learning on heterogeneous datasets via bucketing.
 \newblock In \emph{International Conference on Learning Representations}, 2022.
+
+\bibitem[Bagdasaryan et~al.(2020)Bagdasaryan, Veit, Hua, Estrin, and
+  Shmatikov]{bagdasaryan2020backdoor}
+Eugene Bagdasaryan, Andreas Veit, Yiqing Hua, Deborah Estrin, and Vitaly
+  Shmatikov.
+\newblock How to backdoor federated learning.
+\newblock In \emph{International Conference on Artificial Intelligence and
+  Statistics}, pages 2938--2948, 2020.
+
+\bibitem[Xie et~al.(2020{\natexlab{b}})Xie, Huang, Chen, and Li]{xie2020dba}
+Chulin Xie, Keli Huang, Pin-Yu Chen, and Bo~Li.
+\newblock {DBA}: Distributed backdoor attacks against federated learning.
+\newblock In \emph{International Conference on Learning Representations},
+  2020{\natexlab{b}}.
+
+\bibitem[Wang et~al.(2020)Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal,
+  Sohn, Lee, and Papailiopoulos]{wang2020tails}
+Hongyi Wang, Kartik Sreenivasan, Shashank Rajput, Harit Vishwakarma, Saurabh
+  Agarwal, Jy-yong Sohn, Kangwook Lee, and Dimitris Papailiopoulos.
+\newblock Attack of the tails: Yes, you really can backdoor federated learning.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2020.
+
+\bibitem[Karimireddy et~al.(2021)Karimireddy, He, and
+  Jaggi]{karimireddy2021history}
+Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
+\newblock Learning from history for {B}yzantine robust optimization.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  5311--5319, 2021.
+
+\bibitem[Xu et~al.(2022)Xu, Huang, Song, and Lan]{xu2022signguard}
+Jian Xu, Shao-Lun Huang, Linqi Song, and Tian Lan.
+\newblock {SignGuard}: {B}yzantine-robust federated learning through
+  collaborative malicious gradient filtering.
+\newblock In \emph{IEEE International Conference on Distributed Computing
+  Systems}, pages 1026--1036, 2022.
+
+\bibitem[Wang et~al.(2022)Wang, Xiao, Chen, Hu, Lou, and Hou]{wang2022flare}
+Ning Wang, Yang Xiao, Yimin Chen, Yang Hu, Wenjing Lou, and Y.~Thomas Hou.
+\newblock {FLARE}: Defending federated learning against model poisoning attacks
+  via latent space representations.
+\newblock In \emph{ACM Asia Conference on Computer and Communications
+  Security}, pages 946--958, 2022.
+
+\bibitem[Xu et~al.(2025)Xu, Zhang, and Hu]{xu2025lasa}
+Jiahao Xu, Zikai Zhang, and Rui Hu.
+\newblock Achieving {B}yzantine-resilient federated learning via layer-adaptive
+  sparsified model aggregation.
+\newblock In \emph{IEEE/CVF Winter Conference on Applications of Computer
+  Vision}, pages 1508--1517, 2025.
+
+\bibitem[He et~al.(2021)He, Karimireddy, and Jaggi]{he2021resampling}
+Lie He, Sai~Praneeth Karimireddy, and Martin Jaggi.
+\newblock Byzantine-robust learning on heterogeneous datasets via resampling.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
 
 \bibitem[Data and Diggavi(2021)]{data2021localsgd}
 Deepesh Data and Suhas Diggavi.
@@ -211,19 +262,6 @@ Zaixi Zhang, Xiaoyu Xu, Jinyuan Jia, Matthew Jagielski, Gauri Joshi, Mingyi
   attacks via detecting malicious clients.
 \newblock In \emph{ACM SIGKDD Conference on Knowledge Discovery and Data
   Mining}, 2022.
-
-\bibitem[Allouah et~al.(2025)Allouah, Guerraoui, Gupta, Jellouli, Rizk, and
-  Stephan]{allouah2025arc}
-Youssef Allouah, Rachid Guerraoui, Nirupam Gupta, Ahmed Jellouli, Geovani Rizk,
-  and John Stephan.
-\newblock Adaptive gradient clipping for robust federated learning.
-\newblock In \emph{International Conference on Learning Representations}, 2025.
-
-\bibitem[Yang et~al.(2025)Yang, Shi, and Li]{yang2025tension}
-Yi-Rui Yang, Chang-Wei Shi, and Wu-Jun Li.
-\newblock On the tension between byzantine robustness and no-attack accuracy in
-  distributed learning.
-\newblock In \emph{International Conference on Machine Learning}, 2025.
 
 \bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016deep}
 Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.

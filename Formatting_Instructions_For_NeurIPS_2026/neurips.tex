@@ -139,7 +139,7 @@ CARAT turns the requirements above into a server-side aggregation procedure with
 
 \begin{figure*}[!htbp]
 \centering
-\safeincludegraphics[width=\textwidth]{figures/Carat_design_nocaption.png}
+\safeincludegraphics[width=\textwidth]{figures/Carat_design.png}
 \caption{Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates.}
 \label{fig:carat-overview}
 \end{figure*}

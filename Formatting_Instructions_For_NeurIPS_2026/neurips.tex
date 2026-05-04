@@ -58,7 +58,7 @@
 \maketitle
 
 \begin{abstract}
-Federated learning servers aggregate client updates without seeing client data, which leaves training exposed to model-poisoning attacks. Most robust aggregators rely on update geometry, coordinate-wise robust statistics, or alignment with a single trusted reference direction. These signals weaken when benign clients are heterogeneous and adaptive attackers stay close to the benign update manifold. We propose \textbf{CARAT}, a class-aware robust aggregation rule built on \emph{hidden task certificates}. Given a small labeled server-side reference set, CARAT samples multiple hidden, class-balanced micro-tasks and scores each client update by the loss reduction it achieves across them. CARAT combines these task-conditioned scores with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization with temporal regularization. The result is an aggregator that favors updates that remain useful across diverse semantic slices while limiting the influence of structurally extreme clients. We frame CARAT specifically as a defense against untargeted model poisoning under heterogeneous client data and use a matched CIFAR-100/ResNet18 non-i.i.d.\ evaluation protocol with $20\%$ malicious clients, public robust-aggregation baselines, matched trusted-data budgets, and class-sensitive metrics.
+Federated learning servers aggregate client updates without seeing client data, which leaves training exposed to model-poisoning attacks. Most robust aggregators rely on update geometry, coordinate-wise robust statistics, or alignment with a single trusted reference direction. These signals weaken when benign clients are heterogeneous and adaptive attackers stay close to the benign update manifold. We propose \textbf{CARAT}, a class-aware robust aggregation rule built on \emph{hidden task certificates}. Given a small labeled server-side reference set, CARAT samples multiple hidden, class-balanced micro-tasks and scores each client update by the loss reduction it achieves across them. CARAT combines these task-conditioned scores with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization with temporal regularization. The result is an aggregator that favors updates that remain useful across diverse semantic slices while limiting the influence of structurally extreme clients. We frame CARAT specifically as a defense against untargeted model poisoning under heterogeneous client data and use a matched CIFAR-100/ResNet18 non-i.i.d.\ evaluation protocol with $20\%$ malicious clients, public robust-aggregation baselines, matched trusted-data budgets, and final accuracy/loss metrics.
 \end{abstract}
 
 \section{Introduction}
@@ -228,7 +228,7 @@ A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendi
 \section{Experiments}
 \label{sec:experiments}
 
-We evaluate CARAT on class-rich federated benchmarks to test whether hidden-task certificates improve robustness beyond geometry-only and single-anchor defenses while preserving clean utility under heterogeneous client data. The study is organized around three questions: how much clean-utility cost CARAT incurs without attack, how well it resists untargeted model poisoning as heterogeneity increases, and what robustness is obtained per unit of trusted-data budget and runtime overhead. The full benchmark matrix, appendix-only stress tests, and ablation scope are reported in Appendix~\ref{sec:appendix-experiments}.
+We evaluate CARAT on class-rich federated benchmarks to test whether hidden-task certificates improve robustness beyond geometry-only and single-anchor defenses under heterogeneous client data. The completed core study focuses on untargeted model poisoning as heterogeneity increases and uses matched trusted-data budgets for CARAT and FLTrust. The full benchmark matrix, appendix-only stress tests, and ablation scope are reported in Appendix~\ref{sec:appendix-experiments}.
 
 \subsection{Experimental Setup}
 
@@ -292,13 +292,13 @@ Appendix-only stress tests raise the attacker fraction to $40\%$, examine the mo
 \paragraph{Overhead analysis.}
 Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as the main extra cost, we report runtime per round, total defense overhead, and trusted-data budget sensitivity as first-class evaluation outcomes rather than as implementation footnotes.
 
-\subsection{Protocol-Locked Evaluation Status}
+\subsection{Protocol-Locked Results}
 
-The main empirical comparison is a non-i.i.d.\ CIFAR-100/ResNet18 evaluation with $20$ clients, $20\%$ malicious clients, $200$ rounds, and four untargeted model-poisoning attacks. The final NeurIPS table uses only public, citable baselines and matches the labeled reference budget between CARAT and FLTrust. Table~\ref{tab:cifar100-main-acc} is retained as a current result audit: it records reusable legacy baseline results and the earlier single-task CARAT pilot, but it is not the final claim table. The final table will replace the pilot CARAT row with the full $T=8$ CARAT protocol and will replace the legacy FLTrust row with the matched-budget FLTrust protocol.
+The main empirical comparison is a non-i.i.d.\ CIFAR-100/ResNet18 evaluation with $20$ clients, $20\%$ malicious clients, $200$ rounds, and four untargeted model-poisoning attacks. Table~\ref{tab:cifar100-main-acc} reports the completed public-baseline result set. It excludes unpublished defenses, reuses compatible five-seed legacy logs for Mean, NormClipping, MultiKrum, and FLDetector, and regenerates TrimmedMean, matched-budget FLTrust, and the final $T=8$ CARAT protocol with three seeds under the locked configuration.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Current final-accuracy audit (\%) under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher is better. Published legacy baseline cells use five seeds where available. The CARAT row is the earlier single-task pilot ($T=1$), not the final $T=8$ CARAT protocol. The matched-budget FLTrust and final CARAT rows are being regenerated under the locked public-baseline protocol.}
+\caption{Final test accuracy (\%) under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher is better. Legacy public-baseline rows reuse five-seed logs where available; TrimmedMean, FLTrust, and CARAT are regenerated under the locked public-baseline protocol with three seeds and matched CARAT/FLTrust reference budgets.}
 \label{tab:cifar100-main-acc}
 \renewcommand{\arraystretch}{1.05}
 \small
@@ -307,38 +307,38 @@ The main empirical comparison is a non-i.i.d.\ CIFAR-100/ResNet18 evaluation wit
 \toprule
 \textbf{Dirichlet $\alpha$} & \textbf{Defense} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \textbf{Avg. rank} \\
 \midrule
-\textbf{$1.0$} & Mean & $49.43 \pm 0.39$ & $48.86 \pm 0.70$ & $50.49 \pm 0.59$ & $50.50 \pm 0.49$ & $3.0$ \\
+\textbf{$1.0$} & Mean & $49.43 \pm 0.39$ & $48.86 \pm 0.70$ & $50.49 \pm 0.59$ & $50.50 \pm 0.49$ & $3.2$ \\
 \textbf{$1.0$} & NormClipping & $25.27 \pm 0.70$ & $22.67 \pm 0.77$ & $24.86 \pm 0.65$ & $24.74 \pm 0.63$ & $7.0$ \\
-\textbf{$1.0$} & TrimmedMean & \multicolumn{5}{c}{\textit{running under final public-baseline protocol}} \\
-\textbf{$1.0$} & MultiKrum & $39.59 \pm 0.74$ & $37.18 \pm 0.83$ & $48.69 \pm 0.84$ & $47.71 \pm 1.12$ & $4.8$ \\
-\textbf{$1.0$} & FLTrust (legacy budget) & $33.26 \pm 0.63$ & $33.81 \pm 0.99$ & $33.61 \pm 0.86$ & $33.85 \pm 0.78$ & $5.8$ \\
-\textbf{$1.0$} & FLDetector & $47.96 \pm 0.58$ & $28.54 \pm 4.42$ & $50.58 \pm 0.76$ & $50.47 \pm 0.27$ & $4.0$ \\
-\textbf{$1.0$} & \textbf{CARAT pilot ($T=1$)} & \textbf{52.92$\pm$1.71} & \textbf{53.96$\pm$0.86} & \textbf{54.20$\pm$1.39} & \textbf{54.23$\pm$1.73} & \textbf{1.0} \\
+\textbf{$1.0$} & TrimmedMean & \textbf{$54.41 \pm 0.35$} & \textbf{$56.25 \pm 0.63$} & \textbf{$57.05 \pm 0.26$} & \textbf{$57.04 \pm 0.87$} & \textbf{$1.0$} \\
+\textbf{$1.0$} & MultiKrum & $39.59 \pm 0.74$ & $37.18 \pm 0.83$ & $48.69 \pm 0.84$ & $47.71 \pm 1.12$ & $5.0$ \\
+\textbf{$1.0$} & FLTrust (matched) & $39.17 \pm 1.87$ & $37.68 \pm 1.92$ & $41.90 \pm 1.18$ & $41.56 \pm 1.61$ & $5.5$ \\
+\textbf{$1.0$} & FLDetector & $47.96 \pm 0.58$ & $28.54 \pm 4.42$ & $50.58 \pm 0.76$ & $50.47 \pm 0.27$ & $4.2$ \\
+\textbf{$1.0$} & \textbf{CARAT ($T=8$)} & $51.33 \pm 1.75$ & $54.31 \pm 1.28$ & $54.35 \pm 1.46$ & $54.70 \pm 1.43$ & $2.0$ \\
 \midrule
 \textbf{$0.5$} & Mean & $47.62 \pm 0.73$ & $47.53 \pm 1.01$ & $48.88 \pm 0.32$ & $48.88 \pm 0.52$ & $3.2$ \\
 \textbf{$0.5$} & NormClipping & $23.73 \pm 0.53$ & $20.64 \pm 1.41$ & $23.28 \pm 0.40$ & $22.92 \pm 0.50$ & $7.0$ \\
-\textbf{$0.5$} & TrimmedMean & \multicolumn{5}{c}{\textit{running under final public-baseline protocol}} \\
-\textbf{$0.5$} & MultiKrum & $37.00 \pm 0.81$ & $33.05 \pm 1.20$ & $46.59 \pm 1.09$ & $46.45 \pm 0.80$ & $4.8$ \\
-\textbf{$0.5$} & FLTrust (legacy budget) & $31.72 \pm 0.51$ & $32.20 \pm 0.47$ & $32.21 \pm 0.68$ & $32.08 \pm 0.46$ & $5.8$ \\
+\textbf{$0.5$} & TrimmedMean & \textbf{$53.71 \pm 0.51$} & \textbf{$54.36 \pm 0.77$} & \textbf{$55.77 \pm 1.17$} & \textbf{$55.83 \pm 1.14$} & \textbf{$1.0$} \\
+\textbf{$0.5$} & MultiKrum & $37.00 \pm 0.81$ & $33.05 \pm 1.20$ & $46.59 \pm 1.09$ & $46.45 \pm 0.80$ & $5.0$ \\
+\textbf{$0.5$} & FLTrust (matched) & $34.52 \pm 0.84$ & $34.22 \pm 0.94$ & $39.50 \pm 0.27$ & $39.49 \pm 0.37$ & $5.5$ \\
 \textbf{$0.5$} & FLDetector & $45.30 \pm 0.75$ & $27.77 \pm 1.25$ & $48.85 \pm 0.53$ & $49.01 \pm 0.69$ & $4.2$ \\
-\textbf{$0.5$} & \textbf{CARAT pilot ($T=1$)} & \textbf{51.89$\pm$0.56} & \textbf{52.58$\pm$1.30} & \textbf{53.76$\pm$0.36} & \textbf{54.81} & \textbf{1.0} \\
+\textbf{$0.5$} & \textbf{CARAT ($T=8$)} & $50.15 \pm 1.13$ & $51.81 \pm 0.79$ & $53.64 \pm 1.12$ & $54.10 \pm 0.30$ & $2.0$ \\
 \bottomrule
 \end{tabular}
 }
 \end{table*}
 
-The audit table is useful for checking that the benchmark pipeline and legacy baseline parser agree with the intended CIFAR-100 protocol, but we do not use it as the final NeurIPS evidence because two cells violate the locked protocol: the CARAT row uses a single hidden task rather than the full $T=8$ setting, and the FLTrust row uses a smaller trusted-data budget than CARAT. The final public-baseline run therefore regenerates CARAT, FLTrust, and TrimmedMean under the same protocol while reusing only compatible published-baseline results.
+The completed table supports a more conservative claim than the earlier pilot table. TrimmedMean is the strongest method in this CIFAR-100 untargeted-poisoning setting, achieving the best average rank for both $\alpha=1.0$ and $\alpha=0.5$. CARAT is consistently second-best across both heterogeneity settings and all four attacks, improving over Mean, FLDetector, MultiKrum, matched-budget FLTrust, and NormClipping while using the same labeled reference budget as FLTrust.
 
-Figure~\ref{fig:cifar100-fangattack-curves} gives the corresponding round-wise view for the single-task FangAttack pilot. The final figure will be regenerated from the full $T=8$ CARAT runs once the locked public-baseline experiment queue completes.
+Figure~\ref{fig:cifar100-fangattack-curves} gives the corresponding round-wise view under FangAttack for the completed result set.
 
 \begin{figure*}[!htbp]
 \centering
 \safeincludegraphics[width=0.98\textwidth]{figures/cifar100_fangattack_curves.pdf}
-\caption{Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show the mean over reported seeds; the CARAT band shows one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol.}
+\caption{Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol.}
 \label{fig:cifar100-fangattack-curves}
 \end{figure*}
 
-The corresponding final-loss audit is reported in Appendix~\ref{sec:appendix-experiments}. As with the accuracy audit, those loss values are retained only to document the legacy pilot state; the final loss table will be regenerated from the locked $T=8$ CARAT and matched-budget FLTrust runs. Additional verification-scale learning curves and runtime measurements are reported in Appendix~\ref{sec:appendix-runtime}.
+The corresponding final-loss table is reported in Appendix~\ref{sec:appendix-experiments}. Additional verification-scale learning curves and runtime measurements are reported in Appendix~\ref{sec:appendix-runtime}.
 
 \section{Limitations}
 \label{sec:limitations}
@@ -354,7 +354,7 @@ Finally, CARAT adds server-side computation because every round evaluates candid
 
 We presented CARAT, a class-aware robust aggregation rule that validates client updates through hidden task certificates rather than relying only on geometric centrality or a single trusted reference direction. By scoring updates across multiple hidden, class-balanced semantic slices and combining those scores with rank-space anomaly suppression and capped-simplex weight optimization, CARAT is designed to preserve benign heterogeneity while reducing the influence of semantically harmful or structurally extreme clients.
 
-The CIFAR-100/ResNet18 non-i.i.d.\ evaluation is scoped to public robust-aggregation baselines, matched trusted-data budgets, and untargeted poisoning attacks. The evidence should therefore be interpreted as a heterogeneous untargeted-poisoning result rather than as a universal poisoning claim. The method is most appropriate in FL deployments where the server can maintain a modest labeled audit set and where class-selective failures matter under heterogeneous client drift. The next empirical step after the locked public-baseline runs is to broaden the stress-test suite across more severe heterogeneity, larger client populations, trusted-budget sweeps, and additional attack families.
+The CIFAR-100/ResNet18 non-i.i.d.\ evaluation is scoped to public robust-aggregation baselines, matched trusted-data budgets, and untargeted poisoning attacks. The evidence should therefore be interpreted as a heterogeneous untargeted-poisoning result rather than as a universal poisoning claim. Within this scope, CARAT is a stable second-ranked method behind TrimmedMean. The method is most appropriate in FL deployments where the server can maintain a modest labeled audit set and where class-selective failures matter under heterogeneous client drift. The next empirical step is to broaden the stress-test suite across more severe heterogeneity, larger client populations, trusted-budget sweeps, and additional attack families.
 
 \bibliographystyle{unsrtnat}
 \bibliography{ref}
@@ -792,21 +792,21 @@ For untargeted poisoning, the primary comparison uses Mean, NormClipping, Trimme
 
 \subsection{Metrics and Fairness}
 
-No-attack clean utility is reported separately from attacked runs. The clean metrics are test accuracy and test loss. On class-rich datasets we additionally report macro-average accuracy and worst-class accuracy, because the motivation for CARAT is precisely that averaging can hide semantically concentrated failures. Runtime per round and total defense overhead are reported for all defenses that add nontrivial server-side computation.
+The completed core tables report attacked final test accuracy, final test loss, and average rank. No-attack clean utility, macro-average accuracy, worst-class accuracy, and runtime are treated as supplementary diagnostics because they require separate clean or instrumented runs and should not be mixed with the main attacked-result table.
 
-Trusted-data fairness is controlled explicitly. CARAT and FLTrust are compared under the same labeled server-reference budget, rather than allowing one method to benefit from more public data. In addition to fixed-budget comparisons, we sweep the reference budget in the appendix to show whether CARAT's advantage comes from the hidden-task validation principle rather than from budget alone.
+Trusted-data fairness is controlled explicitly. CARAT and FLTrust are compared under the same labeled server-reference budget, rather than allowing one method to benefit from more public data. Reference-budget sweeps are left to appendix extensions and are not used as evidence for the main claim table.
 
 \subsection{Shared Training Protocol}
 
-Unless stated otherwise, the primary comparison uses $20$ clients with full participation, $200$ communication rounds, $4$ local epochs, and learning rate $0.05$. The main heterogeneity settings are Dirichlet non-i.i.d.\ partitions with $\alpha \in \{1,0.5\}$; the more severe $\alpha=0.1$ setting is reserved for stress testing rather than used as a main-text claim. The main attacker ratio is $20\%$, while $40\%$ is reserved for appendix stress tests. Baseline rows use five random seeds. CARAT seed counts are reported in the relevant table captions. Scaling studies in the appendix may additionally vary the number of clients or the attacker ratio, but these are treated as stress tests rather than as the core evaluation axis.
+Unless stated otherwise, the primary comparison uses $20$ clients with full participation, $200$ communication rounds, $4$ local epochs, and learning rate $0.05$. The main heterogeneity settings are Dirichlet non-i.i.d.\ partitions with $\alpha \in \{1,0.5\}$; the more severe $\alpha=0.1$ setting is reserved for stress testing rather than used as a main-text claim. The main attacker ratio is $20\%$, while $40\%$ is reserved for appendix stress tests. Legacy public-baseline rows use five random seeds where available, while the locked TrimmedMean, FLTrust, and CARAT rows use three random seeds. Scaling studies in the appendix may additionally vary the number of clients or the attacker ratio, but these are treated as stress tests rather than as the core evaluation axis.
 
 \subsection{Final Loss Results}
 
-Table~\ref{tab:cifar100-main-loss} reports the current final-loss audit corresponding to Table~\ref{tab:cifar100-main-acc}. As with the accuracy table, it documents the legacy pilot state and will be regenerated from the locked $T=8$ CARAT and matched-budget FLTrust runs before the final submission.
+Table~\ref{tab:cifar100-main-loss} reports the final test loss corresponding to Table~\ref{tab:cifar100-main-acc}. It uses the same source policy: compatible legacy public-baseline logs are reused, while TrimmedMean, matched-budget FLTrust, and $T=8$ CARAT are taken from the locked three-seed protocol.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Current final-loss audit under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Published legacy baseline cells use five seeds where available. The CARAT row is the earlier single-task pilot ($T=1$), not the final $T=8$ CARAT protocol.}
+\caption{Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; TrimmedMean, FLTrust, and CARAT are regenerated under the locked public-baseline protocol with three seeds and matched CARAT/FLTrust reference budgets.}
 \label{tab:cifar100-main-loss}
 \renewcommand{\arraystretch}{1.05}
 \small
@@ -817,19 +817,19 @@ Table~\ref{tab:cifar100-main-loss} reports the current final-loss audit correspo
 \midrule
 \textbf{$1.0$} & Mean & $0.0292 \pm 0.0004$ & $0.0294 \pm 0.0004$ & $0.0283 \pm 0.0004$ & $0.0283 \pm 0.0006$ & $3.2$ \\
 \textbf{$1.0$} & NormClipping & $0.0476 \pm 0.0005$ & $0.0501 \pm 0.0004$ & $0.0484 \pm 0.0004$ & $0.0485 \pm 0.0003$ & $7.0$ \\
-\textbf{$1.0$} & TrimmedMean & \multicolumn{5}{c}{\textit{running under final public-baseline protocol}} \\
-\textbf{$1.0$} & MultiKrum & $0.0361 \pm 0.0006$ & $0.0377 \pm 0.0005$ & $0.0295 \pm 0.0005$ & $0.0301 \pm 0.0009$ & $4.8$ \\
-\textbf{$1.0$} & FLTrust (legacy budget) & $0.0409 \pm 0.0004$ & $0.0407 \pm 0.0006$ & $0.0406 \pm 0.0007$ & $0.0406 \pm 0.0005$ & $5.8$ \\
-\textbf{$1.0$} & FLDetector & $0.0305 \pm 0.0004$ & $0.0450 \pm 0.0035$ & $0.0283 \pm 0.0006$ & $0.0284 \pm 0.0003$ & $4.0$ \\
-\textbf{$1.0$} & \textbf{CARAT pilot ($T=1$)} & \textbf{0.0267$\pm$0.0009} & \textbf{0.0260$\pm$0.0005} & \textbf{0.0260$\pm$0.0007} & \textbf{0.0260$\pm$0.0010} & \textbf{1.0} \\
+\textbf{$1.0$} & TrimmedMean & \textbf{$0.0263 \pm 0.0005$} & \textbf{$0.0243 \pm 0.0005$} & \textbf{$0.0241 \pm 0.0003$} & \textbf{$0.0240 \pm 0.0003$} & \textbf{$1.0$} \\
+\textbf{$1.0$} & MultiKrum & $0.0361 \pm 0.0006$ & $0.0377 \pm 0.0005$ & $0.0295 \pm 0.0005$ & $0.0301 \pm 0.0009$ & $5.0$ \\
+\textbf{$1.0$} & FLTrust (matched) & $0.0363 \pm 0.0016$ & $0.0375 \pm 0.0015$ & $0.0344 \pm 0.0008$ & $0.0346 \pm 0.0013$ & $5.5$ \\
+\textbf{$1.0$} & FLDetector & $0.0305 \pm 0.0004$ & $0.0450 \pm 0.0035$ & $0.0283 \pm 0.0006$ & $0.0284 \pm 0.0003$ & $4.2$ \\
+\textbf{$1.0$} & \textbf{CARAT ($T=8$)} & $0.0279 \pm 0.0010$ & $0.0256 \pm 0.0008$ & $0.0255 \pm 0.0005$ & $0.0252 \pm 0.0009$ & $2.0$ \\
 \midrule
 \textbf{$0.5$} & Mean & $0.0303 \pm 0.0005$ & $0.0302 \pm 0.0006$ & $0.0293 \pm 0.0001$ & $0.0293 \pm 0.0004$ & $3.2$ \\
 \textbf{$0.5$} & NormClipping & $0.0486 \pm 0.0005$ & $0.0517 \pm 0.0011$ & $0.0497 \pm 0.0005$ & $0.0498 \pm 0.0004$ & $7.0$ \\
-\textbf{$0.5$} & TrimmedMean & \multicolumn{5}{c}{\textit{running under final public-baseline protocol}} \\
-\textbf{$0.5$} & MultiKrum & $0.0382 \pm 0.0008$ & $0.0407 \pm 0.0010$ & $0.0306 \pm 0.0006$ & $0.0308 \pm 0.0006$ & $4.8$ \\
-\textbf{$0.5$} & FLTrust (legacy budget) & $0.0420 \pm 0.0005$ & $0.0417 \pm 0.0005$ & $0.0417 \pm 0.0006$ & $0.0417 \pm 0.0004$ & $5.8$ \\
-\textbf{$0.5$} & FLDetector & $0.0319 \pm 0.0004$ & $0.0458 \pm 0.0011$ & $0.0294 \pm 0.0004$ & $0.0292 \pm 0.0005$ & $4.0$ \\
-\textbf{$0.5$} & \textbf{CARAT pilot ($T=1$)} & \textbf{0.0271$\pm$0.0006} & \textbf{0.0266$\pm$0.0010} & \textbf{0.0259$\pm$0.0003} & \textbf{0.0253} & \textbf{1.0} \\
+\textbf{$0.5$} & TrimmedMean & \textbf{$0.0264 \pm 0.0005$} & \textbf{$0.0257 \pm 0.0006$} & \textbf{$0.0248 \pm 0.0006$} & \textbf{$0.0248 \pm 0.0006$} & \textbf{$1.0$} \\
+\textbf{$0.5$} & MultiKrum & $0.0382 \pm 0.0008$ & $0.0407 \pm 0.0010$ & $0.0306 \pm 0.0006$ & $0.0308 \pm 0.0006$ & $5.0$ \\
+\textbf{$0.5$} & FLTrust (matched) & $0.0396 \pm 0.0005$ & $0.0403 \pm 0.0005$ & $0.0362 \pm 0.0002$ & $0.0361 \pm 0.0002$ & $5.5$ \\
+\textbf{$0.5$} & FLDetector & $0.0319 \pm 0.0004$ & $0.0458 \pm 0.0011$ & $0.0294 \pm 0.0004$ & $0.0292 \pm 0.0005$ & $4.2$ \\
+\textbf{$0.5$} & \textbf{CARAT ($T=8$)} & $0.0285 \pm 0.0012$ & $0.0272 \pm 0.0008$ & $0.0258 \pm 0.0008$ & $0.0258 \pm 0.0004$ & $2.0$ \\
 \bottomrule
 \end{tabular}
 }
@@ -885,7 +885,7 @@ Two design principles matter when transferring these defaults across datasets. F
 All main reported results use public benchmark datasets and fixed training protocols described in Section~\ref{sec:experiments}. The aggregation method is specified in Algorithm~\ref{alg:carat-round}, with implementation defaults listed above. For anonymous review, logs, plotting scripts, and configuration files should be included in the supplementary material or an anonymized archive so that each table cell can be traced to its seed-level runs.
 
 \paragraph{Compute resources.}
-Experiments were launched on a Compute Canada SLURM cluster through the repository launch scripts. The primary CIFAR-100/CARAT 200-round runs requested one NVIDIA H100 80GB HBM3 MIG GPU slice with the SLURM resource string \texttt{nvidia\_h100\_80gb\_hbm3\_2g.20gb:1}, $8$ CPU cores, $64$GB host memory, and a $24$ hour wall-time limit per array task; the launcher used $4$ data-loading workers and capped concurrent array tasks at $3$ for this main CARAT specification. Supplementary CARAT specifications used the same single-GPU resource profile with wall-time limits between $4$ hours and $2$ days and array concurrency between $1$ and $4$, depending on the benchmark and sweep size. Each run writes a metadata file recording the configuration file, command line, seed, Python environment, CUDA requirement, and git commit.
+Legacy public-baseline logs were generated through the repository launch scripts on a Compute Canada SLURM cluster. After that resource became unavailable, the locked TrimmedMean, matched-budget FLTrust, and final CARAT runs reported in Tables~\ref{tab:cifar100-main-acc} and~\ref{tab:cifar100-main-loss} were completed locally on one NVIDIA GeForce RTX 4090 using the same launcher, export script, and fixed configuration files. Each run writes a metadata file recording the configuration file, command line, seed, Python environment, CUDA requirement, and git commit.
 
 \paragraph{Ethics.}
 This work studies defenses against model-poisoning attacks in federated learning. The attack implementations are used to evaluate robustness and do not require access to private user data. The main practical risk is dual use: stronger attack simulations may help adversaries tune poisoning strategies. We mitigate this by framing attacks as benchmark stressors and by releasing defensive evaluation code together with the corresponding protocols.

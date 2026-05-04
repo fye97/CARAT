@@ -29,12 +29,31 @@ Peter Kairouz, H.~Brendan McMahan, Brendan Avent, Aurelien Bellet, Mehdi
 \newblock \emph{Advances and Open Problems in Federated Learning}.
 \newblock Now Publishers, 2021.
 
-\bibitem[Bhagoji et~al.(2019)Bhagoji, Chakraborty, Mittal, and
-  Calo]{bhagoji2019adversarial}
-Arjun~Nitin Bhagoji, Supriyo Chakraborty, Prateek Mittal, and Seraphin Calo.
-\newblock Analyzing federated learning through an adversarial lens.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  634--643, 2019.
+\bibitem[Bagdasaryan et~al.(2020)Bagdasaryan, Veit, Hua, Estrin, and
+  Shmatikov]{bagdasaryan2020backdoor}
+Eugene Bagdasaryan, Andreas Veit, Yiqing Hua, Deborah Estrin, and Vitaly
+  Shmatikov.
+\newblock How to backdoor federated learning.
+\newblock In \emph{International Conference on Artificial Intelligence and
+  Statistics}, pages 2938--2948, 2020.
+
+\bibitem[Xie et~al.(2020{\natexlab{a}})Xie, Huang, Chen, and Li]{xie2020dba}
+Chulin Xie, Keli Huang, Pin-Yu Chen, and Bo~Li.
+\newblock {DBA}: Distributed backdoor attacks against federated learning.
+\newblock In \emph{International Conference on Learning Representations},
+  2020{\natexlab{a}}.
+
+\bibitem[Wang et~al.(2020)Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal,
+  Sohn, Lee, and Papailiopoulos]{wang2020tails}
+Hongyi Wang, Kartik Sreenivasan, Shashank Rajput, Harit Vishwakarma, Saurabh
+  Agarwal, Jy-yong Sohn, Kangwook Lee, and Dimitris Papailiopoulos.
+\newblock Attack of the tails: Yes, you really can backdoor federated learning.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2020.
+
+\bibitem[Baruch et~al.(2019)Baruch, Baruch, and Goldberg]{baruch2019alie}
+Gilad Baruch, Moran Baruch, and Yoav Goldberg.
+\newblock A little is enough: Circumventing defenses for distributed learning.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2019.
 
 \bibitem[Fang et~al.(2020)Fang, Cao, Jia, and Gong]{fang2020local}
 Minghong Fang, Xiaoyu Cao, Jinyuan Jia, and Neil~Zhenqiang Gong.
@@ -47,11 +66,6 @@ Virat Shejwalkar and Amir Houmansadr.
 \newblock Manipulating the {B}yzantine: Optimizing model poisoning attacks and
   defenses for federated learning.
 \newblock In \emph{Network and Distributed System Security Symposium}, 2021.
-
-\bibitem[Baruch et~al.(2019)Baruch, Baruch, and Goldberg]{baruch2019alie}
-Gilad Baruch, Moran Baruch, and Yoav Goldberg.
-\newblock A little is enough: Circumventing defenses for distributed learning.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2019.
 
 \bibitem[Zhao et~al.(2018)Zhao, Li, Lai, Suda, et~al.]{zhao2018noniid}
 Yue Zhao, Meng Li, Liangzhen Lai, Naveen Suda, et~al.
@@ -97,6 +111,55 @@ Dong Yin, Yudong Chen, Ramchandran Kannan, and Peter Bartlett.
   rates.
 \newblock In \emph{International Conference on Machine Learning}, 2018.
 
+\bibitem[Pillutla et~al.(2022)Pillutla, Kakade, and Harchaoui]{pillutla2022rfa}
+Krishna Pillutla, Sham~M. Kakade, and Zaid Harchaoui.
+\newblock Robust aggregation for federated learning.
+\newblock \emph{IEEE Transactions on Signal Processing}, 70:\penalty0
+  1142--1154, 2022.
+
+\bibitem[Cao et~al.(2021)Cao, Fang, Liu, Gong, and Gong]{cao2021fltrust}
+Xiaoyu Cao, Minghong Fang, Jia Liu, Neil~Zhenqiang Gong, and Yixin Gong.
+\newblock {FLTrust}: {B}yzantine-robust federated learning via trust
+  bootstrapping.
+\newblock In \emph{Network and Distributed System Security Symposium}, 2021.
+
+\bibitem[Zhang et~al.(2022)Zhang, Xu, Jia, Jagielski, Joshi, Hong, and
+  Gunter]{zhang2022fldetector}
+Zaixi Zhang, Xiaoyu Xu, Jinyuan Jia, Matthew Jagielski, Gauri Joshi, Mingyi
+  Hong, and Carl~A. Gunter.
+\newblock {FLDetector}: Defending federated learning against model poisoning
+  attacks via detecting malicious clients.
+\newblock In \emph{ACM SIGKDD Conference on Knowledge Discovery and Data
+  Mining}, 2022.
+
+\bibitem[Damaskinos et~al.(2018)Damaskinos, El~Mhamdi, Guerraoui, Patra, and
+  Taziki]{damaskinos2018asynchronous}
+Georgios Damaskinos, El~Mahdi El~Mhamdi, Rachid Guerraoui, Rhicheek Patra, and
+  Mahsa Taziki.
+\newblock Asynchronous {B}yzantine machine learning (the case of {SGD}).
+\newblock In \emph{International Conference on Machine Learning}, pages
+  1145--1154, 2018.
+
+\bibitem[Bhagoji et~al.(2019)Bhagoji, Chakraborty, Mittal, and
+  Calo]{bhagoji2019adversarial}
+Arjun~Nitin Bhagoji, Supriyo Chakraborty, Prateek Mittal, and Seraphin Calo.
+\newblock Analyzing federated learning through an adversarial lens.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  634--643, 2019.
+
+\bibitem[Xie et~al.(2020{\natexlab{b}})Xie, Koyejo, and Gupta]{xie2020ipm}
+Cong Xie, Oluwasanmi Koyejo, and Indranil Gupta.
+\newblock Fall of empires: Breaking {B}yzantine-tolerant {SGD} by inner product
+  manipulation.
+\newblock In \emph{Conference on Uncertainty in Artificial Intelligence}, pages
+  261--270, 2020{\natexlab{b}}.
+
+\bibitem[Karimireddy et~al.(2022)Karimireddy, He, and
+  Jaggi]{karimireddy2022bucketing}
+Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
+\newblock Byzantine-robust learning on heterogeneous datasets via bucketing.
+\newblock In \emph{International Conference on Learning Representations}, 2022.
+
 \bibitem[Xie et~al.(2019)Xie, Koyejo, and Gupta]{xie2019zeno}
 Cong Xie, Sanmi Koyejo, and Indranil Gupta.
 \newblock Zeno: Distributed stochastic gradient descent with suspicion-based
@@ -118,60 +181,6 @@ Liping Li, Wei Xu, Tianyi Chen, Georgios~B. Giannakis, and Qing Ling.
   distributed learning from heterogeneous datasets.
 \newblock In \emph{AAAI Conference on Artificial Intelligence}, pages
   1544--1551, 2019.
-
-\bibitem[Pillutla et~al.(2022)Pillutla, Kakade, and Harchaoui]{pillutla2022rfa}
-Krishna Pillutla, Sham~M. Kakade, and Zaid Harchaoui.
-\newblock Robust aggregation for federated learning.
-\newblock \emph{IEEE Transactions on Signal Processing}, 70:\penalty0
-  1142--1154, 2022.
-
-\bibitem[Cao et~al.(2021)Cao, Fang, Liu, Gong, and Gong]{cao2021fltrust}
-Xiaoyu Cao, Minghong Fang, Jia Liu, Neil~Zhenqiang Gong, and Yixin Gong.
-\newblock {FLTrust}: {B}yzantine-robust federated learning via trust
-  bootstrapping.
-\newblock In \emph{Network and Distributed System Security Symposium}, 2021.
-
-\bibitem[Damaskinos et~al.(2018)Damaskinos, El~Mhamdi, Guerraoui, Patra, and
-  Taziki]{damaskinos2018asynchronous}
-Georgios Damaskinos, El~Mahdi El~Mhamdi, Rachid Guerraoui, Rhicheek Patra, and
-  Mahsa Taziki.
-\newblock Asynchronous {B}yzantine machine learning (the case of {SGD}).
-\newblock In \emph{International Conference on Machine Learning}, pages
-  1145--1154, 2018.
-
-\bibitem[Xie et~al.(2020{\natexlab{a}})Xie, Koyejo, and Gupta]{xie2020ipm}
-Cong Xie, Oluwasanmi Koyejo, and Indranil Gupta.
-\newblock Fall of empires: Breaking {B}yzantine-tolerant {SGD} by inner product
-  manipulation.
-\newblock In \emph{Conference on Uncertainty in Artificial Intelligence}, pages
-  261--270, 2020{\natexlab{a}}.
-
-\bibitem[Karimireddy et~al.(2022)Karimireddy, He, and
-  Jaggi]{karimireddy2022bucketing}
-Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
-\newblock Byzantine-robust learning on heterogeneous datasets via bucketing.
-\newblock In \emph{International Conference on Learning Representations}, 2022.
-
-\bibitem[Bagdasaryan et~al.(2020)Bagdasaryan, Veit, Hua, Estrin, and
-  Shmatikov]{bagdasaryan2020backdoor}
-Eugene Bagdasaryan, Andreas Veit, Yiqing Hua, Deborah Estrin, and Vitaly
-  Shmatikov.
-\newblock How to backdoor federated learning.
-\newblock In \emph{International Conference on Artificial Intelligence and
-  Statistics}, pages 2938--2948, 2020.
-
-\bibitem[Xie et~al.(2020{\natexlab{b}})Xie, Huang, Chen, and Li]{xie2020dba}
-Chulin Xie, Keli Huang, Pin-Yu Chen, and Bo~Li.
-\newblock {DBA}: Distributed backdoor attacks against federated learning.
-\newblock In \emph{International Conference on Learning Representations},
-  2020{\natexlab{b}}.
-
-\bibitem[Wang et~al.(2020)Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal,
-  Sohn, Lee, and Papailiopoulos]{wang2020tails}
-Hongyi Wang, Kartik Sreenivasan, Shashank Rajput, Harit Vishwakarma, Saurabh
-  Agarwal, Jy-yong Sohn, Kangwook Lee, and Dimitris Papailiopoulos.
-\newblock Attack of the tails: Yes, you really can backdoor federated learning.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2020.
 
 \bibitem[Karimireddy et~al.(2021)Karimireddy, He, and
   Jaggi]{karimireddy2021history}
@@ -253,15 +262,6 @@ Clement Fung, Chris J.~M. Yoon, and Ivan Beschastnikh.
 \newblock The limitations of federated learning in sybil settings.
 \newblock In \emph{International Symposium on Research in Attacks, Intrusions
   and Defenses}, 2020.
-
-\bibitem[Zhang et~al.(2022)Zhang, Xu, Jia, Jagielski, Joshi, Hong, and
-  Gunter]{zhang2022fldetector}
-Zaixi Zhang, Xiaoyu Xu, Jinyuan Jia, Matthew Jagielski, Gauri Joshi, Mingyi
-  Hong, and Carl~A. Gunter.
-\newblock {FLDetector}: Defending federated learning against model poisoning
-  attacks via detecting malicious clients.
-\newblock In \emph{ACM SIGKDD Conference on Knowledge Discovery and Data
-  Mining}, 2022.
 
 \bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016deep}
 Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.

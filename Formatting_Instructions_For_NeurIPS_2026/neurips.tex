@@ -59,24 +59,26 @@
 \maketitle
 
 \begin{abstract}
-Federated learning servers aggregate client updates without seeing client data, which leaves training exposed to model-poisoning attacks. Most robust aggregators rely on update geometry, coordinate-wise robust statistics, or alignment with a single trusted reference direction. These signals weaken when benign clients are heterogeneous and adaptive attackers stay close to the benign update manifold. We propose \textbf{CARAT}, a class-aware robust aggregation rule built on \emph{hidden task certificates}. Given a small labeled server-side reference set, CARAT samples multiple hidden, class-balanced micro-tasks and scores each client update by the loss reduction it achieves across them. CARAT combines these task-conditioned scores with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization with temporal regularization. The result is an aggregator that favors updates that remain useful across diverse semantic slices while limiting the influence of structurally extreme clients. We frame CARAT specifically as a defense against untargeted model poisoning under heterogeneous client data and use a matched CIFAR-100/ResNet18 non-i.i.d.\ evaluation protocol with $20\%$ malicious clients, public robust-aggregation baselines, matched trusted-data budgets, and final accuracy/loss metrics.
+Federated learning is vulnerable to model-poisoning attacks because the server must aggregate client updates without inspecting client data. Existing robust aggregation rules often rely on update geometry, coordinate-wise robust statistics, or a single trusted reference direction, but these signals can confuse malicious behavior with benign client heterogeneity under non-i.i.d.\ data. We propose \textbf{CARAT}, a class-aware robust aggregation rule that uses a small labeled server reference set to sample hidden, class-balanced tasks and score each client update by its task-level loss reduction. CARAT combines these hidden-task certificates with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization to favor updates that remain useful across semantic slices while limiting structurally extreme clients. On CIFAR-100/ResNet18 with $20\%$ malicious clients, two non-i.i.d.\ regimes, and four untargeted model-poisoning attacks, CARAT achieves the best average rank among the displayed public baselines and improves final accuracy by $1.9$--$5.5$ percentage points over the strongest non-CARAT baseline in each attack/heterogeneity setting. These results show that task-conditioned validation offers a practical alternative to purely geometric or single-anchor trust signals when a modest labeled server audit set is available.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
-Federated learning (FL) lets many clients train a shared model without centralizing raw data \citep{mcmahan2017fedavg,bonawitz2017secureagg,kairouz2021federated}. This decentralization is attractive in privacy- and governance-sensitive settings, but it leaves the server in an asymmetric position: the global model must be updated from client messages that the server cannot directly verify. The aggregation rule therefore becomes a security-critical part of the FL system. Malicious clients can slow convergence or distort the decision boundary through model-poisoning updates that remain difficult to distinguish from benign client drift \citep{bhagoji2019adversarial,fang2020local,shejwalkar2021manipulating,baruch2019alie}.
+Federated learning (FL) enables many clients to train a shared model without centralizing their private data \citep{mcmahan2017fedavg,bonawitz2017secureagg,kairouz2021federated}. This distributed training paradigm is attractive for privacy- and governance-sensitive applications, but it also makes aggregation a security-critical operation. At each round, the server must update the global model from client messages whose underlying data and training process cannot be directly inspected. As a result, the aggregation rule becomes the main line of defense when some clients submit harmful updates.
 
-The central difficulty is that benign heterogeneity and malicious behavior can look similar from the server's perspective. Under non-i.i.d.\ partitions, benign clients can differ substantially in update direction, norm, sparsity, and class emphasis \citep{zhao2018noniid,li2020fedprox,karimireddy2020scaffold,zhu2021noniidsurvey}. An unusual update may therefore reflect either a harmful client or a legitimately different local distribution. This ambiguity weakens defenses based on coarse notions of centrality. Pairwise-distance methods can mistake benign dispersion for adversarial deviation, coordinate-wise robust statistics discard cross-coordinate structure, and trusted-anchor approaches compress all auxiliary supervision into a single global reference direction \citep{blanchard2017krum,elmhamdi2018bulyan,yin2018median,xie2019zeno,chen2018draco,li2019rsa,pillutla2022rfa,cao2021fltrust}. Such signals are often too coarse to expose attacks whose effect is concentrated on a subset of classes or semantic regions.
+Model-poisoning attacks exploit this trust bottleneck by replacing benign client updates with crafted messages. These attacks can be targeted, such as backdoor and model-replacement attacks \citep{bagdasaryan2020backdoor,xie2020dba,wang2020tails}, or untargeted, where the goal is to degrade clean test performance and destabilize collaborative training \citep{baruch2019alie,fang2020local,shejwalkar2021manipulating}. This paper focuses on the untargeted setting. The core challenge is not only that malicious updates can be arbitrary, but also that benign updates are naturally diverse under non-i.i.d.\ client data. A geometrically unusual update may therefore be either an attack or a legitimate consequence of client heterogeneity \citep{zhao2018noniid,li2020fedprox,karimireddy2020scaffold,zhu2021noniidsurvey}.
 
-CARAT addresses this problem by shifting validation from geometric similarity to task-conditioned utility. The server maintains a small labeled reference set and repeatedly instantiates hidden, class-balanced micro-tasks from it. Each client update is scored by the loss reduction it induces across these tasks, producing a certificate matrix that measures whether the update is broadly useful across semantic slices of the problem instead of merely close to the geometric center of the client population. CARAT then combines this signal with robust clipping, common-radius evaluation, coordinate-rank anomaly penalties, and capped-simplex weight optimization with temporal regularization.
+Existing Byzantine-robust defenses mitigate this threat through geometric selection, coordinate-wise robust statistics, or auxiliary validation, but their trust signals are often too coarse for heterogeneous FL. Krum and MultiKrum \citep{blanchard2017krum} select centrally located updates, Bulyan \citep{elmhamdi2018bulyan} combines selection with trimmed aggregation, coordinate-wise median and trimmed mean \citep{yin2018median} suppress marginal outliers, and RFA \citep{pillutla2022rfa} uses a geometric-median objective. These rules can confuse benign dispersion with malicious deviation when client data are non-i.i.d. Auxiliary-information defenses partly address this limitation, but FLTrust \citep{cao2021fltrust} compresses trusted data into a single reference direction and FLDetector \citep{zhang2022fldetector} relies on historical behavior prediction. Such signals may miss attacks whose harm is concentrated on a subset of classes or semantic regions. The resulting open problem is how to validate client updates by their task-level usefulness rather than only by their location in update space.
 
-This design targets FL deployments in which a modest server-side audit set is realistic, such as cross-silo or institutionally managed settings. It is not a fully data-free defense. Within that setting, CARAT aims to preserve benign diversity while reducing the influence of updates that are semantically harmful or structurally extreme. Our main contributions are as follows.
+We propose \textbf{CARAT}, a class-aware robust aggregation rule that validates updates through hidden, class-balanced tasks sampled from a small labeled server reference set. The key idea is that a benign non-i.i.d.\ update need not be geometrically central, but it should provide useful evidence on semantic validation tasks that are hidden from the clients. CARAT first places candidate updates in a common scoring geometry through robust clipping and common-radius evaluation. It then measures task-level loss reduction to form hidden-task certificates, penalizes coordinate-rank anomalies, and solves a capped-simplex weight optimization problem with temporal regularization. The final update is computed from clipped client updates, so the server can preserve useful benign diversity while limiting clients that are semantically harmful or structurally extreme. This design explicitly targets settings where a modest labeled server audit set is available; it is not intended to be a fully data-free defense.
+
+We evaluate CARAT on CIFAR-100/ResNet18 under four untargeted model-poisoning attacks, two Dirichlet non-i.i.d.\ regimes, and a $20\%$ malicious-client ratio. CARAT achieves the best average rank among the displayed public baselines and improves final accuracy by $1.9$--$5.5$ percentage points over the strongest non-CARAT baseline across the tested attack/heterogeneity settings. These results support the paper's central claim: class-conditioned validation provides a practical robustness signal that complements, and can outperform, purely geometric or single-anchor aggregation criteria. Our main contributions are as follows.
 
 \begin{itemize}
-\item We propose CARAT, a class-aware robust aggregation rule that validates client updates through hidden-task certificates constructed from server-side labeled reference data, replacing one-shot geometric trust signals with multi-task utility checks.
-\item We formulate aggregation as a capped-simplex optimization problem that combines worst-task utility across hidden tasks, coordinate-rank anomaly suppression, and temporal regularization, yielding a robust weighting mechanism compatible with heterogeneous FL.
-\item We define a matched CIFAR-100/ResNet18 non-i.i.d.\ evaluation against public robust-aggregation baselines across four model-poisoning attacks under $\alpha\in\{1,0.5\}$, with trusted-data budgets and seed counts reported explicitly.
+\item We introduce hidden-task certificates for robust FL aggregation, using class-balanced server-side validation tasks to evaluate whether each client update improves semantic slices of the learning problem.
+\item We develop the CARAT aggregation objective, which combines hidden-task utility, coordinate-rank anomaly penalties, capped per-client influence, and temporal regularization into a single robust weighting rule.
+\item We provide a locked CIFAR-100/ResNet18 evaluation against public robust-aggregation baselines under four untargeted poisoning attacks and non-i.i.d.\ partitions, with matched reference-data budgets and seed-level reporting.
 \end{itemize}
 
 \section{Related Work}
@@ -221,25 +223,22 @@ A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendi
 \section{Experiments}
 \label{sec:experiments}
 
-We evaluate CARAT on a class-rich federated benchmark to test whether hidden-task certificates improve robustness beyond geometry-only and single-anchor defenses under heterogeneous client data. The completed core study focuses on CIFAR-100/ResNet18 under untargeted model poisoning and uses matched trusted-data budgets for CARAT and FLTrust. Appendix~\ref{sec:appendix-experiments} reports the locked protocol, complete public-baseline tables, runtime diagnostics, and reproducibility details.
+The experiments evaluate one deliberately scoped claim: whether hidden-task certificates improve robustness to untargeted model poisoning under heterogeneous client data, when compared against public robust-aggregation baselines under matched protocol controls. The main study uses CIFAR-100/ResNet18, matched trusted-data budgets for CARAT and FLTrust, final attacked accuracy/loss metrics, and average rank across attacks. Appendix~\ref{sec:appendix-experiments} provides the complete public-baseline tables, runtime diagnostics, and reproducibility details.
 
-\subsection{Experimental Setup}
+\subsection{Evaluation Protocol}
 
-\paragraph{Benchmarks.}
-The completed benchmark is CIFAR-100 with ResNet18~\cite{he2016deep}. CIFAR-100 offers a class-rich label space in which hidden semantic slices are meaningful and class-selective failures are easier to expose than on low-cardinality datasets. Keeping the backbone fixed across all compared defenses helps attribute observed differences to aggregation rather than to model capacity or architecture changes.
+\paragraph{Benchmark and threat model.}
+We use CIFAR-100 with ResNet18~\cite{he2016deep}. CIFAR-100 has a class-rich label space, making it suitable for evaluating whether hidden class-balanced tasks reveal class-selective degradation that may be hidden in aggregate accuracy alone. The attacked comparison covers four untargeted model-poisoning attacks: ALIE~\cite{baruch2019alie}, FangAttack~\cite{fang2020local}, MinMax~\cite{shejwalkar2021manipulating}, and MinSum~\cite{shejwalkar2021manipulating}. These attacks test stealthy variance-based poisoning, geometry-aware local model poisoning, and distance-constrained optimization attacks. Backdoor and data-poisoning attacks remain outside the empirical claim set.
 
-\paragraph{Threat models.}
-For untargeted model poisoning, the main threat models are ALIE~\cite{baruch2019alie}, FangAttack~\cite{fang2020local}, MinMax~\cite{shejwalkar2021manipulating}, and MinSum~\cite{shejwalkar2021manipulating}. These attacks represent stealthy optimization-based adversaries that try to stay near the benign update manifold while degrading global learning, together with a geometry-aware attack that is especially informative for defenses based on Krum-style screening. We do not treat data poisoning or backdoor attacks as part of CARAT's claimed scope in this paper.
+\paragraph{Baselines and fairness controls.}
+The main-text comparison includes Mean, NormClipping, MultiKrum~\cite{blanchard2017krum}, FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, and CARAT. This set spans averaging, clipping, geometry-based filtering, trusted-data anchoring, historical detection, and hidden-task validation. We exclude unpublished or under-review defenses from the main claim so that every displayed baseline is citable and publicly attributable; the appendix keeps a broader public-baseline table for transparency. To isolate the effect of the aggregation rule, CARAT and FLTrust use matched labeled server-reference budgets.
 
-\paragraph{Baselines.}
-The main-text baselines are Mean, NormClipping, MultiKrum~\cite{blanchard2017krum}, FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, and CARAT. This set spans plain averaging, norm clipping, geometry-based filtering, trusted-data anchoring, history-based detection, and class-aware hidden-task validation. We exclude unpublished or under-review defenses from the main comparison so that all baseline claims are tied to citable public methods; the appendix reports a broader public-baseline table.
-
-\paragraph{Implementation details.}
-Across the primary comparison, we use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, and learning rate $0.05$. To probe heterogeneity, we evaluate Dirichlet non-i.i.d.\ regimes with $\alpha \in \{1,0.5\}$. The adversarial setting uses an attacker ratio of $20\%$, corresponding to $4$ malicious clients. Clean-reference experiments are reported separately from attacked experiments instead of being inserted as attack rows. Unless otherwise stated, compatible legacy rows use five seeds, while locked FLTrust and CARAT rows use three seeds under the regenerated protocol.
+\paragraph{Training and reporting protocol.}
+All main attacked runs use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, learning rate $0.05$, and a $20\%$ malicious-client ratio. We evaluate Dirichlet non-i.i.d.\ regimes with $\alpha\in\{1,0.5\}$, where smaller $\alpha$ increases client heterogeneity. Clean no-attack runs are kept separate from attacked robustness tables so that clean utility is not mixed with poisoning resistance. Compatible legacy rows use five seeds where available; locked FLTrust and CARAT rows use three seeds under the regenerated protocol. We report final test accuracy as the primary metric, final test loss in the appendix as a consistency check, and average rank within each non-i.i.d.\ setting to summarize performance across attacks.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Locked experimental setup used for the main CARAT evaluation. The table separates the training protocol, poisoning comparison, and reporting controls used throughout the CIFAR-100/ResNet18 result set.}
+\caption{Locked evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}
 \label{tab:hyperparams}
 \definecolor{setupgray}{gray}{0.92}
 \renewcommand{\arraystretch}{1.08}
@@ -276,32 +275,13 @@ Seed policy & Legacy rows: five seeds where available; locked FLTrust/CARAT rows
 }
 \end{table*}
 
-\paragraph{Metrics and fairness.}
-Because CARAT is explicitly class-aware, the evaluation should not rely only on aggregate clean accuracy. The completed core robustness tables report attacked final test accuracy, final test loss, and average rank; clean-utility and class-sensitive diagnostics are tracked separately when available so they do not blur the attacked-result comparison. Fairness requires explicit control of server-side supervision: CARAT and FLTrust are compared under a matched labeled-data budget, and the reference budget is parameterized per class rather than fixed as a dataset-independent total pool size.
+\subsection{Main Robustness Results}
 
-\subsection{Main Evaluation Comparisons}
-
-\paragraph{Clean reference.}
-We keep no-attack performance separate from attacked robustness tables so that clean utility is not conflated with poisoning resistance. The no-attack Mean run is used only as a reference curve in the round-wise view, not as an attack-row baseline in the final robustness table.
-
-\paragraph{Untargeted poisoning.}
-We then compare CARAT against Mean, NormClipping, MultiKrum, FLTrust, and FLDetector under ALIE, FangAttack, MinMax, and MinSum on non-i.i.d.\ partitions. The main question is whether task-conditioned validation remains reliable when benign clients are dispersed and adaptive attackers stay close to the benign update manifold.
-
-\subsection{Scope and Overhead Diagnostics}
-
-\paragraph{Evaluation scope.}
-The completed evaluation supports a deliberately scoped claim: robustness against untargeted model poisoning on CIFAR-100/ResNet18 under $\alpha\in\{1,0.5\}$ and $20\%$ malicious clients. More severe heterogeneity, larger client populations, additional datasets, backdoor attacks, and data-poisoning attacks remain outside the empirical claim set.
-
-\paragraph{Overhead diagnostics.}
-Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as the main extra cost, we include a verification-scale runtime diagnostic in Appendix~\ref{sec:appendix-runtime}. This diagnostic supports the overhead discussion, but it is not used as a primary robustness claim.
-
-\subsection{Protocol-Locked Results}
-
-The main empirical comparison is a non-i.i.d.\ CIFAR-100/ResNet18 evaluation with $20$ clients, $20\%$ malicious clients, $200$ rounds, and four untargeted model-poisoning attacks. Table~\ref{tab:cifar100-main-acc} reports the completed main-text public-baseline subset. It excludes unpublished defenses, reuses compatible five-seed legacy logs for Mean, NormClipping, MultiKrum, and FLDetector, and regenerates matched-budget FLTrust and the final $T=8$ CARAT protocol with three seeds under the locked configuration. A broader public-baseline accuracy table is reported in Appendix~\ref{sec:appendix-experiments}.
+Table~\ref{tab:cifar100-main-acc} reports the main attacked-accuracy comparison. The table uses the public-baseline subset described above, reuses compatible five-seed legacy logs for Mean, NormClipping, MultiKrum, and FLDetector, and regenerates matched-budget FLTrust and the final $T=8$ CARAT protocol with three seeds under the locked configuration. The no-attack Mean run is not inserted as an attack-row baseline; it is shown only as a reference curve in Figure~\ref{fig:cifar100-fangattack-curves}.
 
 \begin{table*}[!htbp]
 \centering
-\caption{Final test accuracy (\%) for the main-text public-baseline subset under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the locked protocol with three seeds and matched CARAT/FLTrust reference budgets.}
+\caption{Final test accuracy (\%) for the main-text public-baseline subset under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the locked protocol with three seeds and matched reference budgets.}
 \label{tab:cifar100-main-acc}
 \definecolor{caratrow}{gray}{0.91}
 \renewcommand{\arraystretch}{1.08}
@@ -342,9 +322,9 @@ The main empirical comparison is a non-i.i.d.\ CIFAR-100/ResNet18 evaluation wit
 }
 \end{table*}
 
-Within the main-text subset, CARAT is consistently strongest across both heterogeneity settings and all four attacks. It improves over Mean, FLDetector, MultiKrum, matched-budget FLTrust, and NormClipping while using the same labeled reference budget as FLTrust. Appendix~\ref{sec:appendix-experiments} reports the broader public-baseline accuracy table for completeness.
+CARAT obtains average rank $1.0$ in both heterogeneity settings and is the strongest displayed defense in every attack column. Relative to the best non-CARAT row in each column, CARAT improves mean final accuracy by $1.9$--$5.5$ percentage points across the eight attack/heterogeneity cells. The largest margins occur under FangAttack and under the more heterogeneous $\alpha=0.5$ MinMax/MinSum settings, where several non-CARAT defenses lose substantial accuracy. Appendix~\ref{sec:appendix-experiments} reports the broader public-baseline accuracy table and the corresponding final-loss table.
 
-Figure~\ref{fig:cifar100-fangattack-curves} gives the corresponding round-wise view under FangAttack for the completed result set.
+Figure~\ref{fig:cifar100-fangattack-curves} shows the round-wise behavior under FangAttack, the attack where several non-CARAT defenses degrade most visibly in Table~\ref{tab:cifar100-main-acc}.
 
 \begin{figure*}[!htbp]
 \centering
@@ -353,7 +333,11 @@ Figure~\ref{fig:cifar100-fangattack-curves} gives the corresponding round-wise v
 \label{fig:cifar100-fangattack-curves}
 \end{figure*}
 
-The corresponding final-loss table is reported in Appendix~\ref{sec:appendix-experiments}. Additional verification-scale learning curves and runtime measurements are reported in Appendix~\ref{sec:appendix-runtime}.
+\FloatBarrier
+
+\subsection{Scope and Diagnostics}
+
+The completed evaluation supports a bounded claim: robustness against untargeted model poisoning on CIFAR-100/ResNet18 with $20\%$ malicious clients and Dirichlet non-i.i.d.\ partitions with $\alpha\in\{1,0.5\}$. More severe heterogeneity, larger client populations, additional datasets, backdoor attacks, and data-poisoning attacks remain outside the empirical claim set. Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as CARAT's main extra cost, Appendix~\ref{sec:appendix-runtime} reports verification-scale learning curves and runtime measurements as overhead diagnostics rather than as primary robustness claims.
 
 \section{Conclusion}
 \label{sec:conclusion}

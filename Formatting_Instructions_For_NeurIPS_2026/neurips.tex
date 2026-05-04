@@ -139,7 +139,7 @@ CARAT turns the requirements above into the three-stage server-side pipeline sho
 
 \begin{figure*}[!htbp]
 \centering
-\safeincludegraphics[width=\textwidth]{figures/Carat_design.png}
+\safeincludegraphics[width=\textwidth,trim=12 75 18 25,clip]{figures/Carat_design.png}
 \caption{Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly, temporal-stability, and per-client cap constraints. The server updates the model using a weighted average of clipped client updates.}
 \label{fig:carat-overview}
 \end{figure*}

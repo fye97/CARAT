@@ -68,18 +68,13 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Overview}{4}{subsection.13}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates.}}{4}{figure.15}\protected@file@percent }
 \newlabel{fig:carat-overview}{{1}{4}{Overview of CARAT. Non-i.i.d.\ client data can make diverse benign updates difficult to distinguish from poisoning updates. CARAT uses a small labeled server reference set to sample hidden class-balanced tasks, forms a certificate matrix from task-level loss reductions, learns capped-simplex aggregation weights with rank-anomaly and temporal-stability penalties, and updates the global model by a weighted average of clipped client updates}{figure.15}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Design rationale for the CARAT aggregation pipeline. Each component addresses a different ambiguity in non-i.i.d.\ robust aggregation.}}{5}{table.17}\protected@file@percent }
-\newlabel{tab:component-rationale}{{1}{5}{Design rationale for the CARAT aggregation pipeline. Each component addresses a different ambiguity in non-i.i.d.\ robust aggregation}{table.17}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hidden-Task Certificates}{5}{subsection.18}\protected@file@percent }
-\newlabel{eq:clip}{{5}{5}{Hidden-Task Certificates}{equation.19}{}}
-\newlabel{eq:normalize}{{7}{5}{Hidden-Task Certificates}{equation.21}{}}
-\newlabel{eq:cert}{{8}{5}{Hidden-Task Certificates}{equation.22}{}}
-\newlabel{eq:rank}{{9}{6}{Hidden-Task Certificates}{equation.23}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Robust Weight Optimization}{6}{subsection.24}\protected@file@percent }
-\newlabel{eq:capped-simplex}{{10}{6}{Robust Weight Optimization}{equation.25}{}}
-\newlabel{eq:objective}{{11}{6}{Robust Weight Optimization}{equation.26}{}}
-\newlabel{eq:softmin}{{12}{6}{Robust Weight Optimization}{equation.27}{}}
-\newlabel{eq:aggregate}{{13}{6}{Robust Weight Optimization}{equation.28}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hidden-Task Certificates}{4}{subsection.16}\protected@file@percent }
+\newlabel{eq:clip}{{5}{5}{Hidden-Task Certificates}{equation.17}{}}
+\newlabel{eq:normalize}{{7}{5}{Hidden-Task Certificates}{equation.19}{}}
+\newlabel{eq:cert}{{8}{5}{Hidden-Task Certificates}{equation.20}{}}
+\newlabel{eq:rank}{{9}{5}{Hidden-Task Certificates}{equation.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Robust Weight Optimization}{5}{subsection.22}\protected@file@percent }
+\newlabel{eq:capped-simplex}{{10}{5}{Robust Weight Optimization}{equation.23}{}}
 \citation{he2016deep}
 \citation{baruch2019alie}
 \citation{fang2020local}
@@ -88,17 +83,25 @@
 \citation{blanchard2017krum}
 \citation{cao2021fltrust}
 \citation{zhang2022fldetector}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{7}{section.29}\protected@file@percent }
-\newlabel{sec:experiments}{{5}{7}{Experiments}{section.29}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Evaluation Protocol}{7}{subsection.30}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Benchmark and threat model.}{7}{section*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Baselines and fairness controls.}{7}{section*.32}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Training and reporting protocol.}{7}{section*.33}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Main Robustness Results}{7}{subsection.36}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}}{8}{table.35}\protected@file@percent }
-\newlabel{tab:hyperparams}{{2}{8}{Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls}{table.35}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}}{8}{table.38}\protected@file@percent }
-\newlabel{tab:cifar100-main-acc}{{3}{8}{Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets}{table.38}{}}
+\newlabel{eq:objective}{{11}{6}{Robust Weight Optimization}{equation.24}{}}
+\newlabel{eq:softmin}{{12}{6}{Robust Weight Optimization}{equation.25}{}}
+\newlabel{eq:aggregate}{{13}{6}{Robust Weight Optimization}{equation.26}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{6}{section.27}\protected@file@percent }
+\newlabel{sec:experiments}{{5}{6}{Experiments}{section.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Evaluation Protocol}{6}{subsection.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Benchmark and threat model.}{6}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Baselines and fairness controls.}{6}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Training and reporting protocol.}{6}{section*.31}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}}{7}{table.33}\protected@file@percent }
+\newlabel{tab:hyperparams}{{1}{7}{Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls}{table.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Main Robustness Results}{7}{subsection.34}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}}{8}{table.36}\protected@file@percent }
+\newlabel{tab:cifar100-main-acc}{{2}{8}{Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets}{table.36}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol.}}{8}{figure.38}\protected@file@percent }
+\newlabel{fig:cifar100-fangattack-curves}{{2}{8}{Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol}{figure.38}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Scope and Diagnostics}{8}{subsection.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{8}{section.40}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{8}{Conclusion}{section.40}{}}
 \bibstyle{unsrtnat}
 \bibdata{ref}
 \bibcite{mcmahan2017fedavg}{{1}{2017}{{McMahan et~al.}}{{McMahan, Moore, Ramage, Hampson, and Ag{\"u}era~y Arcas}}}
@@ -107,11 +110,6 @@
 \bibcite{bagdasaryan2020backdoor}{{4}{2020}{{Bagdasaryan et~al.}}{{Bagdasaryan, Veit, Hua, Estrin, and Shmatikov}}}
 \bibcite{xie2020dba}{{5}{2020{}}{{Xie et~al.}}{{Xie, Huang, Chen, and Li}}}
 \bibcite{wang2020tails}{{6}{2020}{{Wang et~al.}}{{Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal, Sohn, Lee, and Papailiopoulos}}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol.}}{9}{figure.40}\protected@file@percent }
-\newlabel{fig:cifar100-fangattack-curves}{{2}{9}{Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol}{figure.40}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Scope and Diagnostics}{9}{subsection.41}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{9}{section.42}\protected@file@percent }
-\newlabel{sec:conclusion}{{6}{9}{Conclusion}{section.42}{}}
 \bibcite{baruch2019alie}{{7}{2019}{{Baruch et~al.}}{{Baruch, Baruch, and Goldberg}}}
 \bibcite{fang2020local}{{8}{2020}{{Fang et~al.}}{{Fang, Cao, Jia, and Gong}}}
 \bibcite{shejwalkar2021manipulating}{{9}{2021}{{Shejwalkar and Houmansadr}}{{}}}
@@ -145,54 +143,58 @@
 \bibcite{shen2016auror}{{37}{2016}{{Shen et~al.}}{{Shen, Tople, and Saxena}}}
 \bibcite{fung2020foolsgold}{{38}{2020}{{Fung et~al.}}{{Fung, Yoon, and Beschastnikh}}}
 \bibcite{he2016deep}{{39}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
-\@writefile{toc}{\contentsline {paragraph}{Appendix organization.}{13}{section*.44}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A}Algorithmic and Theoretical Details}{13}{appendix.45}\protected@file@percent }
-\newlabel{sec:appendix-algorithm-theory}{{A}{13}{Algorithmic and Theoretical Details}{appendix.45}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Notation and Round Inputs}{13}{subsection.46}\protected@file@percent }
-\newlabel{sec:appendix-notation}{{A.1}{13}{Notation and Round Inputs}{subsection.46}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}CARAT Round Algorithm}{13}{subsection.47}\protected@file@percent }
-\newlabel{sec:appendix-algorithm}{{A.2}{13}{CARAT Round Algorithm}{subsection.47}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Implementation Invariants}{13}{subsection.87}\protected@file@percent }
-\newlabel{sec:appendix-implementation}{{A.3}{13}{Implementation Invariants}{subsection.87}{}}
-\@writefile{toc}{\contentsline {paragraph}{Persistent state and initialization.}{13}{section*.88}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Reference-pool construction and hidden-task sampling.}{13}{section*.89}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Robust score calibration.}{13}{section*.90}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces CARAT server aggregation at round $r$}}{14}{algorithm.48}\protected@file@percent }
-\newlabel{alg:carat-round}{{1}{14}{CARAT Round Algorithm}{algorithm.48}{}}
-\@writefile{toc}{\contentsline {paragraph}{Projected optimization.}{15}{section*.91}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Diagnostics.}{15}{section*.92}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.4}Proofs and Structural Properties}{15}{subsection.93}\protected@file@percent }
-\newlabel{sec:appendix-theory}{{A.4}{15}{Proofs and Structural Properties}{subsection.93}{}}
-\newlabel{prop:capped-simplex}{{A.1}{15}{Feasibility and support of the capped simplex}{proposition.94}{}}
-\newlabel{prop:aggregate-bound}{{A.2}{15}{Norm bound for the final aggregate}{proposition.95}{}}
-\newlabel{prop:malicious-mass-bound}{{A.3}{16}{Influence bound from malicious weight mass}{proposition.96}{}}
-\newlabel{prop:directional-invariance}{{A.4}{16}{Directional invariance of certificate scoring}{proposition.97}{}}
-\newlabel{prop:task-standardization}{{A.5}{16}{Task-wise standardization preserves within-task ordering}{proposition.98}{}}
-\newlabel{prop:softmin}{{A.6}{17}{Softmin bounds and gradient form}{proposition.99}{}}
-\newlabel{prop:temporal-prior}{{A.7}{17}{Temporal prior and projected-iterate invariants}{proposition.100}{}}
-\newlabel{prop:pairwise-transfer}{{A.8}{18}{Pairwise weight-transfer condition}{proposition.101}{}}
-\newlabel{prop:complexity}{{A.9}{18}{Per-round complexity}{proposition.102}{}}
-\@writefile{toc}{\contentsline {paragraph}{Remark on the reference assumption.}{18}{section*.103}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Experimental Protocols and Additional Results}{18}{appendix.104}\protected@file@percent }
-\newlabel{sec:appendix-experiments}{{B}{18}{Experimental Protocols and Additional Results}{appendix.104}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Completed Empirical Scope}{19}{subsection.105}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Reported CIFAR-100 Protocol}{19}{subsection.106}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces CIFAR-100/ResNet18 protocol used for the reported public-baseline result set.}}{19}{table.108}\protected@file@percent }
-\newlabel{tab:reported-protocol}{{4}{19}{CIFAR-100/ResNet18 protocol used for the reported public-baseline result set}{table.108}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}CARAT Hyperparameters}{19}{subsection.109}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Final-Loss Results}{19}{subsection.112}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces CARAT hyperparameters used in the reported CIFAR-100/ResNet18 public-baseline runs.}}{20}{table.111}\protected@file@percent }
-\newlabel{tab:carat-hyperparameters}{{5}{20}{CARAT hyperparameters used in the reported CIFAR-100/ResNet18 public-baseline runs}{table.111}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}}{20}{table.114}\protected@file@percent }
-\newlabel{tab:cifar100-main-loss}{{6}{20}{Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets}{table.114}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.5}Verification-Scale Runtime Results}{20}{subsection.115}\protected@file@percent }
-\newlabel{sec:appendix-runtime}{{B.5}{20}{Verification-Scale Runtime Results}{subsection.115}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation.}}{21}{figure.117}\protected@file@percent }
-\newlabel{fig:verification-curves}{{3}{21}{Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation}{figure.117}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.6}Reproducibility, Ethics, and Availability}{21}{subsection.118}\protected@file@percent }
-\newlabel{sec:appendix-reproducibility}{{B.6}{21}{Reproducibility, Ethics, and Availability}{subsection.118}{}}
-\@writefile{toc}{\contentsline {paragraph}{Reproducibility.}{21}{section*.119}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Compute resources.}{21}{section*.120}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Ethics.}{21}{section*.121}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Data availability.}{21}{section*.122}\protected@file@percent }
-\gdef \@abspage@last{28}
+\@writefile{toc}{\contentsline {paragraph}{Appendix organization.}{12}{section*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Algorithmic and Theoretical Details}{12}{appendix.43}\protected@file@percent }
+\newlabel{sec:appendix-algorithm-theory}{{A}{12}{Algorithmic and Theoretical Details}{appendix.43}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Notation and Round Inputs}{12}{subsection.44}\protected@file@percent }
+\newlabel{sec:appendix-notation}{{A.1}{12}{Notation and Round Inputs}{subsection.44}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}CARAT Round Algorithm}{12}{subsection.45}\protected@file@percent }
+\newlabel{sec:appendix-algorithm}{{A.2}{12}{CARAT Round Algorithm}{subsection.45}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Implementation Invariants}{12}{subsection.85}\protected@file@percent }
+\newlabel{sec:appendix-implementation}{{A.3}{12}{Implementation Invariants}{subsection.85}{}}
+\newlabel{sec:appendix-component-rationale}{{A.3}{12}{Component rationale}{section*.86}{}}
+\@writefile{toc}{\contentsline {paragraph}{Component rationale.}{12}{section*.86}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Persistent state and initialization.}{12}{section*.89}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reference-pool construction and hidden-task sampling.}{12}{section*.90}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces CARAT server aggregation at round $r$}}{13}{algorithm.46}\protected@file@percent }
+\newlabel{alg:carat-round}{{1}{13}{CARAT Round Algorithm}{algorithm.46}{}}
+\@writefile{toc}{\contentsline {paragraph}{Robust score calibration.}{13}{section*.91}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Design rationale for the CARAT aggregation pipeline. Each component addresses a different ambiguity in non-i.i.d.\ robust aggregation.}}{14}{table.88}\protected@file@percent }
+\newlabel{tab:component-rationale}{{3}{14}{Design rationale for the CARAT aggregation pipeline. Each component addresses a different ambiguity in non-i.i.d.\ robust aggregation}{table.88}{}}
+\@writefile{toc}{\contentsline {paragraph}{Projected optimization.}{14}{section*.92}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diagnostics.}{14}{section*.93}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.4}Proofs and Structural Properties}{14}{subsection.94}\protected@file@percent }
+\newlabel{sec:appendix-theory}{{A.4}{14}{Proofs and Structural Properties}{subsection.94}{}}
+\newlabel{prop:capped-simplex}{{A.1}{15}{Feasibility and support of the capped simplex}{proposition.95}{}}
+\newlabel{prop:aggregate-bound}{{A.2}{15}{Norm bound for the final aggregate}{proposition.96}{}}
+\newlabel{prop:malicious-mass-bound}{{A.3}{15}{Influence bound from malicious weight mass}{proposition.97}{}}
+\newlabel{prop:directional-invariance}{{A.4}{16}{Directional invariance of certificate scoring}{proposition.98}{}}
+\newlabel{prop:task-standardization}{{A.5}{16}{Task-wise standardization preserves within-task ordering}{proposition.99}{}}
+\newlabel{prop:softmin}{{A.6}{16}{Softmin bounds and gradient form}{proposition.100}{}}
+\newlabel{prop:temporal-prior}{{A.7}{17}{Temporal prior and projected-iterate invariants}{proposition.101}{}}
+\newlabel{prop:pairwise-transfer}{{A.8}{17}{Pairwise weight-transfer condition}{proposition.102}{}}
+\newlabel{prop:complexity}{{A.9}{18}{Per-round complexity}{proposition.103}{}}
+\@writefile{toc}{\contentsline {paragraph}{Remark on the reference assumption.}{18}{section*.104}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Experimental Protocols and Additional Results}{18}{appendix.105}\protected@file@percent }
+\newlabel{sec:appendix-experiments}{{B}{18}{Experimental Protocols and Additional Results}{appendix.105}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Completed Empirical Scope}{18}{subsection.106}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Reported CIFAR-100 Protocol}{18}{subsection.107}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}CARAT Hyperparameters}{18}{subsection.110}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Final-Loss Results}{18}{subsection.113}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces CIFAR-100/ResNet18 protocol used for the reported public-baseline result set.}}{19}{table.109}\protected@file@percent }
+\newlabel{tab:reported-protocol}{{4}{19}{CIFAR-100/ResNet18 protocol used for the reported public-baseline result set}{table.109}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces CARAT hyperparameters used in the reported CIFAR-100/ResNet18 public-baseline runs.}}{19}{table.112}\protected@file@percent }
+\newlabel{tab:carat-hyperparameters}{{5}{19}{CARAT hyperparameters used in the reported CIFAR-100/ResNet18 public-baseline runs}{table.112}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}}{19}{table.115}\protected@file@percent }
+\newlabel{tab:cifar100-main-loss}{{6}{19}{Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets}{table.115}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.5}Verification-Scale Runtime Results}{20}{subsection.116}\protected@file@percent }
+\newlabel{sec:appendix-runtime}{{B.5}{20}{Verification-Scale Runtime Results}{subsection.116}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation.}}{20}{figure.118}\protected@file@percent }
+\newlabel{fig:verification-curves}{{3}{20}{Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation}{figure.118}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.6}Reproducibility, Ethics, and Availability}{20}{subsection.119}\protected@file@percent }
+\newlabel{sec:appendix-reproducibility}{{B.6}{20}{Reproducibility, Ethics, and Availability}{subsection.119}{}}
+\@writefile{toc}{\contentsline {paragraph}{Reproducibility.}{20}{section*.120}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Compute resources.}{20}{section*.121}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Ethics.}{20}{section*.122}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Data availability.}{20}{section*.123}\protected@file@percent }
+\gdef \@abspage@last{27}

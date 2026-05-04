@@ -144,29 +144,7 @@ CARAT turns the requirements above into a server-side aggregation procedure with
 \label{fig:carat-overview}
 \end{figure*}
 
-Table~\ref{tab:component-rationale} summarizes why each CARAT component is included. The design is not intended as an arbitrary stack of heuristics: each term targets a distinct failure mode that appears when heterogeneous benign drift and malicious manipulation coexist.
-
-\begin{table*}[!htbp]
-\centering
-\caption{Design rationale for the CARAT aggregation pipeline. Each component addresses a different ambiguity in non-i.i.d.\ robust aggregation.}
-\label{tab:component-rationale}
-\renewcommand{\arraystretch}{1.08}
-\small
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{p{0.23\textwidth}p{0.33\textwidth}p{0.36\textwidth}}
-\toprule
-\textbf{Component} & \textbf{Failure mode addressed} & \textbf{Role in CARAT} \\
-\midrule
-MAD clipping and common-radius scoring & Large-norm or scale-manipulated updates can dominate validation scores, while benign non-i.i.d.\ clients may naturally have different update norms. & Separates the scoring copy from the final clipped update, making hidden-task evaluation less sensitive to update magnitude. \\
-Hidden class-balanced tasks & A single global score or trusted direction can miss class-local degradation and can confuse semantic usefulness with geometric centrality. & Scores each candidate by loss reduction on multiple hidden semantic slices, producing a task-level certificate matrix. \\
-Robust task standardization & Hidden tasks can have different baseline loss scales and difficulty levels. & Makes certificate columns comparable while preserving within-task ordering. \\
-Coordinate-rank penalty & A client may look useful on part of the reference signal while remaining structurally extreme in update space. & Penalizes consistently outlying coordinate ranks without rewarding unusual centrality. \\
-Capped-simplex weights & Even a high-scoring client should not receive unbounded influence in a Byzantine setting. & Limits per-client weight according to an attacker-fraction prior and bounds direct malicious mass. \\
-Temporal regularization & Round-to-round weight oscillations can overreact to noisy probe evaluations. & Encourages stable trust allocation unless hidden-task evidence supports a change. \\
-\bottomrule
-\end{tabular}
-}
-\end{table*}
+Appendix~\ref{sec:appendix-component-rationale} summarizes how each component maps to a concrete failure mode in non-i.i.d.\ robust aggregation.
 
 \subsection{Hidden-Task Certificates}
 
@@ -456,6 +434,32 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server aggregation round. T
 \label{sec:appendix-implementation}
 
 This subsection records implementation choices that affect reproducibility but are too low-level for the main method section. The purpose is to make the server-side scoring rule auditable, not to introduce additional assumptions beyond those stated in the threat model.
+
+\paragraph{Component rationale.}
+\label{sec:appendix-component-rationale}
+Table~\ref{tab:component-rationale} summarizes why each CARAT component is included. The design is not intended as an arbitrary stack of heuristics: each term targets a distinct failure mode that appears when heterogeneous benign drift and malicious manipulation coexist.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Design rationale for the CARAT aggregation pipeline. Each component addresses a different ambiguity in non-i.i.d.\ robust aggregation.}
+\label{tab:component-rationale}
+\renewcommand{\arraystretch}{1.08}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{0.23\textwidth}p{0.33\textwidth}p{0.36\textwidth}}
+\toprule
+\textbf{Component} & \textbf{Failure mode addressed} & \textbf{Role in CARAT} \\
+\midrule
+MAD clipping and common-radius scoring & Large-norm or scale-manipulated updates can dominate validation scores, while benign non-i.i.d.\ clients may naturally have different update norms. & Separates the scoring copy from the final clipped update, making hidden-task evaluation less sensitive to update magnitude. \\
+Hidden class-balanced tasks & A single global score or trusted direction can miss class-local degradation and can confuse semantic usefulness with geometric centrality. & Scores each candidate by loss reduction on multiple hidden semantic slices, producing a task-level certificate matrix. \\
+Robust task standardization & Hidden tasks can have different baseline loss scales and difficulty levels. & Makes certificate columns comparable while preserving within-task ordering. \\
+Coordinate-rank penalty & A client may look useful on part of the reference signal while remaining structurally extreme in update space. & Penalizes consistently outlying coordinate ranks without rewarding unusual centrality. \\
+Capped-simplex weights & Even a high-scoring client should not receive unbounded influence in a Byzantine setting. & Limits per-client weight according to an attacker-fraction prior and bounds direct malicious mass. \\
+Temporal regularization & Round-to-round weight oscillations can overreact to noisy probe evaluations. & Encourages stable trust allocation unless hidden-task evidence supports a change. \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
 
 \paragraph{Persistent state and initialization.}
 CARAT maintains two state variables across rounds: the probe pool $\mathcal{P}$ derived from $\mathcal{D}^{\mathrm{ref}}$, and the previous-round weight vector $\alpha^{\mathrm{prev}}$. At the first round, $\alpha^{\mathrm{prev}}$ is initialized to the uniform vector. This makes the first aggregation unbiased across clients while allowing later rounds to use temporal consistency once weight trajectories have been observed.

@@ -14,6 +14,8 @@
 \citation{zhang2022fldetector}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
 \newlabel{sec:introduction}{{1}{1}{Introduction}{section.1}{}}
+\citation{krizhevsky2009learning}
+\citation{he2016deep}
 \citation{blanchard2017krum}
 \citation{damaskinos2018asynchronous}
 \citation{bhagoji2019adversarial}
@@ -66,8 +68,8 @@
 \@writefile{toc}{\contentsline {section}{\numberline {4}CARAT}{4}{section.12}\protected@file@percent }
 \newlabel{sec:method}{{4}{4}{CARAT}{section.12}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Overview}{4}{subsection.13}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly, temporal-stability, and per-client cap constraints. The server updates the model using a weighted average of clipped client updates.}}{4}{figure.15}\protected@file@percent }
-\newlabel{fig:carat-overview}{{1}{4}{Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly, temporal-stability, and per-client cap constraints. The server updates the model using a weighted average of clipped client updates}{figure.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly penalties, temporal stability, and per-client caps. The server updates the model using a weighted average of clipped client updates.}}{4}{figure.15}\protected@file@percent }
+\newlabel{fig:carat-overview}{{1}{4}{Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly penalties, temporal stability, and per-client caps. The server updates the model using a weighted average of clipped client updates}{figure.15}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hidden Tasks and Task-Conditioned Validation}{5}{subsection.16}\protected@file@percent }
 \newlabel{eq:clip}{{5}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.17}{}}
 \newlabel{eq:normalize}{{7}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.19}{}}
@@ -75,6 +77,7 @@
 \newlabel{eq:rank}{{9}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.21}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Bounded Weight Learning}{5}{subsection.22}\protected@file@percent }
 \newlabel{eq:capped-simplex}{{10}{5}{Bounded Weight Learning}{equation.23}{}}
+\citation{krizhevsky2009learning}
 \citation{he2016deep}
 \citation{baruch2019alie}
 \citation{fang2020local}
@@ -123,26 +126,27 @@
 \bibcite{pillutla2022rfa}{{17}{2022}{{Pillutla et~al.}}{{Pillutla, Kakade, and Harchaoui}}}
 \bibcite{cao2021fltrust}{{18}{2021}{{Cao et~al.}}{{Cao, Fang, Liu, Gong, and Gong}}}
 \bibcite{zhang2022fldetector}{{19}{2022}{{Zhang et~al.}}{{Zhang, Xu, Jia, Jagielski, Joshi, Hong, and Gunter}}}
-\bibcite{damaskinos2018asynchronous}{{20}{2018}{{Damaskinos et~al.}}{{Damaskinos, El~Mhamdi, Guerraoui, Patra, and Taziki}}}
-\bibcite{bhagoji2019adversarial}{{21}{2019}{{Bhagoji et~al.}}{{Bhagoji, Chakraborty, Mittal, and Calo}}}
-\bibcite{xie2020ipm}{{22}{2020{}}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
-\bibcite{karimireddy2022bucketing}{{23}{2022}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
-\bibcite{xie2019zeno}{{24}{2019}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
-\bibcite{chen2018draco}{{25}{2018}{{Chen et~al.}}{{Chen, Wang, Charles, and Papailiopoulos}}}
-\bibcite{li2019rsa}{{26}{2019}{{Li et~al.}}{{Li, Xu, Chen, Giannakis, and Ling}}}
-\bibcite{karimireddy2021history}{{27}{2021}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
-\bibcite{xu2022signguard}{{28}{2022}{{Xu et~al.}}{{Xu, Huang, Song, and Lan}}}
-\bibcite{wang2022flare}{{29}{2022}{{Wang et~al.}}{{Wang, Xiao, Chen, Hu, Lou, and Hou}}}
-\bibcite{xu2025lasa}{{30}{2025}{{Xu et~al.}}{{Xu, Zhang, and Hu}}}
-\bibcite{he2021resampling}{{31}{2021}{{He et~al.}}{{He, Karimireddy, and Jaggi}}}
-\bibcite{data2021localsgd}{{32}{2021}{{Data and Diggavi}}{{}}}
-\bibcite{liu2023gas}{{33}{2023}{{Liu et~al.}}{{Liu, Chen, Lyu, Wu, Wu, and Chen}}}
-\bibcite{allouah2023fixing}{{34}{2023}{{Allouah et~al.}}{{Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and Stephan}}}
-\bibcite{bao2024boba}{{35}{2024}{{Bao et~al.}}{{Bao, Wu, and He}}}
-\bibcite{huang2024sdea}{{36}{2024}{{Huang et~al.}}{{Huang, Shi, Ye, Li, and Du}}}
-\bibcite{shen2016auror}{{37}{2016}{{Shen et~al.}}{{Shen, Tople, and Saxena}}}
-\bibcite{fung2020foolsgold}{{38}{2020}{{Fung et~al.}}{{Fung, Yoon, and Beschastnikh}}}
-\bibcite{he2016deep}{{39}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
+\bibcite{krizhevsky2009learning}{{20}{2009}{{Krizhevsky}}{{}}}
+\bibcite{he2016deep}{{21}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
+\bibcite{damaskinos2018asynchronous}{{22}{2018}{{Damaskinos et~al.}}{{Damaskinos, El~Mhamdi, Guerraoui, Patra, and Taziki}}}
+\bibcite{bhagoji2019adversarial}{{23}{2019}{{Bhagoji et~al.}}{{Bhagoji, Chakraborty, Mittal, and Calo}}}
+\bibcite{xie2020ipm}{{24}{2020{}}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
+\bibcite{karimireddy2022bucketing}{{25}{2022}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
+\bibcite{xie2019zeno}{{26}{2019}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
+\bibcite{chen2018draco}{{27}{2018}{{Chen et~al.}}{{Chen, Wang, Charles, and Papailiopoulos}}}
+\bibcite{li2019rsa}{{28}{2019}{{Li et~al.}}{{Li, Xu, Chen, Giannakis, and Ling}}}
+\bibcite{karimireddy2021history}{{29}{2021}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
+\bibcite{xu2022signguard}{{30}{2022}{{Xu et~al.}}{{Xu, Huang, Song, and Lan}}}
+\bibcite{wang2022flare}{{31}{2022}{{Wang et~al.}}{{Wang, Xiao, Chen, Hu, Lou, and Hou}}}
+\bibcite{xu2025lasa}{{32}{2025}{{Xu et~al.}}{{Xu, Zhang, and Hu}}}
+\bibcite{he2021resampling}{{33}{2021}{{He et~al.}}{{He, Karimireddy, and Jaggi}}}
+\bibcite{data2021localsgd}{{34}{2021}{{Data and Diggavi}}{{}}}
+\bibcite{liu2023gas}{{35}{2023}{{Liu et~al.}}{{Liu, Chen, Lyu, Wu, Wu, and Chen}}}
+\bibcite{allouah2023fixing}{{36}{2023}{{Allouah et~al.}}{{Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and Stephan}}}
+\bibcite{bao2024boba}{{37}{2024}{{Bao et~al.}}{{Bao, Wu, and He}}}
+\bibcite{huang2024sdea}{{38}{2024}{{Huang et~al.}}{{Huang, Shi, Ye, Li, and Du}}}
+\bibcite{shen2016auror}{{39}{2016}{{Shen et~al.}}{{Shen, Tople, and Saxena}}}
+\bibcite{fung2020foolsgold}{{40}{2020}{{Fung et~al.}}{{Fung, Yoon, and Beschastnikh}}}
 \@writefile{toc}{\contentsline {paragraph}{Appendix organization.}{12}{section*.42}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {A}Algorithmic and Theoretical Details}{12}{appendix.43}\protected@file@percent }
 \newlabel{sec:appendix-algorithm-theory}{{A}{12}{Algorithmic and Theoretical Details}{appendix.43}{}}

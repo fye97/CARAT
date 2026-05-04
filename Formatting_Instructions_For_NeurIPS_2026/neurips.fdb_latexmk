@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex neurips"] 1777914325.91302 "neurips.aux" "neurips.bbl" "neurips" 1777914326.89119 0
+["bibtex neurips"] 1777914845.72574 "neurips.aux" "neurips.bbl" "neurips" 1777914916.12265 0
   "./ref.bib" 1777676214.16979 14290 93dc13e50c4fc3a62b535321c3dd10f8 ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "neurips.aux" 1777914326.71819 22462 29c3d9ba9f164bd24daba9f45b4cfd35 "pdflatex"
+  "neurips.aux" 1777914915.86457 22462 fb545f3a1cec5f092b91e1f606794b16 "pdflatex"
   (generated)
   "neurips.bbl"
   "neurips.blg"
   (rewritten before read)
-["pdflatex"] 1777914326.00038 "neurips.tex" "neurips.pdf" "neurips" 1777914326.89131 0
+["pdflatex"] 1777914914.85372 "neurips.tex" "neurips.pdf" "neurips" 1777914916.12281 0
   "/etc/texmf/web2c/texmf.cnf" 1770938166.97607 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -110,6 +110,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo" 1705352648 8448 dbc0dbf4156c0bb9ba01a1c685d3bad0 ""
   "/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd" 1705352648 2443 790016d75def8d3127df5c216a45abcc ""
   "/usr/share/texlive/texmf-dist/tex/latex/booktabs/booktabs.sty" 1579038678 6078 f1cb470c9199e7110a27851508ed7a5c ""
+  "/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty" 1659300143 12441 3b2a708337608012a865c7d9b7f05d28 ""
   "/usr/share/texlive/texmf-dist/tex/latex/environ/environ.sty" 1399239813 4378 f429f0da968c278653359293040a8f52 ""
   "/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1579991033 13886 d1306dcf79a944f6988e688c1785f9ce ""
   "/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty" 1601931149 46845 3b58f70c6e861a13d927bff09d35ecbc ""
@@ -118,6 +119,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg" 1459978653 1213 620bba36b25224fa9b7e1ccb4ecb76fd ""
   "/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg" 1465944070 1224 978390e9c2234eab29404bc21b268d1e ""
   "/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def" 1663965824 19448 1e988b341dda20961a6b931bcde55519 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty" 1654720880 7233 e46ce9241d2b2ca2a78155475fdd557a ""
   "/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty" 1654720880 18387 8f900a490197ebaf93c02ae9476d4b09 ""
   "/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty" 1654720880 8010 a8d949cbdbc5c983593827c9eec252e1 ""
   "/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty" 1654720880 2671 7e67d78d9b88c845599a85b2d41f2e39 ""
@@ -134,6 +136,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def" 1704491087 30006 57b07afb710ee2f649c65cfbafda39c1 ""
   "/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg" 1279039959 678 4792914a8f45be57bb98413425e4c7af ""
   "/usr/share/texlive/texmf-dist/tex/latex/lineno/lineno.sty" 1684613922 154524 d78e0d3f9a3cdfd2cab61cd321c9281c ""
+  "/usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty" 1249334690 15773 2dd7dde1ec1c2a3d0c85bc3b273e04d8 ""
   "/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype-pdftex.def" 1678741534 48246 c3eed060aba663f58af3ff756e83f2bd ""
   "/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.cfg" 1678741534 26842 05a01d67d23e805520393a049533b8c0 ""
   "/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.sty" 1678741534 98531 f79ec363f3014ada2cb766715926ecc9 ""
@@ -141,12 +144,14 @@
   "/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg" 1678741534 5929 0e1d31c98c10fece90f470d5746ecdd6 ""
   "/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg" 1678741534 5594 45ca1ba048c2fa6267d5419cc463d804 ""
   "/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-ptm.cfg" 1678741534 12427 02d1873769280609ae2509e963f1fa66 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty" 1615845910 6149 2398eec4faa1ee24ff761581e580ecf1 ""
   "/usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty" 1707919699 45458 f1c6cb3edd91174e966cbbaf88993bcf ""
   "/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd" 1586716065 1483 47067fbe7c3ffed1ede7aaa7b8549d7a ""
   "/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd" 1137110629 774 61d7da1e9f9e74989b196d147e623736 ""
   "/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd" 1137110629 619 96f56dc5d1ef1fe1121f1cfeec70ee0c ""
   "/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty" 1576624809 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1657483315 9714 ba3194bd52c8499b3f1e3eb91d409670 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty" 1698869629 12667 e4b5eb11e4b7239e6c8a52bbe074a6c6 ""
   "/usr/share/texlive/texmf-dist/tex/latex/tools/bm.sty" 1698869629 13231 2c742011581e2bf297e33520567d9464 ""
   "/usr/share/texlive/texmf-dist/tex/latex/trimspaces/trimspaces.sty" 1253232110 1380 971a51b00a14503ddf754cab24c3f209 ""
   "/usr/share/texlive/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
@@ -161,10 +166,10 @@
   "figures/Carat_design_nocaption.png" 1777676214.15679 813044 f95bd204e0cf1a46d06da5224428e02a ""
   "figures/carat_verification.pdf" 1777676214.15779 29284 d4cbdbed0d067fb76751342909de7f15 ""
   "figures/cifar100_fangattack_curves.pdf" 1777913932.7475 84737 84d565b040e0463bb6bfa2e31f848ad1 ""
-  "neurips.aux" 1777914326.71819 22462 29c3d9ba9f164bd24daba9f45b4cfd35 "pdflatex"
-  "neurips.bbl" 1777914325.99716 11090 8ea78423d585b55e330253f7295f14b4 "bibtex neurips"
-  "neurips.out" 1777914326.71819 6405 190aa1635ffbc0e8b1a462fb2136f7b5 "pdflatex"
-  "neurips.tex" 1777914312.09661 71850 95729c78a1e65855b2eaf971641fc686 ""
+  "neurips.aux" 1777914915.86457 22462 fb545f3a1cec5f092b91e1f606794b16 "pdflatex"
+  "neurips.bbl" 1777914845.79479 11090 8ea78423d585b55e330253f7295f14b4 "bibtex neurips"
+  "neurips.out" 1777914915.86557 6405 190aa1635ffbc0e8b1a462fb2136f7b5 "pdflatex"
+  "neurips.tex" 1777914906.14318 72122 496e3c22fe105003b4ce5685caf6ab69 ""
   "neurips_2026.sty" 1776322777.71361 13462 818d80447f57703e59b8270885421e82 ""
   (generated)
   "neurips.aux"

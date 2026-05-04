@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.12)  4 MAY 2026 10:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.12)  4 MAY 2026 10:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -410,6 +410,23 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1371.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1372.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1373.
 )
+(/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2022/06/20 v1.0f Color table columns (DPC)
+
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
+Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen181
+\ar@mcellbox=\box55
+\extrarowheight=\dimen182
+\NC@list=\toks37
+\extratabsurround=\skip62
+\backup@length=\skip63
+\ar@cellbox=\box56
+)
+\everycr=\toks38
+\minrowclearance=\skip64
+\rownum=\count303
+)
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 
@@ -424,8 +441,8 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 107.
 )
-\Gin@req@height=\dimen181
-\Gin@req@width=\dimen182
+\Gin@req@height=\dimen183
+\Gin@req@width=\dimen184
 )
 (/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithm.sty
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
@@ -433,33 +450,46 @@ nment
 
 (/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count303
-\float@exts=\toks37
-\float@box=\box55
-\@float@everytoks=\toks38
-\@floatcapt=\box56
+\c@float@type=\count304
+\float@exts=\toks39
+\float@box=\box57
+\@float@everytoks=\toks40
+\@floatcapt=\box58
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
 )
-\@float@every@algorithm=\toks39
-\c@algorithm=\count304
+\@float@every@algorithm=\toks41
+\c@algorithm=\count305
 )
 (/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithmic.sty
 Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
-\c@ALC@unique=\count305
-\c@ALC@line=\count306
-\c@ALC@rem=\count307
-\c@ALC@depth=\count308
-\ALC@tlm=\skip62
-\algorithmicindent=\skip63
+\c@ALC@unique=\count306
+\c@ALC@line=\count307
+\c@ALC@rem=\count308
+\c@ALC@depth=\count309
+\ALC@tlm=\skip65
+\algorithmicindent=\skip66
 )
-\c@proposition=\count309
+(/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip67
+\multirow@cntb=\count310
+\multirow@dima=\skip68
+\bigstrutjot=\dimen185
+)
+(/usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
+Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
+\rotheadsize=\dimen186
+\c@nlinenum=\count311
+\TeXr@lab=\toks42
+)
+\c@proposition=\count312
 
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count310
-\l__pdf_internal_box=\box57
+\l__color_backend_stack_int=\count313
+\l__pdf_internal_box=\box59
 )
 (./neurips.aux)
 \openout1 = `neurips.aux'.
@@ -490,7 +520,7 @@ LaTeX Font Info:    ... okay on input line 56.
 * paper: letterpaper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
+* modes:
 * h-part:(L,W,R)=(92.14519pt, 430.00462pt, 92.14519pt)
 * v-part:(T,H,B)=(95.39737pt, 556.47656pt, 143.09605pt)
 * \paperwidth=614.295pt
@@ -522,7 +552,7 @@ LaTeX Font Info:    ... okay on input line 56.
 * paper: letterpaper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
+* modes:
 * h-part:(L,W,R)=(108.405pt, 397.48499pt, 108.40501pt)
 * v-part:(T,H,B)=(72.26999pt, 650.43pt, 72.27pt)
 * \paperwidth=614.295pt
@@ -576,17 +606,17 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count311
-\scratchdimen=\dimen183
-\scratchbox=\box58
-\nofMPsegments=\count312
-\nofMParguments=\count313
-\everyMPshowfont=\toks40
-\MPscratchCnt=\count314
-\MPscratchDim=\dimen184
-\MPnumerator=\count315
-\makeMPintoPDFobject=\count316
-\everyMPtoPDFconversion=\toks41
+\scratchcounter=\count314
+\scratchdimen=\dimen187
+\scratchbox=\box60
+\nofMPsegments=\count315
+\nofMParguments=\count316
+\everyMPshowfont=\toks43
+\MPscratchCnt=\count317
+\MPscratchDim=\dimen188
+\MPnumerator=\count318
+\makeMPintoPDFobject=\count319
+\everyMPtoPDFconversion=\toks44
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -665,11 +695,11 @@ Package pdftex.def Info: figures/Carat_design_nocaption.png  used on input line
 File: figures/cifar100_fangattack_curves.pdf Graphic file (type pdf)
 <use figures/cifar100_fangattack_curves.pdf>
 Package pdftex.def Info: figures/cifar100_fangattack_curves.pdf  used on input
-line 334.
+line 348.
 (pdftex.def)             Requested size: 389.53358pt x 130.25415pt.
  [8 <./figures/cifar100_fangattack_curves.pdf>] (./neurips.bbl [9] [10]) [11]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 376.
+put line 390.
 
 Underfull \vbox (badness 2818) has occurred while \output is active []
 
@@ -678,77 +708,77 @@ Underfull \vbox (badness 2818) has occurred while \output is active []
 <figures/carat_verification.pdf, id=466, 767.26604pt x 297.511pt>
 File: figures/carat_verification.pdf Graphic file (type pdf)
 <use figures/carat_verification.pdf>
-Package pdftex.def Info: figures/carat_verification.pdf  used on input line 883
+Package pdftex.def Info: figures/carat_verification.pdf  used on input line 897
 .
 (pdftex.def)             Requested size: 389.53358pt x 151.0431pt.
  [19]
-Underfull \hbox (badness 3713) in paragraph at lines 910--910
-[]\T1/ptm/m/n/9 (+20) ALIE, Fan-gAt-tack, Min-
+Underfull \hbox (badness 3364) in paragraph at lines 924--924
+[]|\T1/ptm/m/n/9 (+20) ALIE, Fan-gAt-tack, Min-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) round-wise ac-cu-racy
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
-[]\T1/ptm/m/n/9 (+20) Mean, Norm-Clip-ping,
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
+[]|\T1/ptm/m/n/9 (+20) Mean, Norm-Clip-ping,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) FLTrust, FLDe-tec-tor,
  []
 
 
-Underfull \hbox (badness 2726) in paragraph at lines 910--910
-[]\T1/ptm/m/n/9 (+20) Median, Krum, Bulyan, RFA,
+Underfull \hbox (badness 2726) in paragraph at lines 924--924
+[]|\T1/ptm/m/n/9 (+20) Median, Krum, Bulyan, RFA,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) Sign-Guard, Cen-tered-Clip-ping,
  []
 
 
-Underfull \hbox (badness 1939) in paragraph at lines 910--910
-[]\T1/ptm/m/n/9 (+20) Dirichlet non-i.i.d. $\OML/cmm/m/it/9  \OMS/cmsy/m/n/9 2
-
+Underfull \hbox (badness 1939) in paragraph at lines 924--924
+[]|\T1/ptm/m/n/9 (+20) Dirichlet non-i.i.d. $\OML/cmm/m/it/9  \OMS/cmsy/m/n/9
+2
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 910--910
+Underfull \hbox (badness 1796) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) client-count scal-ing, CIFAR-10
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) san-ity checks, Tiny-Im-a-geNet,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
-[]\T1/ptm/m/n/9 (+20) Robustness-vs-
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
+[]|\T1/ptm/m/n/9 (+20) Robustness-vs-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) heterogeneity curves;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) bench-mark sum-mary
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 910--910
+Underfull \hbox (badness 10000) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) robustness-overhead
  []
 
 
-Underfull \hbox (badness 6268) in paragraph at lines 910--910
+Underfull \hbox (badness 6268) in paragraph at lines 924--924
 \T1/ptm/m/n/9 (+20) set un-less the pa-per
  []
 
@@ -760,15 +790,15 @@ L3 programming layer <2024-01-22>
  ***********
 Package rerunfilecheck Info: File `neurips.out' has not changed.
 (rerunfilecheck)             Checksum: 190AA1635FFBC0E8B1A462FB2136F7B5;6405.
- ) 
+ )
 Here is how much of TeX's memory you used:
- 15031 strings out of 474222
- 230794 string characters out of 5748733
- 1957975 words of memory out of 5000000
- 36502 multiletter control sequences out of 15000+600000
+ 15408 strings out of 474222
+ 236096 string characters out of 5748733
+ 1960975 words of memory out of 5000000
+ 36865 multiletter control sequences out of 15000+600000
  615937 words of font info for 293 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,12n,79p,1417b,797s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,20n,79p,1417b,797s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texl
@@ -786,7 +816,7 @@ e/texmf/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr
 8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on neurips.pdf (28 pages, 1333474 bytes).
+Output written on neurips.pdf (28 pages, 1333933 bytes).
 PDF statistics:
  748 PDF objects out of 1000 (max. 8388607)
  617 compressed objects within 7 object streams

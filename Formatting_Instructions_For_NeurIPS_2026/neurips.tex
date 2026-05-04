@@ -20,6 +20,7 @@
 \usepackage{algorithmic}
 \usepackage{multirow}
 \usepackage{makecell}
+\usepackage{placeins}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\softmin}{\operatorname*{softmin}}
@@ -228,12 +229,12 @@ A compact round-level algorithm summary is provided in Appendix~\ref{sec:appendi
 \section{Experiments}
 \label{sec:experiments}
 
-We evaluate CARAT on class-rich federated benchmarks to test whether hidden-task certificates improve robustness beyond geometry-only and single-anchor defenses under heterogeneous client data. The completed core study focuses on untargeted model poisoning as heterogeneity increases and uses matched trusted-data budgets for CARAT and FLTrust. The full benchmark matrix, appendix-only stress tests, and ablation scope are reported in Appendix~\ref{sec:appendix-experiments}.
+We evaluate CARAT on a class-rich federated benchmark to test whether hidden-task certificates improve robustness beyond geometry-only and single-anchor defenses under heterogeneous client data. The completed core study focuses on CIFAR-100/ResNet18 under untargeted model poisoning and uses matched trusted-data budgets for CARAT and FLTrust. Appendix~\ref{sec:appendix-experiments} reports the locked protocol, complete public-baseline tables, runtime diagnostics, and reproducibility details.
 
 \subsection{Experimental Setup}
 
 \paragraph{Benchmarks.}
-The primary benchmark is CIFAR-100 with ResNet18~\cite{he2016deep}. CIFAR-100 offers a class-rich label space in which hidden semantic slices are meaningful and class-selective failures are easier to expose than on low-cardinality datasets. We complement it with TinyImageNet, again using ResNet18, to test whether the method scales to a larger class vocabulary while keeping the backbone fixed. To anchor the method in a more application-oriented setting, we also include CHMNIST with the same backbone in the appendix, where class-selective degradation has a clearer domain interpretation. CIFAR-10 is retained only as an appendix sanity check rather than a primary source of evidence, because a ten-class benchmark is too coarse to serve as the main validation vehicle for a class-aware defense. Keeping the model family fixed across visual datasets helps attribute observed differences to aggregation rather than to backbone changes.
+The completed benchmark is CIFAR-100 with ResNet18~\cite{he2016deep}. CIFAR-100 offers a class-rich label space in which hidden semantic slices are meaningful and class-selective failures are easier to expose than on low-cardinality datasets. Keeping the backbone fixed across all compared defenses helps attribute observed differences to aggregation rather than to model capacity or architecture changes.
 
 \paragraph{Threat models.}
 For untargeted model poisoning, the main threat models are ALIE~\cite{baruch2019alie}, FangAttack~\cite{fang2020local}, MinMax~\cite{shejwalkar2021manipulating}, and MinSum~\cite{shejwalkar2021manipulating}. These attacks represent stealthy optimization-based adversaries that try to stay near the benign update manifold while degrading global learning, together with a geometry-aware attack that is especially informative for defenses based on Krum-style screening. We do not treat data poisoning or backdoor attacks as part of CARAT's claimed scope in this paper.
@@ -242,7 +243,7 @@ For untargeted model poisoning, the main threat models are ALIE~\cite{baruch2019
 The main-text baselines are Mean, NormClipping, MultiKrum~\cite{blanchard2017krum}, FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, and CARAT. This set spans plain averaging, norm clipping, geometry-based filtering, trusted-data anchoring, history-based detection, and class-aware hidden-task validation. We exclude unpublished or under-review defenses from the main comparison so that all baseline claims are tied to citable public methods; the appendix reports a broader public-baseline table.
 
 \paragraph{Implementation details.}
-Across the primary comparison, we use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, and learning rate $0.05$. To probe heterogeneity, we evaluate Dirichlet non-i.i.d.\ regimes with $\alpha \in \{1,0.5\}$ in the main table; the more severe $\alpha=0.1$ regime is treated as a stress-test setting and is not used for the central claim. The adversarial setting uses an attacker ratio of $20\%$, corresponding to $4$ malicious clients. Clean-reference experiments are reported separately from attacked experiments instead of being inserted as attack rows. Unless otherwise stated, baseline means and standard deviations are computed over $5$ seeds. CARAT seed counts are stated in the relevant table captions.
+Across the primary comparison, we use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, and learning rate $0.05$. To probe heterogeneity, we evaluate Dirichlet non-i.i.d.\ regimes with $\alpha \in \{1,0.5\}$. The adversarial setting uses an attacker ratio of $20\%$, corresponding to $4$ malicious clients. Clean-reference experiments are reported separately from attacked experiments instead of being inserted as attack rows. Unless otherwise stated, compatible legacy rows use five seeds, while locked FLTrust and CARAT rows use three seeds under the regenerated protocol.
 
 \begin{table*}[!htbp]
 \centering
@@ -255,15 +256,13 @@ Across the primary comparison, we use $20$ clients with full participation, $200
 \textbf{Component} & \textbf{Design choice} \\
 \midrule
 Primary benchmark & CIFAR-100 with ResNet18 \\
-Supplementary benchmarks & TinyImageNet with ResNet18; CHMNIST with ResNet18 (appendix); CIFAR-10 only as appendix sanity check \\
 Clients and participation & $20$ total clients with full participation each round \\
 Optimization schedule & $200$ communication rounds, $4$ local epochs, learning rate $0.05$ \\
-Heterogeneity settings & Dirichlet non-i.i.d.\ with $\alpha \in \{1,0.5\}$ for the main comparison; $\alpha=0.1$ reserved for stress testing \\
+Heterogeneity settings & Dirichlet non-i.i.d.\ with $\alpha \in \{1,0.5\}$ \\
 Main adversarial fraction & $20\%$ malicious clients \\
-Stress adversarial fraction & $40\%$ malicious clients (appendix) \\
 Main untargeted attacks & ALIE, FangAttack, MinMax, MinSum \\
 Untargeted baselines & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT \\
-Primary reported metrics & Final test accuracy, final test loss, average rank, runtime per round where available \\
+Primary reported metrics & Final test accuracy, final test loss, average rank \\
 Fairness controls & Matched labeled server-reference budget between CARAT and FLTrust; clean-reference runs reported separately from attacked runs \\
 Repetitions & Five seeds for compatible legacy rows; three seeds for locked FLTrust and CARAT rows \\
 \bottomrule
@@ -275,22 +274,19 @@ Because CARAT is explicitly class-aware, the evaluation should not rely only on 
 
 \subsection{Main Evaluation Comparisons}
 
-\paragraph{Clean utility.}
-We keep no-attack performance separate from attacked robustness tables so that clean-utility cost is not conflated with poisoning resistance. These diagnostics focus on test accuracy and test loss, with macro and worst-class accuracy added when aggregate accuracy alone could mask concentrated degradation.
+\paragraph{Clean reference.}
+We keep no-attack performance separate from attacked robustness tables so that clean utility is not conflated with poisoning resistance. The no-attack Mean run is used only as a reference curve in the round-wise view, not as an attack-row baseline in the final robustness table.
 
 \paragraph{Untargeted poisoning.}
 We then compare CARAT against Mean, NormClipping, MultiKrum, FLTrust, and FLDetector under ALIE, FangAttack, MinMax, and MinSum on non-i.i.d.\ partitions. The main question is whether task-conditioned validation remains reliable when benign clients are dispersed and adaptive attackers stay close to the benign update manifold.
 
-\subsection{Ablations, Stress Tests, and Overhead}
+\subsection{Scope and Overhead Diagnostics}
 
-\paragraph{Ablations.}
-We ablate the components that correspond directly to CARAT's mechanism: hidden-task count, reference budget per class, rank-penalty weight, temporal-prior weight, clipping controls, and common-radius evaluation. These studies isolate whether the observed robustness comes from class-balanced task validation, structural anomaly suppression, or simply from access to more trusted data.
+\paragraph{Evaluation scope.}
+The completed evaluation supports a deliberately scoped claim: robustness against untargeted model poisoning on CIFAR-100/ResNet18 under $\alpha\in\{1,0.5\}$ and $20\%$ malicious clients. More severe heterogeneity, larger client populations, additional datasets, backdoor attacks, and data-poisoning attacks remain outside the empirical claim set.
 
-\paragraph{Stress tests.}
-Appendix-only stress tests raise the attacker fraction to $40\%$, examine the more severe $\alpha=0.1$ heterogeneity regime, and vary the client count or class vocabulary. Their role is to probe failure modes and scaling behavior rather than to replace the main-text comparisons.
-
-\paragraph{Overhead analysis.}
-Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as the main extra cost, we report runtime per round, total defense overhead, and trusted-data budget sensitivity as first-class evaluation outcomes rather than as implementation footnotes.
+\paragraph{Overhead diagnostics.}
+Since Proposition~\ref{prop:complexity} identifies probe-model evaluation as the main extra cost, we include a verification-scale runtime diagnostic in Appendix~\ref{sec:appendix-runtime}. This diagnostic supports the overhead discussion, but it is not used as a primary robustness claim.
 
 \subsection{Protocol-Locked Results}
 
@@ -374,15 +370,16 @@ The CIFAR-100/ResNet18 non-i.i.d.\ evaluation is scoped to public robust-aggrega
 \newpage
 \appendix
 
-\section{Algorithm and Theory}
+\paragraph{Appendix organization.}
+The appendix is organized to make each claim auditable. Appendix~\ref{sec:appendix-algorithm-theory} gives the round-level algorithm, implementation invariants, and proofs of the structural properties used in the main text. Appendix~\ref{sec:appendix-experiments} gives only empirical support for the completed claim: locked protocol details, CARAT hyperparameters, complete public-baseline tables, runtime diagnostics, and reproducibility information.
+
+\section{Algorithmic and Theoretical Details}
 \label{sec:appendix-algorithm-theory}
 
-This appendix part collects the method-level material: executable round-level pseudocode, implementation invariants, and structural propositions used to interpret CARAT. The goal is to keep algorithmic and theoretical details separate from the empirical reporting in Appendix~\ref{sec:appendix-experiments}.
+This part collects method-level material that is needed to reproduce and interpret CARAT: executable server-side pseudocode, implementation details that affect the certificates, and structural propositions that explain the constrained weighting rule. The empirical protocol and additional results are separated into Appendix~\ref{sec:appendix-experiments}.
 
-\subsection{Algorithmic Details}
+\subsection{Round-Level Algorithm}
 \label{sec:appendix-algorithm}
-
-\subsubsection{Round-Level Pseudocode}
 
 Algorithm~\ref{alg:carat-round} summarizes one CARAT server round in standard pseudocode form.
 
@@ -433,7 +430,10 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server round in standard ps
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Implementation Notes}
+\subsection{Implementation Details and Diagnostics}
+\label{sec:appendix-implementation}
+
+This subsection fixes implementation choices that are easy to omit from the mathematical description but affect reproducibility: persistent state, probe construction, score calibration, projection behavior, and diagnostic logging.
 
 \paragraph{Inputs.}
 Current global model $w_r$, client messages $\{u_i^r\}_{i=1}^n$, previous-round weights $\alpha^{\mathrm{prev}}$, server-visible training dataset, and CARAT hyperparameters.
@@ -503,7 +503,7 @@ Aggregated server update, updated temporal prior $\alpha^{\mathrm{prev}}$, and d
 \paragraph{Practical diagnostics.}
 The most useful round-level diagnostics for debugging and empirical interpretation are the learned weights, the weakest-task values emphasized by the softmin, the clip threshold $\tau_r$, the evaluation radius $q_r$, and the final rank penalties $r_i$. In successful runs, these quantities help distinguish three qualitatively different cases: benign but diverse clients that retain moderate weight, clearly harmful clients that lose certificate support across multiple tasks, and structurally extreme clients whose influence is reduced primarily by the rank penalty.
 
-\subsection{Theoretical Analysis}
+\subsection{Proofs and Structural Properties}
 \label{sec:appendix-theory}
 
 This appendix records the main structural properties used to interpret CARAT. These results are not presented as a complete robustness guarantee against arbitrary adaptive attackers. Instead, they clarify why the method decomposes into a normalized evaluation geometry, a task-aware utility objective, and a constrained robust aggregation step.
@@ -774,50 +774,72 @@ CARAT performs one baseline probe evaluation plus $n$ candidate probe evaluation
 \paragraph{Remark on assumptions.}
 The object $\mathcal{D}^{\mathrm{ref}}$ in the main text denotes the labeled server reference set, while the probe pool $\mathcal{P}$ used during each round is a subsampled working set derived from it. In practice, the server first constructs $\mathcal{P}$ from the full server-visible reference data and then samples hidden tasks from $\mathcal{P}$ at each round. This distinction should remain explicit because it is part of the method's server-side assumption and materially strengthens the setting relative to a fully data-free defense.
 
-\section{Additional Experiments}
+\section{Experimental Protocols and Additional Results}
 \label{sec:appendix-experiments}
 
-This appendix part records the empirical material that supports the main-text comparison: benchmark design, threat models, baseline scope, complete result tables, runtime diagnostics, and reproducibility details.
+This part records only empirical material that directly supports the main-text claims. It first fixes the completed CIFAR-100/ResNet18 protocol and CARAT hyperparameters, then reports the complete public-baseline accuracy and loss tables, a runtime diagnostic, and reproducibility details.
 
-\subsection{Experimental Goals}
+\subsection{Completed Empirical Scope}
 
-The empirical study is designed to test properties specific to CARAT rather than to benchmark it as a generic outlier filter. In particular, we ask whether hidden-task validation improves robustness when benign clients are heterogeneous, whether that advantage persists on class-rich benchmarks where class-selective failure matters, and how much robustness is purchased per unit of trusted-data budget and runtime overhead.
+The completed empirical scope is intentionally narrow. We evaluate untargeted model poisoning on CIFAR-100/ResNet18 with Dirichlet non-i.i.d.\ client partitions, $20\%$ malicious clients, and four attacks: ALIE, FangAttack, MinMax, and MinSum. The main-text comparison uses Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT; TrimmedMean is kept only in the complete appendix tables for transparency. All claims are based on attacked final test accuracy, attacked final test loss, and average rank. CARAT and FLTrust use matched labeled server-reference budgets, and unpublished or under-review defenses are excluded from the claim set.
 
-\subsection{Benchmarks}
+\subsection{Locked CIFAR-100 Protocol}
 
-\paragraph{Primary class-rich benchmark.}
-The main benchmark is CIFAR-100 with ResNet18. This setting best matches CARAT's motivation because the label space is rich enough for different hidden tasks to emphasize different semantic slices, and because average clean accuracy alone can hide substantial per-class degradation.
+Unless stated otherwise, the CIFAR-100 comparison uses $20$ clients with full participation, $200$ communication rounds, $4$ local epochs, learning rate $0.05$, and Dirichlet non-i.i.d.\ partitions with $\alpha \in \{1,0.5\}$. Legacy public-baseline rows use five random seeds where available, while the locked TrimmedMean, FLTrust, and CARAT rows use three random seeds.
 
-\paragraph{Scalability benchmark.}
-TinyImageNet with ResNet18 is used to test whether the same aggregation rule remains effective as the number of classes and the visual vocabulary increase. This benchmark is particularly useful for checking whether the hidden-task construction and reference-budget design remain meaningful beyond CIFAR-100.
+\begin{table*}[!htbp]
+\centering
+\caption{Locked CIFAR-100/ResNet18 protocol used for the reported public-baseline result set.}
+\label{tab:locked-protocol}
+\renewcommand{\arraystretch}{1.08}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{0.22\textwidth}p{0.30\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Component} & \textbf{Locked setting} & \textbf{Role in the paper} \\
+\midrule
+Dataset and model & CIFAR-100 / ResNet18 & Primary class-rich benchmark for the main robustness claim. \\
+Client population & $20$ clients, full participation & Keeps client sampling fixed so defense differences are not confounded with participation noise. \\
+Training schedule & $200$ rounds, $4$ local epochs, learning rate $0.05$ & Shared optimization protocol for attacked runs. \\
+Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5\}$ & Completed heterogeneous settings used for the main claim. \\
+Malicious clients & $20\%$ & Attacker fraction used in the completed result set. \\
+Attack suite & ALIE, FangAttack, MinMax, MinSum & Untargeted model-poisoning attacks used for final tables and ranks. \\
+Main-text defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Public, citable baselines used in Table~\ref{tab:cifar100-main-acc}. \\
+Appendix-only baseline & TrimmedMean & Retained in complete appendix tables for transparency, not used in the main-text comparison. \\
+Seeds and source policy & Legacy rows: five seeds where available; locked rows: three seeds & Compatible legacy logs are reused; FLTrust, TrimmedMean, and CARAT are regenerated under the locked protocol. \\
+Trusted-data budget & Matched between FLTrust and CARAT & Prevents CARAT from receiving a larger labeled server-reference budget than the trusted-data baseline. \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
 
-\paragraph{Application-oriented benchmark.}
-We include CHMNIST with ResNet18 as an application-style benchmark in the appendix. Its role is not to maximize scale, but to show that class-selective failures have a practical interpretation in a domain where server-side auditing with a small labeled reference set is plausible.
+\subsection{CARAT Hyperparameters}
 
-\paragraph{Sanity-check benchmark.}
-CIFAR-10 is retained only as a sanity-check benchmark. It remains useful for verifying that CARAT does not fail on standard low-cardinality image classification, but it is not treated as a primary source of evidence because its ten classes are too few to fully exercise the method's class-aware design.
+Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the locked CIFAR-100 result set. These values define the reported protocol and make the server-side evaluation budget explicit.
 
-\subsection{Threat Models}
+\begin{table*}[!htbp]
+\centering
+\caption{CARAT hyperparameters used in the locked CIFAR-100/ResNet18 public-baseline runs.}
+\label{tab:carat-hyperparameters}
+\renewcommand{\arraystretch}{1.08}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{0.24\textwidth}p{0.24\textwidth}p{0.42\textwidth}}
+\toprule
+\textbf{Component} & \textbf{Default value} & \textbf{Purpose} \\
+\midrule
+Hidden-task evaluation & $8$ tasks, $4$ probe samples per class, batch size $128$ & Builds repeated class-balanced certificates for candidate client updates. \\
+Normalization and clipping & Probe-radius quantile $0.5$; MAD clipping factor $2.5$ & Places candidates on a common evaluation radius and limits residual norm influence. \\
+Feasible weight set & Attacker prior $\hat{\rho}=0.2$ & Caps per-client weight and prevents collapse onto a very small client subset. \\
+Task and anomaly weighting & Certificate temperature $\beta=12.0$; rank weight $0.20$; prior weight $0.05$ & Balances weakest-task utility, structural rank penalty, and temporal smoothness. \\
+Rank diagnostics & $4096$ sampled coordinates, $5$ rank subsamples & Estimates whether a client is consistently extreme across coordinate views. \\
+Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capped-simplex weighting problem used for aggregation. \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
 
-\paragraph{Untargeted poisoning.}
-The main untargeted suite contains ALIE, FangAttack, MinMax, and MinSum. Together they represent adaptive model-poisoning attacks that aim to remain stealthy under server-side defenses, plus a geometry-aware stressor that is especially informative for Krum-style and history-based defenses.
-
-\subsection{Baselines}
-
-\paragraph{Untargeted defenses.}
-For untargeted poisoning, the complete appendix comparison uses Mean, NormClipping, TrimmedMean, MultiKrum, FLTrust, FLDetector, and CARAT. This set spans plain averaging, norm-based clipping, coordinate-wise robust statistics, geometry-based filtering, trusted-data anchoring, historical-trajectory detection, and class-aware hidden-task validation. Under-review defenses are excluded from the paper's claim set.
-
-\subsection{Metrics and Fairness}
-
-The completed core tables report attacked final test accuracy, final test loss, and average rank. No-attack clean utility, macro-average accuracy, worst-class accuracy, and runtime are treated as supplementary diagnostics because they require separate clean or instrumented runs and should not be mixed with the main attacked-result table.
-
-Trusted-data fairness is controlled explicitly. CARAT and FLTrust are compared under the same labeled server-reference budget, rather than allowing one method to benefit from more public data. Reference-budget sweeps are left to appendix extensions and are not used as evidence for the main claim table.
-
-\subsection{Shared Training Protocol}
-
-Unless stated otherwise, the CIFAR-100 comparison uses $20$ clients with full participation, $200$ communication rounds, $4$ local epochs, and learning rate $0.05$. The main heterogeneity settings are Dirichlet non-i.i.d.\ partitions with $\alpha \in \{1,0.5\}$; the more severe $\alpha=0.1$ setting is reserved for stress testing rather than used as a main-text claim. The main attacker ratio is $20\%$, while $40\%$ is reserved for appendix stress tests. Legacy public-baseline rows use five random seeds where available, while the locked TrimmedMean, FLTrust, and CARAT rows use three random seeds. Scaling studies in the appendix may additionally vary the number of clients or the attacker ratio, but these are treated as stress tests rather than as the core evaluation axis.
-
-\subsection{Complete Accuracy Results}
+\subsection{Complete Public-Baseline Accuracy Results}
 
 Table~\ref{tab:cifar100-full-acc} reports the complete public-baseline accuracy table corresponding to the main-text subset in Table~\ref{tab:cifar100-main-acc}. This appendix table keeps the broader baseline set for transparency while preserving the narrower main-text narrative.
 
@@ -852,7 +874,7 @@ Table~\ref{tab:cifar100-full-acc} reports the complete public-baseline accuracy 
 }
 \end{table*}
 
-\subsection{Final Loss Results}
+\subsection{Complete Final-Loss Results}
 
 Table~\ref{tab:cifar100-main-loss} reports the final test loss corresponding to Table~\ref{tab:cifar100-main-acc}. It uses the same source policy: compatible legacy public-baseline logs are reused, while TrimmedMean, matched-budget FLTrust, and $T=8$ CARAT are taken from the locked three-seed protocol.
 
@@ -886,11 +908,12 @@ Table~\ref{tab:cifar100-main-loss} reports the final test loss corresponding to 
 \end{tabular}
 }
 \end{table*}
+\FloatBarrier
 
 \subsection{Verification-Scale Runtime Results}
 \label{sec:appendix-runtime}
 
-Figure~\ref{fig:verification-curves} reports a smaller CIFAR-100/i.i.d.\ ALIE verification run that records both round-wise accuracy and server-side runtime. In this setting, CARAT remains stable across seeds under attack but pays a clear runtime premium because each round evaluates candidate updates on repeated hidden tasks. The result is not used as the main robustness claim; it is included to make the overhead tradeoff visible and to motivate the budget controls in the ablation plan.
+Figure~\ref{fig:verification-curves} reports a smaller CIFAR-100/i.i.d.\ ALIE verification run that records both round-wise accuracy and server-side runtime. In this setting, CARAT remains stable across seeds under attack but pays a clear runtime premium because each round evaluates candidate updates on repeated hidden tasks. The result is not used as the main robustness claim; it is included only to make the overhead tradeoff visible.
 
 \begin{figure*}[!htbp]
 \centering
@@ -898,43 +921,13 @@ Figure~\ref{fig:verification-curves} reports a smaller CIFAR-100/i.i.d.\ ALIE ve
 \caption{Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation.}
 \label{fig:verification-curves}
 \end{figure*}
-
-\subsection{Supplementary Experiment Scope}
-
-The main-text comparison is intentionally narrower than the full experimental implementation. In particular, the implementation supports a broader set of model-poisoning attacks and defense baselines than the primary CARAT comparison uses. Table~\ref{tab:expansion-matrix} separates the core suite used for the main claim from additional experiment axes that are most useful for stress testing, sensitivity analysis, and future extensions. Backdoor and data-poisoning implementations remain outside the claim set of this paper.
-
-\begin{table*}[!htbp]
-\centering
-\caption{Supplementary model-poisoning experiment scope. The core suite matches the main-text claim, while the extension suite records additional comparisons supported by the implementation.}
-\label{tab:expansion-matrix}
-\renewcommand{\arraystretch}{1.1}
-\small
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{p{0.18\textwidth}p{0.25\textwidth}p{0.31\textwidth}p{0.22\textwidth}}
-\toprule
-\textbf{Axis} & \textbf{Core suite} & \textbf{Extension suite} & \textbf{Suggested visualization} \\
-\midrule
-Untargeted attacks & ALIE, FangAttack, MinMax, MinSum & Gaussian, IPM, Mimic, SignFlipping, ThreeDFed & Final robustness tables; round-wise accuracy curves \\
-Untargeted defenses & Mean, NormClipping, TrimmedMean, MultiKrum, FLTrust, FLDetector, CARAT & Median, Krum, Bulyan, RFA, DnC, Auror, LASA, FoolsGold, SignGuard, CenteredClipping, Bucketing, SimpleClustering & Grouped comparison tables; per-attack win/loss summaries \\
-Data regimes & Dirichlet non-i.i.d.\ $\alpha \in \{1,0.5\}$ & $\alpha=0.1$, i.i.d.\ verification runs, high-attacker stress tests ($40\%$), client-count scaling, CIFAR-10 sanity checks, TinyImageNet, CHMNIST & Robustness-vs-heterogeneity curves; benchmark summary tables \\
-Efficiency and fairness & Matched CARAT / FLTrust reference budget; runtime per round & Reference-budget sweeps; runtime breakdowns; trusted-data sensitivity & Overhead bars; budget-response curves; clean-robustness-overhead tradeoff plots \\
-Out-of-scope implemented attacks and defenses & -- & ModelReplacement, DBA, Neurotoxin, BadNets, EdgeCase, AlterMin, LabelFlipping, FLAME, DeepSight, CRFL & Keep outside the claim set unless the paper scope is widened \\
-\bottomrule
-\end{tabular}
-}
-\end{table*}
-
-\subsection{CARAT Hyperparameters, Stress Tests, and Ablation Plan}
-
-The implementation defaults are $8$ hidden tasks, $4$ probe samples per class, probe batch size $128$, probe-radius quantile $0.5$, MAD clipping with $k=2.5$, default attacker prior $\hat{\rho}=0.2$, certificate temperature $\beta=12.0$, rank weight $0.20$, prior weight $0.05$, $4096$ sampled coordinates, $5$ rank subsamples, $60$ projected optimization steps, and optimizer learning rate $0.5$.
-
-Two design principles matter when transferring these defaults across datasets. First, the reference budget should scale with the number of classes rather than be fixed as a single dataset-independent total pool size. Second, CARAT should be ablated along the axes that correspond directly to its mechanism: hidden-task count, reference budget per class, rank-penalty weight, temporal-prior weight, and clipping controls. The appendix therefore includes ablations that isolate whether the observed robustness comes from class-balanced hidden tasks, from the structural rank penalty, or simply from access to more trusted data. It also records high-attacker stress tests, scaling analyses, and runtime breakdowns so that robustness, efficiency, and trusted-data dependence are evaluated together.
+\FloatBarrier
 
 \subsection{Reproducibility, Ethics, and Availability}
 \label{sec:appendix-reproducibility}
 
 \paragraph{Reproducibility.}
-All main reported results use public benchmark datasets and fixed training protocols described in Section~\ref{sec:experiments}. The aggregation method is specified in Algorithm~\ref{alg:carat-round}, with implementation defaults listed above. For anonymous review, logs, plotting scripts, and configuration files should be included in the supplementary material or an anonymized archive so that each table cell can be traced to its seed-level runs.
+All main reported results use the public CIFAR-100 benchmark and the fixed training protocol described in Section~\ref{sec:experiments}. The aggregation method is specified in Algorithm~\ref{alg:carat-round}, with implementation defaults listed above. For anonymous review, logs, plotting scripts, and configuration files should be included in the supplementary material or an anonymized archive so that each table cell can be traced to its seed-level runs.
 
 \paragraph{Compute resources.}
 Legacy public-baseline logs were generated through the repository launch scripts on a Compute Canada SLURM cluster. After that resource became unavailable, the locked three-seed public-baseline runs reported across Tables~\ref{tab:cifar100-main-acc},~\ref{tab:cifar100-full-acc}, and~\ref{tab:cifar100-main-loss} were completed locally on one NVIDIA GeForce RTX 4090 using the same launcher, export script, and fixed configuration files. Each run writes a metadata file recording the configuration file, command line, seed, Python environment, CUDA requirement, and git commit.
@@ -943,7 +936,7 @@ Legacy public-baseline logs were generated through the repository launch scripts
 This work studies defenses against model-poisoning attacks in federated learning. The attack implementations are used to evaluate robustness and do not require access to private user data. The main practical risk is dual use: stronger attack simulations may help adversaries tune poisoning strategies. We mitigate this by framing attacks as benchmark stressors and by releasing defensive evaluation code together with the corresponding protocols.
 
 \paragraph{Data availability.}
-CIFAR-10, CIFAR-100, TinyImageNet, and CHMNIST are public datasets. CARAT uses a small labeled server-side reference split during evaluation; when reproducing the results, this split should be generated deterministically from the public training data under the same seed and excluded from client local training data.
+CIFAR-100 is a public dataset. CARAT uses a small labeled server-side reference split during evaluation; when reproducing the results, this split should be generated deterministically from the public training data under the same seed and excluded from client local training data.
 
 \newpage
 \input{checklist}

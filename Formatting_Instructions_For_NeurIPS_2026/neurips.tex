@@ -1,7 +1,10 @@
 \documentclass{article}
 
-\PassOptionsToPackage{numbers,sort&compress}{natbib}
 \usepackage{neurips_2026}
+\setcitestyle{authoryear,round}
+% NeurIPS 2026 submission assembly: main text ends before references and
+% must be at most 9 pages; references, appendices, and checklist remain in
+% the same PDF, which should be named with a .pdf suffix and stay under 50 MB.
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[hypertexnames=false]{hyperref}
@@ -232,10 +235,10 @@ The experiments are organized around one deliberately scoped claim: whether hidd
 \subsection{Evaluation Protocol}
 
 \paragraph{Benchmark and threat model.}
-We use CIFAR-100~\citep{krizhevsky2009learning} with ResNet18~\citep{he2016deep}. CIFAR-100 has a class-rich label space, making it suitable for evaluating whether hidden class-balanced tasks reveal class-selective degradation that may be hidden in aggregate accuracy alone. The attacked comparison covers four untargeted model-poisoning attacks: ALIE~\cite{baruch2019alie}, FangAttack~\cite{fang2020local}, MinMax~\cite{shejwalkar2021manipulating}, and MinSum~\cite{shejwalkar2021manipulating}. These attacks test stealthy variance-based poisoning, geometry-aware local model poisoning, and distance-constrained optimization attacks. Backdoor and data-poisoning attacks remain outside the empirical claim set.
+We use CIFAR-100~\citep{krizhevsky2009learning} with ResNet18~\citep{he2016deep}. CIFAR-100 has a class-rich label space, making it suitable for evaluating whether hidden class-balanced tasks reveal class-selective degradation that may be hidden in aggregate accuracy alone. The attacked comparison covers four untargeted model-poisoning attacks: ALIE~\citep{baruch2019alie}, FangAttack~\citep{fang2020local}, MinMax~\citep{shejwalkar2021manipulating}, and MinSum~\citep{shejwalkar2021manipulating}. These attacks test stealthy variance-based poisoning, geometry-aware local model poisoning, and distance-constrained optimization attacks. Backdoor and data-poisoning attacks remain outside the empirical claim set.
 
 \paragraph{Baselines and fairness controls.}
-The main-text comparison includes Mean, NormClipping, MultiKrum~\cite{blanchard2017krum}, FLTrust~\cite{cao2021fltrust}, FLDetector~\cite{zhang2022fldetector}, and CARAT. This set spans averaging, clipping, geometry-based filtering, trusted-data anchoring, historical detection, and hidden-task validation. We exclude unpublished or under-review defenses from the main claim so that every reported baseline is citable and publicly attributable. To isolate the effect of the aggregation rule, CARAT and FLTrust use matched labeled server-reference budgets.
+The main-text comparison includes Mean, NormClipping, MultiKrum~\citep{blanchard2017krum}, FLTrust~\citep{cao2021fltrust}, FLDetector~\citep{zhang2022fldetector}, and CARAT. This set spans averaging, clipping, geometry-based filtering, trusted-data anchoring, historical detection, and hidden-task validation. We exclude unpublished or under-review defenses from the main claim so that every reported baseline is citable and publicly attributable. To isolate the effect of the aggregation rule, CARAT and FLTrust use matched labeled server-reference budgets.
 
 \paragraph{Training and reporting protocol.}
 All main attacked runs use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, learning rate $0.05$, and a $20\%$ malicious-client ratio. We evaluate Dirichlet non-i.i.d.\ regimes with $\alpha\in\{1,0.5\}$, where smaller $\alpha$ increases client heterogeneity. Clean no-attack runs are kept separate from attacked robustness tables so that clean utility is not mixed with poisoning resistance. Compatible legacy public-baseline rows use five seeds where available; regenerated FLTrust and CARAT rows use three seeds under the matched reference-assisted protocol. The tables disclose this source policy rather than pooling runs across unequal seed counts. Final test accuracy is the primary metric, final test loss in the appendix is a consistency check, and average rank within each non-i.i.d.\ setting summarizes performance across attacks.
@@ -339,7 +342,8 @@ Figure~\ref{fig:cifar100-fangattack-curves} shows the round-wise behavior under 
 
 \FloatBarrier
 
-\subsection{Scope and Diagnostics}
+\subsection{Limitations and Diagnostics}
+\label{sec:limitations-diagnostics}
 
 The completed evaluation supports a bounded robustness claim for untargeted model poisoning on CIFAR-100/ResNet18 with $20\%$ malicious clients and Dirichlet non-i.i.d.\ partitions with $\alpha\in\{1,0.5\}$. More severe heterogeneity, larger client populations, additional datasets, backdoor attacks, data-poisoning attacks, and attackers that observe the exact hidden validation tasks remain outside the empirical claim set. This boundary is intentional: the paper evaluates whether class-aware hidden-task validation is a useful reference-assisted aggregation signal, not whether CARAT solves all Byzantine FL settings. Because Proposition~\ref{prop:complexity} identifies probe-model evaluation as CARAT's main extra cost, Appendix~\ref{sec:appendix-runtime} reports verification-scale learning curves and runtime measurements as overhead diagnostics rather than as primary robustness claims.
 
@@ -348,7 +352,7 @@ The completed evaluation supports a bounded robustness claim for untargeted mode
 
 CARAT validates candidate updates through hidden, class-balanced task certificates rather than geometric centrality or a single trusted reference direction. In the completed CIFAR-100/ResNet18 non-i.i.d.\ evaluation with matched trusted-data budgets, it achieves the strongest performance among the reported public baselines under four untargeted model-poisoning attacks, supporting its use when a modest labeled server reference set is available.
 
-\bibliographystyle{unsrtnat}
+\bibliographystyle{plainnat}
 \bibliography{ref}
 
 \newpage

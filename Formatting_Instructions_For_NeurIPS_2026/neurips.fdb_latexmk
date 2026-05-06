@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex neurips"] 1777935197.5765 "neurips.aux" "neurips.bbl" "neurips" 1777935198.29234 0
-  "./ref.bib" 1777933033.13656 16168 5f1a99f408235d8cec3c7824f9652fc8 ""
-  "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "neurips.aux" 1777935198.10941 20780 3d31424b62f836adcabdcaac448e4c6f "pdflatex"
+["bibtex neurips"] 1778025330.09715 "neurips.aux" "neurips.bbl" "neurips" 1778025412.05409 0
+  "./ref.bib" 1778024732.37563 16168 5f1a99f408235d8cec3c7824f9652fc8 ""
+  "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1233624470 26816 ffe5423d2019860bad9f54bc402fac15 ""
+  "neurips.aux" 1778025411.8868 20883 e7cf9b8e655a134184cbda85de281f21 "pdflatex"
   (generated)
   "neurips.bbl"
   "neurips.blg"
   (rewritten before read)
-["pdflatex"] 1777935197.63926 "neurips.tex" "neurips.pdf" "neurips" 1777935198.2925 0
+["pdflatex"] 1778025411.35924 "neurips.tex" "neurips.pdf" "neurips" 1778025412.05421 0
   "/etc/texmf/web2c/texmf.cnf" 1770938166.97607 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -163,15 +163,15 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1770938182.54464 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1770938231 8213604 9c5c8aafb6deabd68580c8926416aa24 ""
-  "checklist.tex" 1777918069.76223 25099 1c194791c8de794b36cd2cea8d5adaa4 ""
-  "figures/Carat_design.png" 1777932248.75266 1103608 a8b950f0b6bf4c976088504bc493068c ""
-  "figures/carat_verification.pdf" 1777676214.15779 29284 d4cbdbed0d067fb76751342909de7f15 ""
-  "figures/cifar100_fangattack_curves.pdf" 1777935193.57024 77838 ae7954a38b5892921fa268480e66bcb5 ""
-  "neurips.aux" 1777935198.10941 20780 3d31424b62f836adcabdcaac448e4c6f "pdflatex"
-  "neurips.bbl" 1777935197.63639 13188 4422fe0bb5ca2495a682a57136be6479 "bibtex neurips"
-  "neurips.out" 1777935198.11041 4778 40611064704b66f9e4ea7d6f048219ea "pdflatex"
-  "neurips.tex" 1777935177.37361 68427 4aa1bd3bd1b3694a32b359267c2c0e03 ""
-  "neurips_2026.sty" 1776322777.71361 13462 818d80447f57703e59b8270885421e82 ""
+  "checklist.tex" 1778024962.07281 25135 cd308bf35c974044799534c490b45d6e ""
+  "figures/Carat_design.png" 1778024732.36563 1103608 a8b950f0b6bf4c976088504bc493068c ""
+  "figures/carat_verification.pdf" 1778025007.69764 57718 8372ea87cd6d4e6f36a024b516b78670 ""
+  "figures/cifar100_fangattack_curves.pdf" 1778024732.37363 77838 ae7954a38b5892921fa268480e66bcb5 ""
+  "neurips.aux" 1778025411.8868 20883 e7cf9b8e655a134184cbda85de281f21 "pdflatex"
+  "neurips.bbl" 1778025330.15653 13188 c723d0082c57b66c2a4fc95969bdad5e "bibtex neurips"
+  "neurips.out" 1778025411.8868 4808 156f89b374961fb9ba979bdc82b82cc2 "pdflatex"
+  "neurips.tex" 1778025408.50767 68682 c402165c7a65f0f2201635500cd6665b ""
+  "neurips_2026.sty" 1778024732.37563 13462 818d80447f57703e59b8270885421e82 ""
   (generated)
   "neurips.aux"
   "neurips.log"

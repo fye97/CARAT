@@ -27,6 +27,9 @@
 \citation{bagdasaryan2020backdoor}
 \citation{xie2020dba}
 \citation{wang2020tails}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related-work}{{2}{2}{Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Model-poisoning attacks.}{2}{section*.3}\protected@file@percent }
 \citation{blanchard2017krum}
 \citation{elmhamdi2018bulyan}
 \citation{yin2018median}
@@ -53,10 +56,7 @@
 \citation{cao2021fltrust}
 \citation{fung2020foolsgold}
 \citation{zhang2022fldetector}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
-\newlabel{sec:related-work}{{2}{2}{Related Work}{section.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Model-poisoning attacks.}{2}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Defenses against model poisoning.}{2}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Defenses against model poisoning.}{3}{section*.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3}Preliminaries and Problem Statement}{3}{section.5}\protected@file@percent }
 \newlabel{sec:problem}{{3}{3}{Preliminaries and Problem Statement}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Federated Learning and Threat Model}{3}{subsection.6}\protected@file@percent }
@@ -64,28 +64,25 @@
 \newlabel{eq:local-update}{{2}{3}{Federated Learning and Threat Model}{equation.8}{}}
 \newlabel{eq:delta-def}{{3}{3}{Federated Learning and Threat Model}{equation.9}{}}
 \newlabel{eq:generic-aggregation}{{4}{3}{Federated Learning and Threat Model}{equation.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Reference-Assisted Robust Aggregation}{3}{subsection.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Reference-Assisted Robust Aggregation}{4}{subsection.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4}CARAT}{4}{section.12}\protected@file@percent }
 \newlabel{sec:method}{{4}{4}{CARAT}{section.12}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Overview}{4}{subsection.13}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly penalties, temporal stability, and per-client caps. The server updates the model using a weighted average of clipped client updates.}}{4}{figure.15}\protected@file@percent }
-\newlabel{fig:carat-overview}{{1}{4}{Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly penalties, temporal stability, and per-client caps. The server updates the model using a weighted average of clipped client updates}{figure.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hidden Tasks and Task-Conditioned Validation}{5}{subsection.16}\protected@file@percent }
-\newlabel{eq:clip}{{5}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.17}{}}
-\newlabel{eq:normalize}{{7}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.19}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hidden Tasks and Task-Conditioned Validation}{4}{subsection.16}\protected@file@percent }
+\newlabel{eq:clip}{{5}{4}{Hidden Tasks and Task-Conditioned Validation}{equation.17}{}}
+\newlabel{eq:normalize}{{7}{4}{Hidden Tasks and Task-Conditioned Validation}{equation.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly penalties, temporal stability, and per-client caps. The server updates the model using a weighted average of clipped client updates.}}{5}{figure.15}\protected@file@percent }
+\newlabel{fig:carat-overview}{{1}{5}{Overview of CARAT. Under non-i.i.d.\ data, benign diversity can resemble poisoning. CARAT addresses this ambiguity through three server-side stages: (A) hidden class-balanced task construction from a labeled reference set, (B) task-conditioned validation that forms a certificate matrix of loss reductions, and (C) bounded weight learning with rank-anomaly penalties, temporal stability, and per-client caps. The server updates the model using a weighted average of clipped client updates}{figure.15}{}}
 \newlabel{eq:cert}{{8}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.20}{}}
 \newlabel{eq:rank}{{9}{5}{Hidden Tasks and Task-Conditioned Validation}{equation.21}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Bounded Weight Learning}{5}{subsection.22}\protected@file@percent }
-\newlabel{eq:capped-simplex}{{10}{5}{Bounded Weight Learning}{equation.23}{}}
 \citation{krizhevsky2009learning}
 \citation{he2016deep}
 \citation{baruch2019alie}
 \citation{fang2020local}
 \citation{shejwalkar2021manipulating}
 \citation{shejwalkar2021manipulating}
-\citation{blanchard2017krum}
-\citation{cao2021fltrust}
-\citation{zhang2022fldetector}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Bounded Weight Learning}{6}{subsection.22}\protected@file@percent }
+\newlabel{eq:capped-simplex}{{10}{6}{Bounded Weight Learning}{equation.23}{}}
 \newlabel{eq:objective}{{11}{6}{Bounded Weight Learning}{equation.24}{}}
 \newlabel{eq:softmin}{{12}{6}{Bounded Weight Learning}{equation.25}{}}
 \newlabel{eq:aggregate}{{13}{6}{Bounded Weight Learning}{equation.26}{}}
@@ -93,60 +90,64 @@
 \newlabel{sec:experiments}{{5}{6}{Experiments}{section.27}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Evaluation Protocol}{6}{subsection.28}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Benchmark and threat model.}{6}{section*.29}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Baselines and fairness controls.}{6}{section*.30}\protected@file@percent }
+\citation{blanchard2017krum}
+\citation{cao2021fltrust}
+\citation{zhang2022fldetector}
+\@writefile{toc}{\contentsline {paragraph}{Baselines and fairness controls.}{7}{section*.30}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Training and reporting protocol.}{7}{section*.31}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}}{7}{table.33}\protected@file@percent }
 \newlabel{tab:hyperparams}{{1}{7}{Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls}{table.33}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Main Robustness Results}{7}{subsection.34}\protected@file@percent }
-\bibstyle{unsrtnat}
-\bibdata{ref}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}}{8}{table.36}\protected@file@percent }
 \newlabel{tab:cifar100-main-acc}{{2}{8}{Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets}{table.36}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol.}}{8}{figure.38}\protected@file@percent }
 \newlabel{fig:cifar100-fangattack-curves}{{2}{8}{Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol}{figure.38}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Scope and Diagnostics}{8}{subsection.39}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{8}{section.40}\protected@file@percent }
-\newlabel{sec:conclusion}{{6}{8}{Conclusion}{section.40}{}}
-\bibcite{mcmahan2017fedavg}{{1}{2017}{{McMahan et~al.}}{{McMahan, Moore, Ramage, Hampson, and Ag{\"u}era~y Arcas}}}
-\bibcite{bonawitz2017secureagg}{{2}{2017}{{Bonawitz et~al.}}{{Bonawitz, Ivanov, Kreuter, Marcedone, McMahan, Patel, Ramage, Segal, and Seth}}}
-\bibcite{kairouz2021federated}{{3}{2021}{{Kairouz et~al.}}{{Kairouz, McMahan, Avent, Bellet, Bennis, Bhagoji, Bonawitz, Charles, Cormode, Cummings, et~al.}}}
-\bibcite{bagdasaryan2020backdoor}{{4}{2020}{{Bagdasaryan et~al.}}{{Bagdasaryan, Veit, Hua, Estrin, and Shmatikov}}}
-\bibcite{xie2020dba}{{5}{2020{}}{{Xie et~al.}}{{Xie, Huang, Chen, and Li}}}
-\bibcite{wang2020tails}{{6}{2020}{{Wang et~al.}}{{Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal, Sohn, Lee, and Papailiopoulos}}}
-\bibcite{baruch2019alie}{{7}{2019}{{Baruch et~al.}}{{Baruch, Baruch, and Goldberg}}}
-\bibcite{fang2020local}{{8}{2020}{{Fang et~al.}}{{Fang, Cao, Jia, and Gong}}}
-\bibcite{shejwalkar2021manipulating}{{9}{2021}{{Shejwalkar and Houmansadr}}{{}}}
-\bibcite{zhao2018noniid}{{10}{2018}{{Zhao et~al.}}{{Zhao, Li, Lai, Suda, et~al.}}}
-\bibcite{li2020fedprox}{{11}{2020}{{Li et~al.}}{{Li, Sahu, Zaheer, Sanjabi, Talwalkar, and Smith}}}
-\bibcite{karimireddy2020scaffold}{{12}{2020}{{Karimireddy et~al.}}{{Karimireddy, Kale, Mohri, Reddi, Stich, and Suresh}}}
-\bibcite{zhu2021noniidsurvey}{{13}{2021}{{Zhu et~al.}}{{Zhu, Xu, Liu, and Jin}}}
-\bibcite{blanchard2017krum}{{14}{2017}{{Blanchard et~al.}}{{Blanchard, El~Mhamdi, Guerraoui, and Stainer}}}
-\bibcite{elmhamdi2018bulyan}{{15}{2018}{{El~Mhamdi et~al.}}{{El~Mhamdi, Guerraoui, and Rouault}}}
-\bibcite{yin2018median}{{16}{2018}{{Yin et~al.}}{{Yin, Chen, Kannan, and Bartlett}}}
-\bibcite{pillutla2022rfa}{{17}{2022}{{Pillutla et~al.}}{{Pillutla, Kakade, and Harchaoui}}}
-\bibcite{cao2021fltrust}{{18}{2021}{{Cao et~al.}}{{Cao, Fang, Liu, Gong, and Gong}}}
-\bibcite{zhang2022fldetector}{{19}{2022}{{Zhang et~al.}}{{Zhang, Xu, Jia, Jagielski, Joshi, Hong, and Gunter}}}
-\bibcite{krizhevsky2009learning}{{20}{2009}{{Krizhevsky}}{{}}}
-\bibcite{he2016deep}{{21}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
-\bibcite{damaskinos2018asynchronous}{{22}{2018}{{Damaskinos et~al.}}{{Damaskinos, El~Mhamdi, Guerraoui, Patra, and Taziki}}}
-\bibcite{bhagoji2019adversarial}{{23}{2019}{{Bhagoji et~al.}}{{Bhagoji, Chakraborty, Mittal, and Calo}}}
-\bibcite{xie2020ipm}{{24}{2020{}}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
-\bibcite{karimireddy2022bucketing}{{25}{2022}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
-\bibcite{xie2019zeno}{{26}{2019}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
-\bibcite{chen2018draco}{{27}{2018}{{Chen et~al.}}{{Chen, Wang, Charles, and Papailiopoulos}}}
-\bibcite{li2019rsa}{{28}{2019}{{Li et~al.}}{{Li, Xu, Chen, Giannakis, and Ling}}}
-\bibcite{karimireddy2021history}{{29}{2021}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
-\bibcite{xu2022signguard}{{30}{2022}{{Xu et~al.}}{{Xu, Huang, Song, and Lan}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Limitations and Diagnostics}{8}{subsection.39}\protected@file@percent }
+\newlabel{sec:limitations-diagnostics}{{5.3}{8}{Limitations and Diagnostics}{subsection.39}{}}
+\bibstyle{plainnat}
+\bibdata{ref}
+\bibcite{allouah2023fixing}{{1}{2023}{{Allouah et~al.}}{{Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and Stephan}}}
+\bibcite{bagdasaryan2020backdoor}{{2}{2020}{{Bagdasaryan et~al.}}{{Bagdasaryan, Veit, Hua, Estrin, and Shmatikov}}}
+\bibcite{bao2024boba}{{3}{2024}{{Bao et~al.}}{{Bao, Wu, and He}}}
+\bibcite{baruch2019alie}{{4}{2019}{{Baruch et~al.}}{{Baruch, Baruch, and Goldberg}}}
+\bibcite{bhagoji2019adversarial}{{5}{2019}{{Bhagoji et~al.}}{{Bhagoji, Chakraborty, Mittal, and Calo}}}
+\bibcite{blanchard2017krum}{{6}{2017}{{Blanchard et~al.}}{{Blanchard, El~Mhamdi, Guerraoui, and Stainer}}}
+\bibcite{bonawitz2017secureagg}{{7}{2017}{{Bonawitz et~al.}}{{Bonawitz, Ivanov, Kreuter, Marcedone, McMahan, Patel, Ramage, Segal, and Seth}}}
+\bibcite{cao2021fltrust}{{8}{2021}{{Cao et~al.}}{{Cao, Fang, Liu, Gong, and Gong}}}
+\bibcite{chen2018draco}{{9}{2018}{{Chen et~al.}}{{Chen, Wang, Charles, and Papailiopoulos}}}
+\bibcite{damaskinos2018asynchronous}{{10}{2018}{{Damaskinos et~al.}}{{Damaskinos, El~Mhamdi, Guerraoui, Patra, and Taziki}}}
+\bibcite{data2021localsgd}{{11}{2021}{{Data and Diggavi}}{{}}}
+\bibcite{elmhamdi2018bulyan}{{12}{2018}{{El~Mhamdi et~al.}}{{El~Mhamdi, Guerraoui, and Rouault}}}
+\bibcite{fang2020local}{{13}{2020}{{Fang et~al.}}{{Fang, Cao, Jia, and Gong}}}
+\bibcite{fung2020foolsgold}{{14}{2020}{{Fung et~al.}}{{Fung, Yoon, and Beschastnikh}}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{9}{section.40}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{9}{Conclusion}{section.40}{}}
+\bibcite{he2016deep}{{15}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
+\bibcite{he2021resampling}{{16}{2021}{{He et~al.}}{{He, Karimireddy, and Jaggi}}}
+\bibcite{huang2024sdea}{{17}{2024}{{Huang et~al.}}{{Huang, Shi, Ye, Li, and Du}}}
+\bibcite{kairouz2021federated}{{18}{2021}{{Kairouz et~al.}}{{Kairouz, McMahan, Avent, Bellet, Bennis, Bhagoji, Bonawitz, Charles, Cormode, Cummings, et~al.}}}
+\bibcite{karimireddy2020scaffold}{{19}{2020}{{Karimireddy et~al.}}{{Karimireddy, Kale, Mohri, Reddi, Stich, and Suresh}}}
+\bibcite{karimireddy2021history}{{20}{2021}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
+\bibcite{karimireddy2022bucketing}{{21}{2022}{{Karimireddy et~al.}}{{Karimireddy, He, and Jaggi}}}
+\bibcite{krizhevsky2009learning}{{22}{2009}{{Krizhevsky}}{{}}}
+\bibcite{li2019rsa}{{23}{2019}{{Li et~al.}}{{Li, Xu, Chen, Giannakis, and Ling}}}
+\bibcite{li2020fedprox}{{24}{2020}{{Li et~al.}}{{Li, Sahu, Zaheer, Sanjabi, Talwalkar, and Smith}}}
+\bibcite{liu2023gas}{{25}{2023}{{Liu et~al.}}{{Liu, Chen, Lyu, Wu, Wu, and Chen}}}
+\bibcite{mcmahan2017fedavg}{{26}{2017}{{McMahan et~al.}}{{McMahan, Moore, Ramage, Hampson, and Ag{\"u}era~y Arcas}}}
+\bibcite{pillutla2022rfa}{{27}{2022}{{Pillutla et~al.}}{{Pillutla, Kakade, and Harchaoui}}}
+\bibcite{shejwalkar2021manipulating}{{28}{2021}{{Shejwalkar and Houmansadr}}{{}}}
+\bibcite{shen2016auror}{{29}{2016}{{Shen et~al.}}{{Shen, Tople, and Saxena}}}
+\bibcite{wang2020tails}{{30}{2020}{{Wang et~al.}}{{Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal, Sohn, Lee, and Papailiopoulos}}}
 \bibcite{wang2022flare}{{31}{2022}{{Wang et~al.}}{{Wang, Xiao, Chen, Hu, Lou, and Hou}}}
-\bibcite{xu2025lasa}{{32}{2025}{{Xu et~al.}}{{Xu, Zhang, and Hu}}}
-\bibcite{he2021resampling}{{33}{2021}{{He et~al.}}{{He, Karimireddy, and Jaggi}}}
-\bibcite{data2021localsgd}{{34}{2021}{{Data and Diggavi}}{{}}}
-\bibcite{liu2023gas}{{35}{2023}{{Liu et~al.}}{{Liu, Chen, Lyu, Wu, Wu, and Chen}}}
-\bibcite{allouah2023fixing}{{36}{2023}{{Allouah et~al.}}{{Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and Stephan}}}
-\bibcite{bao2024boba}{{37}{2024}{{Bao et~al.}}{{Bao, Wu, and He}}}
-\bibcite{huang2024sdea}{{38}{2024}{{Huang et~al.}}{{Huang, Shi, Ye, Li, and Du}}}
-\bibcite{shen2016auror}{{39}{2016}{{Shen et~al.}}{{Shen, Tople, and Saxena}}}
-\bibcite{fung2020foolsgold}{{40}{2020}{{Fung et~al.}}{{Fung, Yoon, and Beschastnikh}}}
+\bibcite{xie2020dba}{{32}{2020{a}}{{Xie et~al.}}{{Xie, Huang, Chen, and Li}}}
+\bibcite{xie2019zeno}{{33}{2019}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
+\bibcite{xie2020ipm}{{34}{2020{b}}{{Xie et~al.}}{{Xie, Koyejo, and Gupta}}}
+\bibcite{xu2025lasa}{{35}{2025}{{Xu et~al.}}{{Xu, Zhang, and Hu}}}
+\bibcite{xu2022signguard}{{36}{2022}{{Xu et~al.}}{{Xu, Huang, Song, and Lan}}}
+\bibcite{yin2018median}{{37}{2018}{{Yin et~al.}}{{Yin, Chen, Kannan, and Bartlett}}}
+\bibcite{zhang2022fldetector}{{38}{2022}{{Zhang et~al.}}{{Zhang, Xu, Jia, Jagielski, Joshi, Hong, and Gunter}}}
+\bibcite{zhao2018noniid}{{39}{2018}{{Zhao et~al.}}{{Zhao, Li, Lai, Suda, et~al.}}}
+\bibcite{zhu2021noniidsurvey}{{40}{2021}{{Zhu et~al.}}{{Zhu, Xu, Liu, and Jin}}}
 \@writefile{toc}{\contentsline {paragraph}{Appendix organization.}{12}{section*.42}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {A}Algorithmic and Theoretical Details}{12}{appendix.43}\protected@file@percent }
 \newlabel{sec:appendix-algorithm-theory}{{A}{12}{Algorithmic and Theoretical Details}{appendix.43}{}}

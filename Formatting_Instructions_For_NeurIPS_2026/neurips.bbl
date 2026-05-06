@@ -5,29 +5,14 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[McMahan et~al.(2017)McMahan, Moore, Ramage, Hampson, and Ag{\"u}era~y
-  Arcas]{mcmahan2017fedavg}
-H.~Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, and Blaise
-  Ag{\"u}era~y Arcas.
-\newblock Communication-efficient learning of deep networks from decentralized
-  data.
-\newblock In \emph{Artificial Intelligence and Statistics}, 2017.
-
-\bibitem[Bonawitz et~al.(2017)Bonawitz, Ivanov, Kreuter, Marcedone, McMahan,
-  Patel, Ramage, Segal, and Seth]{bonawitz2017secureagg}
-Kallista~A. Bonawitz, Vladimir Ivanov, Ben Kreuter, Antonio Marcedone,
-  H.~Brendan McMahan, Sarvar Patel, Daniel Ramage, Aaron Segal, and Karn Seth.
-\newblock Practical secure aggregation for privacy-preserving machine learning.
-\newblock In \emph{ACM SIGSAC Conference on Computer and Communications
-  Security}, pages 1175--1191, 2017.
-
-\bibitem[Kairouz et~al.(2021)Kairouz, McMahan, Avent, Bellet, Bennis, Bhagoji,
-  Bonawitz, Charles, Cormode, Cummings, et~al.]{kairouz2021federated}
-Peter Kairouz, H.~Brendan McMahan, Brendan Avent, Aurelien Bellet, Mehdi
-  Bennis, Arjun~Nitin Bhagoji, Kallista Bonawitz, Zachary Charles, Graham
-  Cormode, Rachel Cummings, et~al.
-\newblock \emph{Advances and Open Problems in Federated Learning}.
-\newblock Now Publishers, 2021.
+\bibitem[Allouah et~al.(2023)Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and
+  Stephan]{allouah2023fixing}
+Youssef Allouah, Sadegh Farhadkhani, Rachid Guerraoui, Nirupam Gupta, Rafael
+  Pinot, and John Stephan.
+\newblock Fixing by mixing: A recipe for optimal byzantine {ML} under
+  heterogeneity.
+\newblock In \emph{International Conference on Artificial Intelligence and
+  Statistics}, pages 1232--1300, 2023.
 
 \bibitem[Bagdasaryan et~al.(2020)Bagdasaryan, Veit, Hua, Estrin, and
   Shmatikov]{bagdasaryan2020backdoor}
@@ -37,23 +22,73 @@ Eugene Bagdasaryan, Andreas Veit, Yiqing Hua, Deborah Estrin, and Vitaly
 \newblock In \emph{International Conference on Artificial Intelligence and
   Statistics}, pages 2938--2948, 2020.
 
-\bibitem[Xie et~al.(2020{\natexlab{a}})Xie, Huang, Chen, and Li]{xie2020dba}
-Chulin Xie, Keli Huang, Pin-Yu Chen, and Bo~Li.
-\newblock {DBA}: Distributed backdoor attacks against federated learning.
-\newblock In \emph{International Conference on Learning Representations},
-  2020{\natexlab{a}}.
-
-\bibitem[Wang et~al.(2020)Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal,
-  Sohn, Lee, and Papailiopoulos]{wang2020tails}
-Hongyi Wang, Kartik Sreenivasan, Shashank Rajput, Harit Vishwakarma, Saurabh
-  Agarwal, Jy-yong Sohn, Kangwook Lee, and Dimitris Papailiopoulos.
-\newblock Attack of the tails: Yes, you really can backdoor federated learning.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2020.
+\bibitem[Bao et~al.(2024)Bao, Wu, and He]{bao2024boba}
+Wenxuan Bao, Jun Wu, and Jingrui He.
+\newblock {BOBA}: Byzantine-robust federated learning with label skewness.
+\newblock In \emph{International Conference on Artificial Intelligence and
+  Statistics}, pages 892--900, 2024.
 
 \bibitem[Baruch et~al.(2019)Baruch, Baruch, and Goldberg]{baruch2019alie}
 Gilad Baruch, Moran Baruch, and Yoav Goldberg.
 \newblock A little is enough: Circumventing defenses for distributed learning.
 \newblock In \emph{Advances in Neural Information Processing Systems}, 2019.
+
+\bibitem[Bhagoji et~al.(2019)Bhagoji, Chakraborty, Mittal, and
+  Calo]{bhagoji2019adversarial}
+Arjun~Nitin Bhagoji, Supriyo Chakraborty, Prateek Mittal, and Seraphin Calo.
+\newblock Analyzing federated learning through an adversarial lens.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  634--643, 2019.
+
+\bibitem[Blanchard et~al.(2017)Blanchard, El~Mhamdi, Guerraoui, and
+  Stainer]{blanchard2017krum}
+Peva Blanchard, El~Mahdi El~Mhamdi, Rachid Guerraoui, and Julien Stainer.
+\newblock Machine learning with adversaries: {B}yzantine tolerant gradient
+  descent.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2017.
+
+\bibitem[Bonawitz et~al.(2017)Bonawitz, Ivanov, Kreuter, Marcedone, McMahan,
+  Patel, Ramage, Segal, and Seth]{bonawitz2017secureagg}
+Kallista~A. Bonawitz, Vladimir Ivanov, Ben Kreuter, Antonio Marcedone,
+  H.~Brendan McMahan, Sarvar Patel, Daniel Ramage, Aaron Segal, and Karn Seth.
+\newblock Practical secure aggregation for privacy-preserving machine learning.
+\newblock In \emph{ACM SIGSAC Conference on Computer and Communications
+  Security}, pages 1175--1191, 2017.
+
+\bibitem[Cao et~al.(2021)Cao, Fang, Liu, Gong, and Gong]{cao2021fltrust}
+Xiaoyu Cao, Minghong Fang, Jia Liu, Neil~Zhenqiang Gong, and Yixin Gong.
+\newblock {FLTrust}: {B}yzantine-robust federated learning via trust
+  bootstrapping.
+\newblock In \emph{Network and Distributed System Security Symposium}, 2021.
+
+\bibitem[Chen et~al.(2018)Chen, Wang, Charles, and
+  Papailiopoulos]{chen2018draco}
+Lingjiao Chen, Hongyi Wang, Zachary Charles, and Dimitris Papailiopoulos.
+\newblock {DRACO}: Byzantine-resilient distributed training via redundant
+  gradients.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  903--912, 2018.
+
+\bibitem[Damaskinos et~al.(2018)Damaskinos, El~Mhamdi, Guerraoui, Patra, and
+  Taziki]{damaskinos2018asynchronous}
+Georgios Damaskinos, El~Mahdi El~Mhamdi, Rachid Guerraoui, Rhicheek Patra, and
+  Mahsa Taziki.
+\newblock Asynchronous {B}yzantine machine learning (the case of {SGD}).
+\newblock In \emph{International Conference on Machine Learning}, pages
+  1145--1154, 2018.
+
+\bibitem[Data and Diggavi(2021)]{data2021localsgd}
+Deepesh Data and Suhas Diggavi.
+\newblock Byzantine-resilient high-dimensional {SGD} with local iterations on
+  heterogeneous data.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  2478--2488, 2021.
+
+\bibitem[El~Mhamdi et~al.(2018)El~Mhamdi, Guerraoui, and
+  Rouault]{elmhamdi2018bulyan}
+El~Mahdi El~Mhamdi, Rachid Guerraoui, and S{\'e}bastien Rouault.
+\newblock The hidden vulnerability of distributed learning in {B}yzantium.
+\newblock In \emph{International Conference on Machine Learning}, 2018.
 
 \bibitem[Fang et~al.(2020)Fang, Cao, Jia, and Gong]{fang2020local}
 Minghong Fang, Xiaoyu Cao, Jinyuan Jia, and Neil~Zhenqiang Gong.
@@ -61,23 +96,37 @@ Minghong Fang, Xiaoyu Cao, Jinyuan Jia, and Neil~Zhenqiang Gong.
   learning.
 \newblock In \emph{USENIX Security Symposium}, 2020.
 
-\bibitem[Shejwalkar and Houmansadr(2021)]{shejwalkar2021manipulating}
-Virat Shejwalkar and Amir Houmansadr.
-\newblock Manipulating the {B}yzantine: Optimizing model poisoning attacks and
-  defenses for federated learning.
-\newblock In \emph{Network and Distributed System Security Symposium}, 2021.
+\bibitem[Fung et~al.(2020)Fung, Yoon, and Beschastnikh]{fung2020foolsgold}
+Clement Fung, Chris J.~M. Yoon, and Ivan Beschastnikh.
+\newblock The limitations of federated learning in sybil settings.
+\newblock In \emph{International Symposium on Research in Attacks, Intrusions
+  and Defenses}, 2020.
 
-\bibitem[Zhao et~al.(2018)Zhao, Li, Lai, Suda, et~al.]{zhao2018noniid}
-Yue Zhao, Meng Li, Liangzhen Lai, Naveen Suda, et~al.
-\newblock Federated learning with non-{IID} data.
-\newblock \emph{arXiv preprint arXiv:1806.00582}, 2018.
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016deep}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{IEEE Conference on Computer Vision and Pattern Recognition},
+  pages 770--778, 2016.
 
-\bibitem[Li et~al.(2020)Li, Sahu, Zaheer, Sanjabi, Talwalkar, and
-  Smith]{li2020fedprox}
-Tian Li, Anit~Kumar Sahu, Manzil Zaheer, Maziar Sanjabi, Ameet Talwalkar, and
-  Virginia Smith.
-\newblock Federated optimization in heterogeneous networks.
-\newblock In \emph{Proceedings of Machine Learning and Systems}, 2020.
+\bibitem[He et~al.(2021)He, Karimireddy, and Jaggi]{he2021resampling}
+Lie He, Sai~Praneeth Karimireddy, and Martin Jaggi.
+\newblock Byzantine-robust learning on heterogeneous datasets via resampling.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+
+\bibitem[Huang et~al.(2024)Huang, Shi, Ye, Li, and Du]{huang2024sdea}
+Wenke Huang, Zekun Shi, Mang Ye, He~Li, and Bo~Du.
+\newblock Self-driven entropy aggregation for byzantine-robust heterogeneous
+  federated learning.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  20096--20110, 2024.
+
+\bibitem[Kairouz et~al.(2021)Kairouz, McMahan, Avent, Bellet, Bennis, Bhagoji,
+  Bonawitz, Charles, Cormode, Cummings, et~al.]{kairouz2021federated}
+Peter Kairouz, H.~Brendan McMahan, Brendan Avent, Aurelien Bellet, Mehdi
+  Bennis, Arjun~Nitin Bhagoji, Kallista Bonawitz, Zachary Charles, Graham
+  Cormode, Rachel Cummings, et~al.
+\newblock \emph{Advances and Open Problems in Federated Learning}.
+\newblock Now Publishers, 2021.
 
 \bibitem[Karimireddy et~al.(2020)Karimireddy, Kale, Mohri, Reddi, Stich, and
   Suresh]{karimireddy2020scaffold}
@@ -87,29 +136,52 @@ Sai~Praneeth Karimireddy, Satyen Kale, Mehryar Mohri, Sashank Reddi, Sebastian
 \newblock In \emph{International Conference on Machine Learning}, pages
   5132--5143, 2020.
 
-\bibitem[Zhu et~al.(2021)Zhu, Xu, Liu, and Jin]{zhu2021noniidsurvey}
-Hangyu Zhu, Jinjin Xu, Shiqing Liu, and Yaochu Jin.
-\newblock Federated learning on non-{IID} data: A survey.
-\newblock \emph{Neurocomputing}, 465:\penalty0 371--390, 2021.
+\bibitem[Karimireddy et~al.(2021)Karimireddy, He, and
+  Jaggi]{karimireddy2021history}
+Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
+\newblock Learning from history for {B}yzantine robust optimization.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  5311--5319, 2021.
 
-\bibitem[Blanchard et~al.(2017)Blanchard, El~Mhamdi, Guerraoui, and
-  Stainer]{blanchard2017krum}
-Peva Blanchard, El~Mahdi El~Mhamdi, Rachid Guerraoui, and Julien Stainer.
-\newblock Machine learning with adversaries: {B}yzantine tolerant gradient
-  descent.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2017.
+\bibitem[Karimireddy et~al.(2022)Karimireddy, He, and
+  Jaggi]{karimireddy2022bucketing}
+Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
+\newblock Byzantine-robust learning on heterogeneous datasets via bucketing.
+\newblock In \emph{International Conference on Learning Representations}, 2022.
 
-\bibitem[El~Mhamdi et~al.(2018)El~Mhamdi, Guerraoui, and
-  Rouault]{elmhamdi2018bulyan}
-El~Mahdi El~Mhamdi, Rachid Guerraoui, and S{\'e}bastien Rouault.
-\newblock The hidden vulnerability of distributed learning in {B}yzantium.
-\newblock In \emph{International Conference on Machine Learning}, 2018.
+\bibitem[Krizhevsky(2009)]{krizhevsky2009learning}
+Alex Krizhevsky.
+\newblock Learning multiple layers of features from tiny images.
+\newblock Technical report, University of Toronto, 2009.
 
-\bibitem[Yin et~al.(2018)Yin, Chen, Kannan, and Bartlett]{yin2018median}
-Dong Yin, Yudong Chen, Ramchandran Kannan, and Peter Bartlett.
-\newblock Byzantine-robust distributed learning: Towards optimal statistical
-  rates.
-\newblock In \emph{International Conference on Machine Learning}, 2018.
+\bibitem[Li et~al.(2019)Li, Xu, Chen, Giannakis, and Ling]{li2019rsa}
+Liping Li, Wei Xu, Tianyi Chen, Georgios~B. Giannakis, and Qing Ling.
+\newblock {RSA}: Byzantine-robust stochastic aggregation methods for
+  distributed learning from heterogeneous datasets.
+\newblock In \emph{AAAI Conference on Artificial Intelligence}, pages
+  1544--1551, 2019.
+
+\bibitem[Li et~al.(2020)Li, Sahu, Zaheer, Sanjabi, Talwalkar, and
+  Smith]{li2020fedprox}
+Tian Li, Anit~Kumar Sahu, Manzil Zaheer, Maziar Sanjabi, Ameet Talwalkar, and
+  Virginia Smith.
+\newblock Federated optimization in heterogeneous networks.
+\newblock In \emph{Proceedings of Machine Learning and Systems}, 2020.
+
+\bibitem[Liu et~al.(2023)Liu, Chen, Lyu, Wu, Wu, and Chen]{liu2023gas}
+Yuchen Liu, Chen Chen, Lingjuan Lyu, Fangzhao Wu, Sai Wu, and Gang Chen.
+\newblock Byzantine-robust learning on heterogeneous data via gradient
+  splitting.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  21404--21425, 2023.
+
+\bibitem[McMahan et~al.(2017)McMahan, Moore, Ramage, Hampson, and Ag{\"u}era~y
+  Arcas]{mcmahan2017fedavg}
+H.~Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, and Blaise
+  Ag{\"u}era~y Arcas.
+\newblock Communication-efficient learning of deep networks from decentralized
+  data.
+\newblock In \emph{Artificial Intelligence and Statistics}, 2017.
 
 \bibitem[Pillutla et~al.(2022)Pillutla, Kakade, and Harchaoui]{pillutla2022rfa}
 Krishna Pillutla, Sham~M. Kakade, and Zaid Harchaoui.
@@ -117,11 +189,71 @@ Krishna Pillutla, Sham~M. Kakade, and Zaid Harchaoui.
 \newblock \emph{IEEE Transactions on Signal Processing}, 70:\penalty0
   1142--1154, 2022.
 
-\bibitem[Cao et~al.(2021)Cao, Fang, Liu, Gong, and Gong]{cao2021fltrust}
-Xiaoyu Cao, Minghong Fang, Jia Liu, Neil~Zhenqiang Gong, and Yixin Gong.
-\newblock {FLTrust}: {B}yzantine-robust federated learning via trust
-  bootstrapping.
+\bibitem[Shejwalkar and Houmansadr(2021)]{shejwalkar2021manipulating}
+Virat Shejwalkar and Amir Houmansadr.
+\newblock Manipulating the {B}yzantine: Optimizing model poisoning attacks and
+  defenses for federated learning.
 \newblock In \emph{Network and Distributed System Security Symposium}, 2021.
+
+\bibitem[Shen et~al.(2016)Shen, Tople, and Saxena]{shen2016auror}
+Shiqi Shen, Shruti Tople, and Prateek Saxena.
+\newblock {AUROR}: Defending against poisoning attacks in collaborative deep
+  learning systems.
+\newblock In \emph{Annual Computer Security Applications Conference}, 2016.
+
+\bibitem[Wang et~al.(2020)Wang, Sreenivasan, Rajput, Vishwakarma, Agarwal,
+  Sohn, Lee, and Papailiopoulos]{wang2020tails}
+Hongyi Wang, Kartik Sreenivasan, Shashank Rajput, Harit Vishwakarma, Saurabh
+  Agarwal, Jy-yong Sohn, Kangwook Lee, and Dimitris Papailiopoulos.
+\newblock Attack of the tails: Yes, you really can backdoor federated learning.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2020.
+
+\bibitem[Wang et~al.(2022)Wang, Xiao, Chen, Hu, Lou, and Hou]{wang2022flare}
+Ning Wang, Yang Xiao, Yimin Chen, Yang Hu, Wenjing Lou, and Y.~Thomas Hou.
+\newblock {FLARE}: Defending federated learning against model poisoning attacks
+  via latent space representations.
+\newblock In \emph{ACM Asia Conference on Computer and Communications
+  Security}, pages 946--958, 2022.
+
+\bibitem[Xie et~al.(2020{\natexlab{a}})Xie, Huang, Chen, and Li]{xie2020dba}
+Chulin Xie, Keli Huang, Pin-Yu Chen, and Bo~Li.
+\newblock {DBA}: Distributed backdoor attacks against federated learning.
+\newblock In \emph{International Conference on Learning Representations},
+  2020{\natexlab{a}}.
+
+\bibitem[Xie et~al.(2019)Xie, Koyejo, and Gupta]{xie2019zeno}
+Cong Xie, Sanmi Koyejo, and Indranil Gupta.
+\newblock Zeno: Distributed stochastic gradient descent with suspicion-based
+  fault-tolerance.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  6893--6901, 2019.
+
+\bibitem[Xie et~al.(2020{\natexlab{b}})Xie, Koyejo, and Gupta]{xie2020ipm}
+Cong Xie, Oluwasanmi Koyejo, and Indranil Gupta.
+\newblock Fall of empires: Breaking {B}yzantine-tolerant {SGD} by inner product
+  manipulation.
+\newblock In \emph{Conference on Uncertainty in Artificial Intelligence}, pages
+  261--270, 2020{\natexlab{b}}.
+
+\bibitem[Xu et~al.(2025)Xu, Zhang, and Hu]{xu2025lasa}
+Jiahao Xu, Zikai Zhang, and Rui Hu.
+\newblock Achieving {B}yzantine-resilient federated learning via layer-adaptive
+  sparsified model aggregation.
+\newblock In \emph{IEEE/CVF Winter Conference on Applications of Computer
+  Vision}, pages 1508--1517, 2025.
+
+\bibitem[Xu et~al.(2022)Xu, Huang, Song, and Lan]{xu2022signguard}
+Jian Xu, Shao-Lun Huang, Linqi Song, and Tian Lan.
+\newblock {SignGuard}: {B}yzantine-robust federated learning through
+  collaborative malicious gradient filtering.
+\newblock In \emph{IEEE International Conference on Distributed Computing
+  Systems}, pages 1026--1036, 2022.
+
+\bibitem[Yin et~al.(2018)Yin, Chen, Kannan, and Bartlett]{yin2018median}
+Dong Yin, Yudong Chen, Ramchandran Kannan, and Peter Bartlett.
+\newblock Byzantine-robust distributed learning: Towards optimal statistical
+  rates.
+\newblock In \emph{International Conference on Machine Learning}, 2018.
 
 \bibitem[Zhang et~al.(2022)Zhang, Xu, Jia, Jagielski, Joshi, Hong, and
   Gunter]{zhang2022fldetector}
@@ -132,146 +264,14 @@ Zaixi Zhang, Xiaoyu Xu, Jinyuan Jia, Matthew Jagielski, Gauri Joshi, Mingyi
 \newblock In \emph{ACM SIGKDD Conference on Knowledge Discovery and Data
   Mining}, 2022.
 
-\bibitem[Krizhevsky(2009)]{krizhevsky2009learning}
-Alex Krizhevsky.
-\newblock Learning multiple layers of features from tiny images.
-\newblock Technical report, University of Toronto, 2009.
+\bibitem[Zhao et~al.(2018)Zhao, Li, Lai, Suda, et~al.]{zhao2018noniid}
+Yue Zhao, Meng Li, Liangzhen Lai, Naveen Suda, et~al.
+\newblock Federated learning with non-{IID} data.
+\newblock \emph{arXiv preprint arXiv:1806.00582}, 2018.
 
-\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016deep}
-Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
-\newblock Deep residual learning for image recognition.
-\newblock In \emph{IEEE Conference on Computer Vision and Pattern Recognition},
-  pages 770--778, 2016.
-
-\bibitem[Damaskinos et~al.(2018)Damaskinos, El~Mhamdi, Guerraoui, Patra, and
-  Taziki]{damaskinos2018asynchronous}
-Georgios Damaskinos, El~Mahdi El~Mhamdi, Rachid Guerraoui, Rhicheek Patra, and
-  Mahsa Taziki.
-\newblock Asynchronous {B}yzantine machine learning (the case of {SGD}).
-\newblock In \emph{International Conference on Machine Learning}, pages
-  1145--1154, 2018.
-
-\bibitem[Bhagoji et~al.(2019)Bhagoji, Chakraborty, Mittal, and
-  Calo]{bhagoji2019adversarial}
-Arjun~Nitin Bhagoji, Supriyo Chakraborty, Prateek Mittal, and Seraphin Calo.
-\newblock Analyzing federated learning through an adversarial lens.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  634--643, 2019.
-
-\bibitem[Xie et~al.(2020{\natexlab{b}})Xie, Koyejo, and Gupta]{xie2020ipm}
-Cong Xie, Oluwasanmi Koyejo, and Indranil Gupta.
-\newblock Fall of empires: Breaking {B}yzantine-tolerant {SGD} by inner product
-  manipulation.
-\newblock In \emph{Conference on Uncertainty in Artificial Intelligence}, pages
-  261--270, 2020{\natexlab{b}}.
-
-\bibitem[Karimireddy et~al.(2022)Karimireddy, He, and
-  Jaggi]{karimireddy2022bucketing}
-Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
-\newblock Byzantine-robust learning on heterogeneous datasets via bucketing.
-\newblock In \emph{International Conference on Learning Representations}, 2022.
-
-\bibitem[Xie et~al.(2019)Xie, Koyejo, and Gupta]{xie2019zeno}
-Cong Xie, Sanmi Koyejo, and Indranil Gupta.
-\newblock Zeno: Distributed stochastic gradient descent with suspicion-based
-  fault-tolerance.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  6893--6901, 2019.
-
-\bibitem[Chen et~al.(2018)Chen, Wang, Charles, and
-  Papailiopoulos]{chen2018draco}
-Lingjiao Chen, Hongyi Wang, Zachary Charles, and Dimitris Papailiopoulos.
-\newblock {DRACO}: Byzantine-resilient distributed training via redundant
-  gradients.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  903--912, 2018.
-
-\bibitem[Li et~al.(2019)Li, Xu, Chen, Giannakis, and Ling]{li2019rsa}
-Liping Li, Wei Xu, Tianyi Chen, Georgios~B. Giannakis, and Qing Ling.
-\newblock {RSA}: Byzantine-robust stochastic aggregation methods for
-  distributed learning from heterogeneous datasets.
-\newblock In \emph{AAAI Conference on Artificial Intelligence}, pages
-  1544--1551, 2019.
-
-\bibitem[Karimireddy et~al.(2021)Karimireddy, He, and
-  Jaggi]{karimireddy2021history}
-Sai~Praneeth Karimireddy, Lie He, and Martin Jaggi.
-\newblock Learning from history for {B}yzantine robust optimization.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  5311--5319, 2021.
-
-\bibitem[Xu et~al.(2022)Xu, Huang, Song, and Lan]{xu2022signguard}
-Jian Xu, Shao-Lun Huang, Linqi Song, and Tian Lan.
-\newblock {SignGuard}: {B}yzantine-robust federated learning through
-  collaborative malicious gradient filtering.
-\newblock In \emph{IEEE International Conference on Distributed Computing
-  Systems}, pages 1026--1036, 2022.
-
-\bibitem[Wang et~al.(2022)Wang, Xiao, Chen, Hu, Lou, and Hou]{wang2022flare}
-Ning Wang, Yang Xiao, Yimin Chen, Yang Hu, Wenjing Lou, and Y.~Thomas Hou.
-\newblock {FLARE}: Defending federated learning against model poisoning attacks
-  via latent space representations.
-\newblock In \emph{ACM Asia Conference on Computer and Communications
-  Security}, pages 946--958, 2022.
-
-\bibitem[Xu et~al.(2025)Xu, Zhang, and Hu]{xu2025lasa}
-Jiahao Xu, Zikai Zhang, and Rui Hu.
-\newblock Achieving {B}yzantine-resilient federated learning via layer-adaptive
-  sparsified model aggregation.
-\newblock In \emph{IEEE/CVF Winter Conference on Applications of Computer
-  Vision}, pages 1508--1517, 2025.
-
-\bibitem[He et~al.(2021)He, Karimireddy, and Jaggi]{he2021resampling}
-Lie He, Sai~Praneeth Karimireddy, and Martin Jaggi.
-\newblock Byzantine-robust learning on heterogeneous datasets via resampling.
-\newblock In \emph{International Conference on Learning Representations}, 2021.
-
-\bibitem[Data and Diggavi(2021)]{data2021localsgd}
-Deepesh Data and Suhas Diggavi.
-\newblock Byzantine-resilient high-dimensional {SGD} with local iterations on
-  heterogeneous data.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  2478--2488, 2021.
-
-\bibitem[Liu et~al.(2023)Liu, Chen, Lyu, Wu, Wu, and Chen]{liu2023gas}
-Yuchen Liu, Chen Chen, Lingjuan Lyu, Fangzhao Wu, Sai Wu, and Gang Chen.
-\newblock Byzantine-robust learning on heterogeneous data via gradient
-  splitting.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  21404--21425, 2023.
-
-\bibitem[Allouah et~al.(2023)Allouah, Farhadkhani, Guerraoui, Gupta, Pinot, and
-  Stephan]{allouah2023fixing}
-Youssef Allouah, Sadegh Farhadkhani, Rachid Guerraoui, Nirupam Gupta, Rafael
-  Pinot, and John Stephan.
-\newblock Fixing by mixing: A recipe for optimal byzantine {ML} under
-  heterogeneity.
-\newblock In \emph{International Conference on Artificial Intelligence and
-  Statistics}, pages 1232--1300, 2023.
-
-\bibitem[Bao et~al.(2024)Bao, Wu, and He]{bao2024boba}
-Wenxuan Bao, Jun Wu, and Jingrui He.
-\newblock {BOBA}: Byzantine-robust federated learning with label skewness.
-\newblock In \emph{International Conference on Artificial Intelligence and
-  Statistics}, pages 892--900, 2024.
-
-\bibitem[Huang et~al.(2024)Huang, Shi, Ye, Li, and Du]{huang2024sdea}
-Wenke Huang, Zekun Shi, Mang Ye, He~Li, and Bo~Du.
-\newblock Self-driven entropy aggregation for byzantine-robust heterogeneous
-  federated learning.
-\newblock In \emph{International Conference on Machine Learning}, pages
-  20096--20110, 2024.
-
-\bibitem[Shen et~al.(2016)Shen, Tople, and Saxena]{shen2016auror}
-Shiqi Shen, Shruti Tople, and Prateek Saxena.
-\newblock {AUROR}: Defending against poisoning attacks in collaborative deep
-  learning systems.
-\newblock In \emph{Annual Computer Security Applications Conference}, 2016.
-
-\bibitem[Fung et~al.(2020)Fung, Yoon, and Beschastnikh]{fung2020foolsgold}
-Clement Fung, Chris J.~M. Yoon, and Ivan Beschastnikh.
-\newblock The limitations of federated learning in sybil settings.
-\newblock In \emph{International Symposium on Research in Attacks, Intrusions
-  and Defenses}, 2020.
+\bibitem[Zhu et~al.(2021)Zhu, Xu, Liu, and Jin]{zhu2021noniidsurvey}
+Hangyu Zhu, Jinjin Xu, Shiqing Liu, and Yaochu Jin.
+\newblock Federated learning on non-{IID} data: A survey.
+\newblock \emph{Neurocomputing}, 465:\penalty0 371--390, 2021.
 
 \end{thebibliography}

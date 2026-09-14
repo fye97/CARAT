@@ -1,0 +1,39 @@
+\section{Preliminaries and Problem Statement}
+\label{sec:problem}
+
+\subsection{Federated Learning and Threat Model}
+
+We study synchronous FL in which the server must update a global model from client messages without inspecting client data. Let $\mathcal{N}=\{1,\dots,N\}$ be the client population. Client $i$ holds local data $\mathcal{D}_i$ and objective $F_i(w)$, giving the standard weighted objective
+\begin{equation}
+F(w)=\sum_{i=1}^N p_i F_i(w),
+\qquad
+p_i=\frac{|\mathcal{D}_i|}{\sum_{j=1}^N|\mathcal{D}_j|}.
+\label{eq:fl-objective}
+\end{equation}
+At communication round $r$, the server broadcasts $w_r$ to selected clients $\mathcal{S}_r$. Each selected client initializes $w_{i,r}^{0}=w_r$ and performs $K$ local stochastic-gradient steps,
+\begin{equation}
+w_{i,r}^{k+1}=w_{i,r}^{k}-\eta_r \nabla F_i(w_{i,r}^{k};\xi_{i,r}^{k}),
+\qquad k=0,\dots,K-1.
+\label{eq:local-update}
+\end{equation}
+The returned model message is converted to an update vector
+\begin{equation}
+\Delta_i^r=w_{i,r}^{K}-w_r,
+\label{eq:delta-def}
+\end{equation}
+and a server-side aggregation rule maps the received updates to the next global model,
+\begin{equation}
+w_{r+1}=w_r+\mathcal{A}\big(\{\Delta_i^r:i\in\mathcal{S}_r\}\big).
+\label{eq:generic-aggregation}
+\end{equation}
+FedAvg is recovered when $\mathcal{A}$ is the sample-size-weighted mean.
+
+The adversary controls a subset $\mathcal{M}_r\subseteq\mathcal{S}_r$ of selected clients and may replace their benign updates with arbitrary crafted messages $\widetilde{\Delta}_i^r$. We focus on untargeted model poisoning: malicious updates aim to degrade clean test accuracy while remaining plausible enough to evade robust aggregation. This setting is difficult under non-i.i.d.\ data because benign clients can naturally differ in update direction, norm, sparsity, and class emphasis. A robust aggregator must therefore reduce harmful influence without treating every geometrically atypical update as malicious.
+
+The adversary is assumed to know the training protocol, defense family, and public hyperparameters, but not the realized hidden validation tasks sampled by the server in a given round. This defines CARAT's reference-assisted security boundary: the labeled reference set and task sampler are server-side resources, not public client inputs. Attackers that directly observe the reference examples or optimize against the exact hidden tasks are outside the empirical claim set; CARAT still limits accepted influence through clipping, rank penalties, and capped weights.
+
+\subsection{Reference-Assisted Robust Aggregation}
+
+CARAT assumes that the server maintains a small labeled reference set $\mathcal{D}^{\mathrm{ref}}$ covering the task label space. From this set it constructs a probe pool $\mathcal{P}$ and samples hidden, class-balanced validation tasks during aggregation. This is a stronger setting than fully data-free robust aggregation, and we treat it as part of the threat model. The distinction from single-anchor trusted-data methods is that CARAT does not compress $\mathcal{D}^{\mathrm{ref}}$ into one trusted update direction; instead, it uses the reference data to instantiate multiple semantic checks that are hidden from clients.
+
+Given the round-level update set $\{\Delta_i^r\}_{i\in\mathcal{S}_r}$ and reference data $\mathcal{D}^{\mathrm{ref}}$, the server constructs nonnegative aggregation weights and an aggregate update that preserve useful benign diversity while limiting poisoned updates. This goal imposes four design requirements. First, update scoring should be scale-controlled so that large-norm messages cannot receive high trust solely by magnitude. Second, trust should depend on task-conditioned utility, not only on distance to other clients. Third, the method should still penalize structurally extreme updates, because a harmful update may look useful on part of the validation signal. Finally, the aggregation weights should have bounded per-client influence and temporal stability across rounds. CARAT implements these requirements through common-geometry scoring, hidden-task certificates, coordinate-rank penalties, and capped-simplex optimization.

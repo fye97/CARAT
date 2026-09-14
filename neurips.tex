@@ -1,0 +1,90 @@
+\documentclass{article}
+
+\usepackage{neurips_2026}
+\setcitestyle{authoryear,round}
+% NeurIPS 2026 submission assembly: main text ends before references and
+% must be at most 9 pages; references, appendices, and checklist remain in
+% the same PDF, which should be named with a .pdf suffix and stay under 50 MB.
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{placeins}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\softmin}{\operatorname*{softmin}}
+\newcommand{\subfloat}[2][]{%
+  \begin{minipage}[t]{0.30\textwidth}
+    \centering
+    #2\\[0.4em]
+    \footnotesize #1
+  \end{minipage}%
+}
+\newcommand{\missingfigureplaceholder}{%
+  \setlength{\fboxsep}{0pt}%
+  \fbox{%
+    \begin{minipage}[c][0.18\textheight][c]{0.28\textwidth}
+      \centering
+      \small Figure placeholder\\[0.4em]
+      \footnotesize Figure unavailable
+    \end{minipage}%
+  }%
+}
+\newcommand{\safeincludegraphics}[2][]{%
+  \IfFileExists{#2}{\includegraphics[#1]{#2}}{\missingfigureplaceholder}%
+}
+\newtheorem{proposition}{Proposition}[section]
+
+\title{CARAT: Class-Aware Robust Aggregation for Model-Poisoning-Resilient Federated Learning}
+
+% \author{%
+%   Anonymous Authors \\
+%   Anonymous Institution \\
+%   \texttt{anonymous@neurips.cc}
+% }
+
+\begin{document}
+
+\maketitle
+
+
+
+
+\input{sections/0_abstract}
+
+\input{sections/1_introduction}
+\input{sections/2_related_work}
+\input{sections/3_problem_formulation}
+\input{sections/4_CARAT}
+\input{sections/5_experiments}
+\input{sections/6_conclusion}
+
+
+\bibliographystyle{plainnat}
+\bibliography{ref}
+
+\newpage
+\appendix
+
+\paragraph{Appendix organization.}
+The appendix is organized to make each claim auditable. Appendix~\ref{sec:appendix-algorithm-theory} gives the round-level algorithm, implementation invariants, and proofs of the structural properties used in the main text. Appendix~\ref{sec:appendix-experiments} gives only empirical support for the completed claim: protocol details, CARAT hyperparameters, final-loss results, runtime diagnostics, and reproducibility information.
+
+\input{sections/7_details}
+\input{sections/8_additional_results}
+
+
+\end{document}

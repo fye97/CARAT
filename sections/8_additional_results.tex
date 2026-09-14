@@ -1,0 +1,100 @@
+\section{Experimental Protocols and Additional Results}
+\label{sec:appendix-experiments}
+
+This part records only empirical material that directly supports the main-text claims. It first fixes the completed CIFAR-100/ResNet18 protocol and CARAT hyperparameters, then reports final-loss results, a runtime diagnostic, and reproducibility details.
+
+\subsection{Completed Empirical Scope}
+
+The completed empirical scope is intentionally narrow. We evaluate untargeted model poisoning on CIFAR-100/ResNet18 with Dirichlet non-i.i.d.\ client partitions, $20\%$ malicious clients, and four attacks: ALIE, FangAttack, MinMax, and MinSum. The comparison uses Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. All claims are based on attacked final test accuracy, attacked final test loss, and average rank. CARAT and FLTrust use matched labeled server-reference budgets, unpublished or under-review defenses are excluded from the claim set, and the result-source policy is disclosed for each table rather than hidden in aggregate statistics.
+
+\subsection{Reported CIFAR-100 Protocol}
+
+Unless stated otherwise, the CIFAR-100 comparison uses $20$ clients with full participation, $200$ communication rounds, $4$ local epochs, learning rate $0.05$, and Dirichlet non-i.i.d.\ partitions with $\alpha \in \{1,0.5\}$. Legacy public-baseline rows use five random seeds where available, while regenerated FLTrust and CARAT rows use three random seeds under the matched reference-assisted protocol.
+
+\begin{table*}[!htbp]
+\centering
+\caption{CIFAR-100/ResNet18 protocol used for the reported public-baseline result set.}
+\label{tab:reported-protocol}
+\renewcommand{\arraystretch}{1.08}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{0.22\textwidth}p{0.30\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Component} & \textbf{Setting} & \textbf{Role in the paper} \\
+\midrule
+Dataset and model & CIFAR-100 / ResNet18 & Primary class-rich benchmark for the main robustness claim. \\
+Client population & $20$ clients, full participation & Keeps client sampling fixed so defense differences are not confounded with participation noise. \\
+Training schedule & $200$ rounds, $4$ local epochs, learning rate $0.05$ & Shared optimization protocol for attacked runs. \\
+Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5\}$ & Completed heterogeneous settings used for the main claim. \\
+Malicious clients & $20\%$ & Attacker fraction used in the completed result set. \\
+Attack suite & ALIE, FangAttack, MinMax, MinSum & Untargeted model-poisoning attacks used for final tables and ranks. \\
+Compared defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Public, citable baselines used in Table~\ref{tab:cifar100-main-acc}. \\
+Seeds and source policy & Legacy rows: five seeds where available; regenerated FLTrust/CARAT rows: three seeds & Compatible legacy logs are reused with explicit source disclosure; reference-assisted rows are regenerated with matched trusted-data budgets. \\
+Trusted-data budget & Matched between FLTrust and CARAT & Prevents CARAT from receiving a larger labeled server-reference budget than the trusted-data baseline. \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\subsection{CARAT Hyperparameters}
+
+Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the reported CIFAR-100 result set. These values define the reported protocol and make the server-side evaluation budget explicit.
+
+\begin{table*}[!htbp]
+\centering
+\caption{CARAT hyperparameters used in the reported CIFAR-100/ResNet18 public-baseline runs.}
+\label{tab:carat-hyperparameters}
+\renewcommand{\arraystretch}{1.08}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{0.24\textwidth}p{0.24\textwidth}p{0.42\textwidth}}
+\toprule
+\textbf{Component} & \textbf{Default value} & \textbf{Purpose} \\
+\midrule
+Hidden-task evaluation & $8$ tasks, $4$ probe samples per class, batch size $128$ & Builds repeated class-balanced certificates for candidate client updates. \\
+Normalization and clipping & Probe-radius quantile $0.5$; MAD clipping factor $2.5$ & Places candidates on a common evaluation radius and limits residual norm influence. \\
+Feasible weight set & Attacker prior $\hat{\rho}=0.2$ & Caps per-client weight and prevents collapse onto a very small client subset. \\
+Task and anomaly weighting & Certificate temperature $\beta=12.0$; rank weight $0.20$; prior weight $0.05$ & Balances weakest-task utility, structural rank penalty, and temporal smoothness. \\
+Rank diagnostics & $4096$ sampled coordinates, $5$ rank subsamples & Estimates whether a client is consistently extreme across coordinate views. \\
+Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capped-simplex weighting problem used for aggregation. \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\subsection{Final-Loss Results}
+
+Table~\ref{tab:cifar100-main-loss} reports the final test loss corresponding to Table~\ref{tab:cifar100-main-acc}. It uses the same source policy: compatible legacy public-baseline logs are reused, while matched-budget FLTrust and $T=8$ CARAT are taken from the regenerated three-seed protocol.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Final test loss under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Lower is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}
+\label{tab:cifar100-main-loss}
+\renewcommand{\arraystretch}{1.05}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\toprule
+\textbf{Dirichlet $\alpha$} & \textbf{Defense} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \textbf{Avg. rank} \\
+\midrule
+\textbf{$1.0$} & Mean & $0.0292 \pm 0.0004$ & $0.0294 \pm 0.0004$ & $0.0283 \pm 0.0004$ & $0.0283 \pm 0.0006$ & $2.2$ \\
+\textbf{$1.0$} & NormClipping & $0.0476 \pm 0.0005$ & $0.0501 \pm 0.0004$ & $0.0484 \pm 0.0004$ & $0.0485 \pm 0.0003$ & $6.0$ \\
+\textbf{$1.0$} & MultiKrum & $0.0361 \pm 0.0006$ & $0.0377 \pm 0.0005$ & $0.0295 \pm 0.0005$ & $0.0301 \pm 0.0009$ & $4.0$ \\
+\textbf{$1.0$} & FLTrust (matched) & $0.0363 \pm 0.0016$ & $0.0375 \pm 0.0015$ & $0.0344 \pm 0.0008$ & $0.0346 \pm 0.0013$ & $4.5$ \\
+\textbf{$1.0$} & FLDetector & $0.0305 \pm 0.0004$ & $0.0450 \pm 0.0035$ & $0.0283 \pm 0.0006$ & $0.0284 \pm 0.0003$ & $3.2$ \\
+\textbf{$1.0$} & \textbf{CARAT ($T=8$)} & \textbf{$0.0279 \pm 0.0010$} & \textbf{$0.0256 \pm 0.0008$} & \textbf{$0.0255 \pm 0.0005$} & \textbf{$0.0252 \pm 0.0009$} & \textbf{$1.0$} \\
+\midrule
+\textbf{$0.5$} & Mean & $0.0303 \pm 0.0005$ & $0.0302 \pm 0.0006$ & $0.0293 \pm 0.0001$ & $0.0293 \pm 0.0004$ & $2.2$ \\
+\textbf{$0.5$} & NormClipping & $0.0486 \pm 0.0005$ & $0.0517 \pm 0.0011$ & $0.0497 \pm 0.0005$ & $0.0498 \pm 0.0004$ & $6.0$ \\
+\textbf{$0.5$} & MultiKrum & $0.0382 \pm 0.0008$ & $0.0407 \pm 0.0010$ & $0.0306 \pm 0.0006$ & $0.0308 \pm 0.0006$ & $4.0$ \\
+\textbf{$0.5$} & FLTrust (matched) & $0.0396 \pm 0.0005$ & $0.0403 \pm 0.0005$ & $0.0362 \pm 0.0002$ & $0.0361 \pm 0.0002$ & $4.5$ \\
+\textbf{$0.5$} & FLDetector & $0.0319 \pm 0.0004$ & $0.0458 \pm 0.0011$ & $0.0294 \pm 0.0004$ & $0.0292 \pm 0.0005$ & $3.2$ \\
+\textbf{$0.5$} & \textbf{CARAT ($T=8$)} & \textbf{$0.0285 \pm 0.0012$} & \textbf{$0.0272 \pm 0.0008$} & \textbf{$0.0258 \pm 0.0008$} & \textbf{$0.0258 \pm 0.0004$} & \textbf{$1.0$} \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+\FloatBarrier
+
+
+

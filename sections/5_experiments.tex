@@ -1,0 +1,133 @@
+\section{Experiments}
+\label{sec:experiments}
+
+The experiments are organized around one deliberately scoped claim: whether hidden-task certificates improve robustness to untargeted model poisoning under heterogeneous client data, when compared against public robust-aggregation baselines under a fixed protocol and an explicit result-source policy. The main study uses CIFAR-100/ResNet18, matched trusted-data budgets for CARAT and FLTrust, final test accuracy and loss under attack, and average rank across attacks. Appendix~\ref{sec:appendix-experiments} provides protocol details, final-loss results, runtime diagnostics, and reproducibility details.
+
+\subsection{Evaluation Protocol}
+
+\paragraph{Benchmark and threat model.}
+We use CIFAR-100~\citep{krizhevsky2009learning} with ResNet18~\citep{he2016deep}. CIFAR-100 has a class-rich label space, making it suitable for evaluating whether hidden class-balanced tasks reveal class-selective degradation that may be hidden in aggregate accuracy alone. The attacked comparison covers four untargeted model-poisoning attacks: ALIE~\citep{baruch2019alie}, FangAttack~\citep{fang2020local}, MinMax~\citep{shejwalkar2021manipulating}, and MinSum~\citep{shejwalkar2021manipulating}. These attacks test stealthy variance-based poisoning, geometry-aware local model poisoning, and distance-constrained optimization attacks. Backdoor and data-poisoning attacks remain outside the empirical claim set.
+
+\paragraph{Baselines and fairness controls.}
+The main-text comparison includes Mean, NormClipping, MultiKrum~\citep{blanchard2017krum}, FLTrust~\citep{cao2021fltrust}, FLDetector~\citep{zhang2022fldetector}, and CARAT. This set spans averaging, clipping, geometry-based filtering, trusted-data anchoring, historical detection, and hidden-task validation. We exclude unpublished or under-review defenses from the main claim so that every reported baseline is citable and publicly attributable. To isolate the effect of the aggregation rule, CARAT and FLTrust use matched labeled server-reference budgets.
+
+\paragraph{Training and reporting protocol.}
+All main attacked runs use $20$ clients with full participation, $200$ global rounds, $4$ local epochs, learning rate $0.05$, and a $20\%$ malicious-client ratio. We evaluate Dirichlet non-i.i.d.\ regimes with $\alpha\in\{1,0.5\}$, where smaller $\alpha$ increases client heterogeneity. Clean no-attack runs are kept separate from attacked robustness tables so that clean utility is not mixed with poisoning resistance. Compatible legacy public-baseline rows use five seeds where available; regenerated FLTrust and CARAT rows use three seeds under the matched reference-assisted protocol. The tables disclose this source policy rather than pooling runs across unequal seed counts. Final test accuracy is the primary metric, final test loss in the appendix is a consistency check, and average rank within each non-i.i.d.\ setting summarizes performance across attacks.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Reported evaluation protocol used for the main CIFAR-100/ResNet18 robustness comparison. The table separates training controls, poisoning controls, and reporting controls.}
+\label{tab:hyperparams}
+\definecolor{setupgray}{gray}{0.92}
+\renewcommand{\arraystretch}{1.08}
+\setlength{\tabcolsep}{5pt}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{
+>{\raggedright\arraybackslash}p{0.19\textwidth}
+>{\raggedright\arraybackslash}p{0.31\textwidth}
+>{\raggedright\arraybackslash}p{0.40\textwidth}}
+\toprule
+\textbf{Axis} & \textbf{Setting} & \textbf{Purpose in the comparison} \\
+\midrule
+\rowcolor{setupgray}
+\multicolumn{3}{l}{\textbf{Benchmark and federated training protocol}} \\
+Dataset / model & CIFAR-100 / ResNet18 & Class-rich image benchmark where hidden class-balanced tasks are meaningful. \\
+Clients & $20$ clients, full participation & Removes client-sampling noise from defense comparisons. \\
+Training schedule & $200$ rounds; $4$ local epochs; learning rate $0.05$ & Shared optimizer budget for all attacked runs. \\
+Heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5\}$ & Tests robustness as benign client updates become more dispersed. \\
+\midrule
+\rowcolor{setupgray}
+\multicolumn{3}{l}{\textbf{Poisoning setting and compared defenses}} \\
+Malicious clients & $20\%$ of clients & Main untargeted model-poisoning threat level. \\
+Attacks & ALIE, FangAttack, MinMax, MinSum & Stealthy and geometry-aware untargeted poisoning attacks. \\
+Main-text defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Public baselines spanning averaging, clipping, geometric filtering, trusted anchoring, and historical detection. \\
+\midrule
+\rowcolor{setupgray}
+\multicolumn{3}{l}{\textbf{Reporting controls}} \\
+Metrics & Final test accuracy; final test loss; average rank & Accuracy is the main robustness metric; loss and rank provide consistency checks. \\
+Trusted-data control & Matched labeled reference budget for FLTrust and CARAT & Prevents the proposed method from receiving more server-side supervision. \\
+Seed policy & Legacy public-baseline rows: five seeds where available; regenerated FLTrust/CARAT rows: three seeds & Makes the result-source policy explicit while keeping the trusted-data budget matched for reference-assisted defenses. \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\subsection{Main Robustness Results}
+
+Table~\ref{tab:cifar100-main-acc} reports the main attacked-accuracy comparison. The table uses the reported public baselines described above, reuses protocol-compatible five-seed legacy logs for Mean, NormClipping, MultiKrum, and FLDetector, and regenerates matched-budget FLTrust and the final $T=8$ CARAT protocol with three seeds. The no-attack Mean run is not inserted as an attack-row baseline; it is shown only as a reference curve in Figure~\ref{fig:cifar100-fangattack-curves}.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Final test accuracy (\%) for the reported public baselines under four model-poisoning attacks on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ client partitions. Higher accuracy is better, and lower average rank is better. Legacy public-baseline rows reuse five-seed logs where available; FLTrust and CARAT are regenerated under the reference-assisted protocol with three seeds and matched reference budgets.}
+\label{tab:cifar100-main-acc}
+\definecolor{caratrow}{gray}{0.91}
+\renewcommand{\arraystretch}{1.08}
+\setlength{\tabcolsep}{4.2pt}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{c c l c c c c c}
+\toprule
+\multirow{2}{*}{\makecell[c]{Dataset\\Model}} &
+\multirow{2}{*}{\makecell[c]{Non-IID\\setting}} &
+\multirow{2}{*}{\makecell[c]{Defense\\rule}} &
+\multicolumn{4}{c}{\textbf{Attacks}} &
+\multirow{2}{*}{\makecell[c]{Avg.\\rank}} \\
+\cmidrule(lr){4-7}
+& & & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \\
+\midrule
+\multirow{6}{*}{\makecell[c]{CIFAR-100\\ResNet18}}
+& \multirow{6}{*}{$\alpha=1.0$}
+& Mean & $49.43 \pm 0.39$ & $48.86 \pm 0.70$ & $50.49 \pm 0.59$ & $50.50 \pm 0.49$ & $2.2$ \\
+& & NormClipping & $25.27 \pm 0.70$ & $22.67 \pm 0.77$ & $24.86 \pm 0.65$ & $24.74 \pm 0.63$ & $6.0$ \\
+& & MultiKrum & $39.59 \pm 0.74$ & $37.18 \pm 0.83$ & $48.69 \pm 0.84$ & $47.71 \pm 1.12$ & $4.0$ \\
+& & FLTrust (matched) & $39.17 \pm 1.87$ & $37.68 \pm 1.92$ & $41.90 \pm 1.18$ & $41.56 \pm 1.61$ & $4.5$ \\
+& & FLDetector & $47.96 \pm 0.58$ & $28.54 \pm 4.42$ & $50.58 \pm 0.76$ & $50.47 \pm 0.27$ & $3.2$ \\
+\rowcolor{caratrow}
+& & \textbf{CARAT ($T=8$)} & \textbf{$51.33 \pm 1.75$} & \textbf{$54.31 \pm 1.28$} & \textbf{$54.35 \pm 1.46$} & \textbf{$54.70 \pm 1.43$} & \textbf{$1.0$} \\
+\cmidrule(lr){1-8}
+\multirow{6}{*}{\makecell[c]{CIFAR-100\\ResNet18}}
+& \multirow{6}{*}{$\alpha=0.5$}
+& Mean & $47.62 \pm 0.73$ & $47.53 \pm 1.01$ & $48.88 \pm 0.32$ & $48.88 \pm 0.52$ & $2.2$ \\
+& & NormClipping & $23.73 \pm 0.53$ & $20.64 \pm 1.41$ & $23.28 \pm 0.40$ & $22.92 \pm 0.50$ & $6.0$ \\
+& & MultiKrum & $37.00 \pm 0.81$ & $33.05 \pm 1.20$ & $46.59 \pm 1.09$ & $46.45 \pm 0.80$ & $4.0$ \\
+& & FLTrust (matched) & $34.52 \pm 0.84$ & $34.22 \pm 0.94$ & $39.50 \pm 0.27$ & $39.49 \pm 0.37$ & $4.5$ \\
+& & FLDetector & $45.30 \pm 0.75$ & $27.77 \pm 1.25$ & $48.85 \pm 0.53$ & $49.01 \pm 0.69$ & $3.2$ \\
+\rowcolor{caratrow}
+& & \textbf{CARAT ($T=8$)} & \textbf{$50.15 \pm 1.13$} & \textbf{$51.81 \pm 0.79$} & \textbf{$53.64 \pm 1.12$} & \textbf{$54.10 \pm 0.30$} & \textbf{$1.0$} \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+Within this reported comparison, CARAT obtains average rank $1.0$ in both heterogeneity settings and has the highest mean final accuracy in every attack column. Relative to the best non-CARAT row in each column, CARAT improves mean final accuracy by $1.9$--$5.5$ percentage points across the eight attack/heterogeneity cells. The largest margins occur under FangAttack and under the more heterogeneous $\alpha=0.5$ MinMax/MinSum settings, where several non-CARAT defenses lose substantial accuracy. Appendix~\ref{sec:appendix-experiments} reports the corresponding final-loss table.
+
+Figure~\ref{fig:cifar100-fangattack-curves} shows the round-wise behavior under FangAttack, the attack where several non-CARAT defenses degrade most visibly in Table~\ref{tab:cifar100-main-acc}.
+
+\begin{figure*}[!htbp]
+\centering
+\safeincludegraphics[width=0.98\textwidth]{figures/cifar100_fangattack_curves.pdf}
+\caption{Evolution of test accuracy on CIFAR-100/ResNet18 under FangAttack with $20\%$ malicious clients and non-i.i.d.\ data. Curves show seed means and shaded bands show one standard deviation. The dashed black curve is the no-attack Mean reference under the same client partition protocol.}
+\label{fig:cifar100-fangattack-curves}
+\end{figure*}
+
+\FloatBarrier
+
+\subsection{Verification-Scale Runtime Results}
+\label{sec:appendix-runtime}
+
+Figure~\ref{fig:verification-curves} reports a smaller CIFAR-100/i.i.d.\ ALIE verification run that records both round-wise accuracy and server-side runtime. In this setting, CARAT remains stable across seeds under attack but pays a clear runtime premium because each round evaluates candidate updates on repeated hidden tasks. The result is not used as the main robustness claim; it is included only to make the overhead tradeoff visible.
+
+\begin{figure*}[!htbp]
+\centering
+\safeincludegraphics[width=0.98\textwidth]{figures/carat_verification.pdf}
+\caption{Verification-scale local results on CIFAR-100 under the ALIE model-poisoning attack. Left: round-wise test accuracy, where solid curves show the mean over three seeds and shaded bands denote one standard deviation; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars, showing the defense overhead of repeated hidden-task evaluation.}
+\label{fig:verification-curves}
+\end{figure*}
+\FloatBarrier
+
+\subsection{Limitations and Diagnostics}
+\label{sec:limitations-diagnostics}
+
+The completed evaluation supports a bounded robustness claim for untargeted model poisoning on CIFAR-100/ResNet18 with $20\%$ malicious clients and Dirichlet non-i.i.d.\ partitions with $\alpha\in\{1,0.5\}$. More severe heterogeneity, larger client populations, additional datasets, backdoor attacks, data-poisoning attacks, and attackers that observe the exact hidden validation tasks remain outside the empirical claim set. This boundary is intentional: the paper evaluates whether class-aware hidden-task validation is a useful reference-assisted aggregation signal, not whether CARAT solves all Byzantine FL settings. Because Proposition~\ref{prop:complexity} identifies probe-model evaluation as CARAT's main extra cost, Section~\ref{sec:appendix-runtime} reports verification-scale learning curves and runtime measurements as overhead diagnostics rather than as primary robustness claims.
+

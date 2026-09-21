@@ -23,13 +23,13 @@ The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ 
 Dataset and model & CIFAR-10 / VGG19; CIFAR-100 / ResNet18 & Complementary ten-class and class-rich benchmarks. \\
 Client population & $20$ clients, full participation & Fixed participation in every round. \\
 Training schedule & $200$ rounds, $4$ local epochs, learning rate $0.05$ & Common optimization schedule for attacked runs. \\
-Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Settings displayed in the main table. \\
+Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Rows displayed in the main figures. \\
 Malicious clients & $10\%$ & Two of the $20$ clients; this fraction is also supplied to CARAT as $\hat{\rho}$. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
-Compared methods & Clean reference: No Attack + Mean; attacked defenses: NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Rows in Table~\ref{tab:cifar-main-acc}. \\
+Compared methods & Clean reference: No Attack + Mean; attacked defenses: NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Curves in Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10}. \\
 Seeds and source policy & Five seeds for every reported result & All attacked defenses and clean references use seeds $42$--$46$. \\
 Server examples & CARAT pool: $512$; FLTrust: $100$ & Budgets are unequal; examples are sampled from the training set and not excluded from client partitions. \\
-Reported statistic & Final-round accuracy, mean $\pm$ sample standard deviation & Bold values identify the strongest attacked defense per attack; the clean reference is excluded. \\
+Reported statistic & Round-wise accuracy, mean $\pm$ sample standard deviation & The discussion compares round-200 means; rankings exclude the clean reference. \\
 \bottomrule
 \end{tabular}
 }
@@ -64,7 +64,7 @@ Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capp
 
 \subsection{CARAT Final-Loss Results}
 
-The new exporter records evaluation loss as the raw mean cross-entropy. Earlier baseline logs stored cross-entropy with an additional batch-size normalization, so their numerical loss values are not comparable. We therefore avoid a cross-defense loss ranking and report only the internally consistent five-seed CARAT values in Table~\ref{tab:carat-main-loss}. Accuracy in Table~\ref{tab:cifar-main-acc} remains the cross-defense metric.
+The new exporter records evaluation loss as the raw mean cross-entropy. Earlier baseline logs stored cross-entropy with an additional batch-size normalization, so their numerical loss values are not comparable. We therefore avoid a cross-defense loss ranking and report only the internally consistent five-seed CARAT values in Table~\ref{tab:carat-main-loss}. Accuracy in Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10} remains the cross-defense metric.
 
 \begin{table}[!htbp]
 \centering

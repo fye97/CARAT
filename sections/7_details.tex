@@ -433,7 +433,7 @@ The object $\mathcal{D}^{\mathrm{ref}}$ denotes the labeled server reference set
 \label{sec:appendix-reproducibility}
 
 \paragraph{Reproducibility.}
-All main reported results use the public CIFAR-10 and CIFAR-100 benchmarks and the fixed training protocol described in Section~\ref{sec:experiments}. The aggregation method is specified in Algorithm~\ref{alg:carat-round}, with implementation defaults listed in Appendix~\ref{sec:appendix-experiments}. The main CARAT cells and component variants each use five seeds, and the result archives retain metrics, completion markers, job metadata, and configuration files so that every reported cell can be traced to seed-level runs.
+All main reported results use the public CIFAR-10 and CIFAR-100 benchmarks and the fixed training protocol described in Section~\ref{sec:experiments}. The aggregation method is specified in Algorithm~\ref{alg:carat-round}, with implementation defaults listed in Appendix~\ref{sec:appendix-experiments}. The main CARAT settings and component variants each use five seeds, and the result archives retain metrics, completion markers, job metadata, and configuration files so that every reported result can be traced to seed-level runs.
 
 \paragraph{Compute resources.}
 The main CARAT sweep and reported public-baseline logs were generated through the repository launch scripts on a Compute Canada SLURM cluster; the component study was run with the same experiment interface on a laboratory GPU server. Each run writes a metadata file recording its configuration, command line, seed, Python environment, and CUDA requirement; the main sweep also records the git commit.

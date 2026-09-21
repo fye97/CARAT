@@ -5,7 +5,7 @@ This appendix records the exact scope, CARAT configuration, loss convention, and
 
 \subsection{Completed Empirical Scope}
 
-The completed comparison covers CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $20\%$ malicious clients, and four attacks: ALIE, FangAttack, MinMax, and MinSum. The paper reports Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The new CARAT sweep contains all combinations of two displayed heterogeneity levels, four attacks, and five seeds. Baseline values come from compatible earlier logs, and the distinct seed counts and reference-data configurations are retained in the reporting rather than merged.
+The completed comparison covers CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $20\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The CARAT sweep contains all combinations of three displayed heterogeneity levels, five attacks, and five seeds. Compatible baseline values also use five seeds; the available archive does not contain the Mimic--Mean cell, which is left unreported.
 
 \subsection{Reported CIFAR-100 Protocol}
 
@@ -23,13 +23,13 @@ The completed comparison covers CIFAR-100/ResNet18 with $20$ fully participating
 Dataset and model & CIFAR-100 / ResNet18 & Primary class-rich benchmark. \\
 Client population & $20$ clients, full participation & Fixed participation in every round. \\
 Training schedule & $200$ rounds, $4$ local epochs, learning rate $0.05$ & Common optimization schedule for attacked runs. \\
-Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5\}$ & Settings displayed in the main table. \\
+Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Settings displayed in the main table. \\
 Malicious clients & $20\%$ & Four of the $20$ clients; this fraction is also supplied to CARAT as $\hat{\rho}$. \\
-Attack suite & ALIE, FangAttack, MinMax, MinSum & Untargeted model-poisoning attacks. \\
+Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
 Compared defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Methods in Table~\ref{tab:cifar100-main-acc}. \\
-Seeds and source policy & CARAT and most legacy rows: $5$; FLTrust: $3$ & CARAT uses seeds $42$--$46$; differing seed counts are disclosed. \\
+Seeds and source policy & Five seeds for every reported attack cell & CARAT and baseline rows use seeds $42$--$46$; Mimic--Mean is unavailable. \\
 Server examples & CARAT pool: $512$; FLTrust: $100$ & Budgets are unequal; examples are sampled from the training set and not excluded from client partitions. \\
-Reported statistic & Final-round accuracy, mean $\pm$ sample standard deviation & Average rank is computed from cell means within each $\alpha$. \\
+Reported statistic & Final-round accuracy, mean $\pm$ sample standard deviation & Average rank uses the four attacks shared by all six methods. \\
 \bottomrule
 \end{tabular}
 }
@@ -68,24 +68,28 @@ The new exporter records evaluation loss as the raw mean cross-entropy. Earlier 
 
 \begin{table}[!htbp]
 \centering
-\caption{Five-seed CARAT final-round raw mean cross-entropy on CIFAR-100/ResNet18. Lower is better.}
+\caption{Five-seed CARAT final-round raw mean cross-entropy on CIFAR-100/ResNet18. Lower is better. A dash marks a cell with at least one non-finite seed loss.}
 \label{tab:carat-main-loss}
 \renewcommand{\arraystretch}{1.08}
 \small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{ccccc}
+\setlength{\tabcolsep}{4pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{cccccc}
 \toprule
-\textbf{Dirichlet $\alpha$} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} \\
+\textbf{Dirichlet $\alpha$} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \textbf{Mimic} \\
 \midrule
-$1.0$ & $1.9005 \pm 0.0408$ & $1.8797 \pm 0.0311$ & $1.8434 \pm 0.0188$ & $1.8546 \pm 0.0229$ \\
-$0.5$ & $1.9830 \pm 0.0335$ & $1.9573 \pm 0.0142$ & $1.8983 \pm 0.0380$ & $1.8996 \pm 0.0415$ \\
+$1.0$ & $1.9005 \pm 0.0408$ & $1.8797 \pm 0.0311$ & $1.8434 \pm 0.0188$ & $1.8546 \pm 0.0229$ & $1.9628 \pm 0.0199$ \\
+$0.5$ & $1.9830 \pm 0.0335$ & $1.9573 \pm 0.0142$ & $1.8983 \pm 0.0380$ & $1.8996 \pm 0.0415$ & $2.0552 \pm 0.0137$ \\
+$0.1$ & $2.3290 \pm 0.0263$ & -- & $2.1882 \pm 0.0275$ & -- & $2.3821 \pm 0.0246$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
+
+Four of five $\alpha=0.1$ FangAttack runs and one of five $\alpha=0.1$ MinSum runs record non-finite final loss after collapsing to chance-level accuracy. We therefore do not form a misleading finite-only mean for those cells.
 
 \subsection{Result Provenance and Integrity Checks}
 
-The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. The main paper selects the $40$ CIFAR-100/ResNet18 runs with $\alpha\in\{1,0.5\}$, malicious ratio $0.2$, and the four displayed attacks. Every selected metric file contains all $200$ training rounds. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
+The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. The main paper selects the $75$ CIFAR-100/ResNet18 runs with $\alpha\in\{1,0.5,0.1\}$, malicious ratio $0.2$, and the five displayed attacks. Every selected metric file contains all $200$ training rounds. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
 
 The component study contains $100$ completed runs: five variants, four attacks, and five seeds, each with $200$ rounds. It was executed independently on the laboratory server. Because concurrent jobs make wall-clock measurements sensitive to contention, these runs support the accuracy ablation in Table~\ref{tab:carat-ablation} but are not used for a runtime claim.
 

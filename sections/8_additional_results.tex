@@ -1,7 +1,7 @@
 \section{Experimental Protocols and Additional Results}
 \label{sec:appendix-experiments}
 
-This appendix records the exact scope, CARAT configuration, loss convention, and provenance underlying Section~\ref{sec:experiments}.
+This appendix records the exact scope, CARAT configuration, supplementary component and runtime studies, loss convention, and provenance underlying Section~\ref{sec:experiments}.
 
 \subsection{Completed Empirical Scope}
 
@@ -22,7 +22,7 @@ The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ 
 \midrule
 Dataset and model & CIFAR-10 / VGG19; CIFAR-100 / ResNet18 & Complementary ten-class and class-rich benchmarks. \\
 Client population & $20$ clients, full participation & Fixed participation in every round. \\
-Training schedule & $200$ rounds, $4$ local epochs, learning rate $0.05$ & Common optimization schedule for attacked runs. \\
+Training schedule & SGD; $200$ rounds; $4$ local epochs; learning rate $0.05$; momentum $0.9$; weight decay $5\times10^{-4}$; batch size $64$ & Common optimization schedule for attacked runs. \\
 Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Rows displayed in the main figures. \\
 Malicious clients & $10\%$ & Two of the $20$ clients; this fraction is also supplied to CARAT as $\hat{\rho}$. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
@@ -62,6 +62,47 @@ Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capp
 }
 \end{table*}
 
+\subsection{Separate Component Study}
+\label{sec:appendix-component-study}
+
+We conduct a focused component study on CIFAR-100/ResNet18 with $20$ clients, $20\%$ malicious clients, and $\alpha=0.5$. This is a separate, higher-adversary stress test; the available archive does not contain a $10\%$ counterpart. Each variant uses the same five seeds as its within-study control. One task replaces $T=8$ with $T=1$; no clipping disables MAD clipping; no rank penalty sets its coefficient to zero; and no temporal prior removes the temporal regularizer. The study covers ALIE, FangAttack, MinMax, and MinSum and was executed independently from the main comparison.
+
+\begin{table}[!htbp]
+  \definecolor{caratrow}{gray}{0.88}
+  \renewcommand{\arraystretch}{1.05}
+  \caption{CARAT component study on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ $\alpha=0.5$. Values are final test accuracy (\%) over five seeds. The final column averages the four attack means; higher is better.}
+  \label{tab:carat-ablation}
+  \setlength{\tabcolsep}{7pt}
+  \centering\small
+  \begin{tabular}{lccccc}
+  \toprule
+  \textbf{Variant} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \textbf{Mean} \\
+  \midrule
+  \cellcolor{caratrow}\textbf{Full CARAT} & \cellcolor{caratrow}\textbf{46.81$\pm$1.06} & \cellcolor{caratrow}\textbf{47.59$\pm$0.61} & \cellcolor{caratrow}48.20$\pm$1.12 & \cellcolor{caratrow}47.82$\pm$0.99 & \cellcolor{caratrow}\textbf{47.61} \\
+  One task ($T=1$) & 46.68$\pm$0.93 & 47.12$\pm$0.76 & 48.17$\pm$0.95 & \textbf{48.24$\pm$0.82} & 47.55 \\
+  No clipping & 46.26$\pm$0.62 & 46.79$\pm$0.85 & \textbf{48.30$\pm$1.01} & 48.01$\pm$1.00 & 47.34 \\
+  No rank penalty & 46.36$\pm$1.11 & 46.96$\pm$0.59 & 48.09$\pm$0.49 & 47.90$\pm$1.00 & 47.33 \\
+  No temporal prior & 46.33$\pm$0.80 & 47.42$\pm$1.18 & 48.12$\pm$1.22 & 47.93$\pm$1.04 & 47.45 \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+Full CARAT has the highest cross-attack mean, but its advantage over the reduced variants is only $0.06$--$0.28$ percentage points and is smaller than the seed-level variation in individual attack settings. Full CARAT leads under ALIE and FangAttack; no clipping leads under MinMax; and one task leads under MinSum. Thus, $T=1$ nearly matches $T=8$, and the study supports only a small combined benefit in this higher-adversary setting.
+
+\FloatBarrier
+\subsection{Runtime Diagnostic}
+\label{sec:appendix-runtime}
+
+Figure~\ref{fig:verification-curves} reports a separate, earlier CIFAR-100/i.i.d.\ ALIE verification run with three seeds. CARAT records an average per-round time of $9.94$ seconds, compared with $2.80$ seconds for Mean under attack, or approximately $3.6\times$ higher wall-clock cost. This premium is consistent with evaluating every candidate update on repeated hidden tasks. The diagnostic predates the five-seed sweep and is not hardware-normalized for the main comparison.
+
+\begin{figure*}[!b]
+  \centering
+  \safeincludegraphics[width=0.98\textwidth]{figures/carat_verification.pdf}
+  \caption{Verification-scale CIFAR-100/i.i.d.\ results under ALIE. Left: round-wise test accuracy over three seeds; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars. This earlier run is an overhead diagnostic and is not part of the main five-seed comparison.}
+  \label{fig:verification-curves}
+\end{figure*}
+\FloatBarrier
+
 \subsection{CARAT Final-Loss Results}
 
 The new exporter records evaluation loss as the raw mean cross-entropy. Earlier baseline logs stored cross-entropy with an additional batch-size normalization, so their numerical loss values are not comparable. We therefore avoid a cross-defense loss ranking and report only the internally consistent five-seed CARAT values in Table~\ref{tab:carat-main-loss}. Accuracy in Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10} remains the cross-defense metric.
@@ -95,6 +136,6 @@ All $75$ selected CIFAR-100 runs record finite final-round cross-entropy. On CIF
 
 The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. The main paper selects $150$ runs: the $75$ CIFAR-10/VGG19 and $75$ CIFAR-100/ResNet18 runs with $\alpha\in\{1,0.5,0.1\}$, malicious ratio $0.1$, and the five displayed attacks. Every selected metric file contains all $200$ training rounds. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
 
-The component study contains $100$ completed runs at malicious ratio $0.2$: five variants, four attacks, and five seeds, each with $200$ rounds. It was executed independently on the laboratory server and is reported as a higher-adversary stress test rather than as a ratio-matched ablation of the main table. Because concurrent jobs make wall-clock measurements sensitive to contention, these runs support the accuracy ablation in Table~\ref{tab:carat-ablation} but are not used for a runtime claim.
+The component study contains $100$ completed runs at malicious ratio $0.2$: five variants, four attacks, and five seeds, each with $200$ rounds. It was executed independently on the laboratory server and is reported as a higher-adversary stress test rather than as a ratio-matched ablation of the main comparison. Because concurrent jobs make wall-clock measurements sensitive to contention, these runs support the accuracy ablation in Table~\ref{tab:carat-ablation} but are not used for a runtime claim.
 
 \FloatBarrier

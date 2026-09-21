@@ -5,7 +5,7 @@ This appendix records the exact scope, CARAT configuration, loss convention, and
 
 \subsection{Completed Empirical Scope}
 
-The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. For each dataset--model pair, the selected CARAT results contain all combinations of three displayed heterogeneity levels, five attacks, and five seeds, for $150$ CARAT runs in total. Compatible baseline values also use five seeds; the available archive does not contain the Mimic--Mean cells, which are left unreported.
+The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. For each dataset--model pair, the selected CARAT results contain all combinations of three displayed heterogeneity levels, five attacks, and five seeds, for $150$ CARAT runs in total. The defense baselines and clean Mean references also use five seeds.
 
 \subsection{Reported CIFAR Protocol}
 
@@ -26,10 +26,10 @@ Training schedule & $200$ rounds, $4$ local epochs, learning rate $0.05$ & Commo
 Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Settings displayed in the main table. \\
 Malicious clients & $10\%$ & Two of the $20$ clients; this fraction is also supplied to CARAT as $\hat{\rho}$. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
-Compared defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Methods in Table~\ref{tab:cifar-main-acc}. \\
-Seeds and source policy & Five seeds for every reported attack cell & CARAT and baseline rows use seeds $42$--$46$; Mimic--Mean is unavailable for both datasets. \\
+Compared methods & Clean reference: No Attack + Mean; attacked defenses: NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Rows in Table~\ref{tab:cifar-main-acc}. \\
+Seeds and source policy & Five seeds for every reported result & All attacked defenses and clean references use seeds $42$--$46$. \\
 Server examples & CARAT pool: $512$; FLTrust: $100$ & Budgets are unequal; examples are sampled from the training set and not excluded from client partitions. \\
-Reported statistic & Final-round accuracy, mean $\pm$ sample standard deviation & Average rank uses the four attacks shared by all six methods. \\
+Reported statistic & Final-round accuracy, mean $\pm$ sample standard deviation & Bold values identify the strongest attacked defense per attack; the clean reference is excluded. \\
 \bottomrule
 \end{tabular}
 }

@@ -1,6 +1,6 @@
 \section{Experiments}
 \label{sec:experiments}
-
+\subsection{Experimental Setup}
 We evaluate CIFAR-10/VGG19~\citep{krizhevsky2009learning,simonyan2015verydeep} and CIFAR-100/ResNet18~\citep{he2016deep} with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions ($\alpha\in\{1.0,0.5,0.1\}$), $200$ communication rounds, and four local epochs per round. We test ALIE~\citep{baruch2019alie}, FangAttack~\citep{fang2020local}, MinMax, MinSum~\citep{shejwalkar2021manipulating}, and Mimic~\citep{karimireddy2022bucketing} with $10\%$ malicious clients, and compare CARAT with NormClipping, MultiKrum~\citep{blanchard2017krum}, FLTrust~\citep{cao2021fltrust}, and FLDetector~\citep{zhang2022fldetector}. Unattacked Mean is the clean reference. Appendix~\ref{sec:appendix-experiments} gives the optimizer, method, and provenance details.
 
 Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10} report means and sample-standard-deviation bands over seeds $42$--$46$; numerical comparisons below use round 200. CARAT uses $T=8$ hidden tasks and a $512$-example server pool, whereas FLTrust uses $100$ server examples. Both pools are drawn from the training set without removing those examples from client partitions, so the curves compare the recorded method--reference configurations rather than isolated aggregation rules. The shared NoAttack + Mean curve is excluded from defense rankings.

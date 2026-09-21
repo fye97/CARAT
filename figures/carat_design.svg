@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="1120" height="590" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1120 590" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>CARAT overview</title>
+	<desc>Hidden class-balanced server tasks and client update scoring copies meet in a utility matrix. Learned weights combine clipped updates. Scores and bar lengths are schematic, not experimental measurements.</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="1120" height="590"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-590)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="1120" height="590" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="32.8125" y="535" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,1070) scale(1,-1)">Server reference data</text>
+			<rect x="48" y="447" width="52" height="59" style="stroke: rgb(79%,82%,84%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="43" y="441" width="52" height="59" style="stroke: rgb(65%,69%,72%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="58" cy="483" r="6" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<circle cx="80" cy="483" r="6" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<circle cx="58" cy="459" r="6" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<circle cx="80" cy="459" r="6" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<rect x="115" y="447" width="52" height="59" style="stroke: rgb(79%,82%,84%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="110" y="441" width="52" height="59" style="stroke: rgb(65%,69%,72%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="119" y="477" width="12" height="12" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<rect x="141" y="477" width="12" height="12" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<rect x="119" y="453" width="12" height="12" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<rect x="141" y="453" width="12" height="12" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<rect x="182" y="447" width="52" height="59" style="stroke: rgb(79%,82%,84%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="177" y="441" width="52" height="59" style="stroke: rgb(65%,69%,72%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<polygon points="192 489, 186 477, 198 477" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<polygon points="214 489, 208 477, 220 477" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<polygon points="192 465, 186 453, 198 453" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<polygon points="214 465, 208 453, 220 453" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<text x="52.024" y="411" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,822) scale(1,-1)">Labeled examples</text>
+			<polyline points="243 472, 504 472" style="stroke: rgb(40%,44%,47%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="504 472, 497 475.3, 497 468.7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,44%,47%); fill-rule: evenodd;"/>
+			<text x="295.352" y="506" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,1012) scale(1,-1)">Class-balanced</text>
+			<text x="323.996" y="482" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,964) scale(1,-1)">sampling</text>
+			<text x="565.1875" y="549" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-weight: bold; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,1098) scale(1,-1)">Hidden tasks</text>
+			<text x="578.348" y="521" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,1042) scale(1,-1)">Server-only</text>
+			<rect x="533" y="437" width="60" height="62" style="stroke: rgb(71%,67%,79%); stroke-linecap: butt; stroke-width: 1; fill: rgb(98%,98%,98%); fill-rule: evenodd;"/>
+			<circle cx="545" cy="483" r="4.8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<rect x="558.2" y="478.2" width="9.600000000000023" height="9.600000000000023" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<polygon points="581 487.8, 576.2 478.2, 585.8 478.2" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<circle cx="545" cy="454" r="4.8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<rect x="558.2" y="449.2" width="9.600000000000023" height="9.600000000000023" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<polygon points="581 458.8, 576.2 449.2, 585.8 449.2" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<polyline points="563 435, 563 361" style="stroke: rgb(60%,56%,68%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="563 361, 566.3 368, 559.7 368" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(60%,56%,68%); fill-rule: evenodd;"/>
+			<rect x="599" y="437" width="60" height="62" style="stroke: rgb(71%,67%,79%); stroke-linecap: butt; stroke-width: 1; fill: rgb(98%,98%,98%); fill-rule: evenodd;"/>
+			<rect x="606.2" y="478.2" width="9.600000000000023" height="9.600000000000023" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<polygon points="629 487.8, 624.2 478.2, 633.8 478.2" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<circle cx="647" cy="483" r="4.8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<rect x="606.2" y="449.2" width="9.600000000000023" height="9.600000000000023" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<polygon points="629 458.8, 624.2 449.2, 633.8 449.2" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<circle cx="647" cy="454" r="4.8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<polyline points="629 435, 629 361" style="stroke: rgb(60%,56%,68%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="629 361, 632.3 368, 625.7 368" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(60%,56%,68%); fill-rule: evenodd;"/>
+			<rect x="665" y="437" width="60" height="62" style="stroke: rgb(71%,67%,79%); stroke-linecap: butt; stroke-width: 1; fill: rgb(98%,98%,98%); fill-rule: evenodd;"/>
+			<polygon points="677 487.8, 672.2 478.2, 681.8 478.2" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<circle cx="695" cy="483" r="4.8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<rect x="708.2" y="478.2" width="9.600000000000023" height="9.600000000000023" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<polygon points="677 458.8, 672.2 449.2, 681.8 449.2" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(71%,59%,33%); fill-rule: evenodd;"/>
+			<circle cx="695" cy="454" r="4.8" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(52%,47%,62%); fill-rule: evenodd;"/>
+			<rect x="708.2" y="449.2" width="9.600000000000023" height="9.600000000000023" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(34%,59%,56%); fill-rule: evenodd;"/>
+			<polyline points="695 435, 695 361" style="stroke: rgb(60%,56%,68%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="695 361, 698.3 368, 691.7 368" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(60%,56%,68%); fill-rule: evenodd;"/>
+			<text x="19.125" y="366" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,732) scale(1,-1)">Client updates</text>
+			<text x="20.0" y="320" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,640) scale(1,-1)">1</text>
+			<rect x="46" y="309" width="92" height="36" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="53" y="314" width="9" height="14" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="69" y="314" width="9" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="85" y="314" width="9" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="101" y="314" width="9" height="20" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="117" y="314" width="9" height="9" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<text x="20.0" y="276" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,552) scale(1,-1)">2</text>
+			<rect x="46" y="265" width="92" height="36" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="53" y="270" width="9" height="22" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="69" y="270" width="9" height="12" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="85" y="270" width="9" height="26" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="101" y="270" width="9" height="9" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="117" y="270" width="9" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<text x="20.0" y="232" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,464) scale(1,-1)">3</text>
+			<rect x="46" y="221" width="92" height="36" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="53" y="226" width="9" height="10" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="69" y="226" width="9" height="22" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="85" y="226" width="9" height="9" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="101" y="226" width="9" height="25" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="117" y="226" width="9" height="17" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<text x="20.0" y="188" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,376) scale(1,-1)">4</text>
+			<rect x="46" y="177" width="92" height="36" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="53" y="182" width="9" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="69" y="182" width="9" height="9" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="85" y="182" width="9" height="20" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="101" y="182" width="9" height="13" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<rect x="117" y="182" width="9" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<path d="M 151,346 L 151,176 Z" style="stroke: rgb(40%,44%,47%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 144,346 L 151,346 Z" style="stroke: rgb(40%,44%,47%); stroke-linecap: butt; stroke-width: 1;"/>
+			<path d="M 144,176 L 151,176 Z" style="stroke: rgb(40%,44%,47%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polyline points="153 261, 191 261" style="stroke: rgb(12%,15%,17%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="191 261, 184 264.3, 184 257.7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<rect x="195" y="219" width="117" height="84" style="stroke: rgb(65%,69%,72%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="218.992" y="269" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,538) scale(1,-1)">Robust</text>
+			<text x="213.664" y="241" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,482) scale(1,-1)">clipping</text>
+			<polyline points="312 261, 371 261" style="stroke: rgb(12%,15%,17%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="371 261, 364 264.3, 364 257.7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<circle cx="346" cy="261" r="3.2" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<text x="353.008" y="321" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,642) scale(1,-1)">Scoring copies</text>
+			<circle cx="422" cy="261" r="34" style="stroke: rgb(71%,77%,80%); stroke-linecap: butt; stroke-width: 1; fill: none; fill-rule: evenodd;"/>
+			<polyline points="422 261, 433.6287 292.9495" style="stroke: rgb(26%,49%,60%); stroke-linecap: butt; stroke-width: 1.4; fill: None; fill-rule: evenodd;"/>
+			<polygon points="433.6287 292.9495, 428.1336 287.5004, 434.3355 285.243" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<polyline points="422 261, 453.9495 272.6287" style="stroke: rgb(26%,49%,60%); stroke-linecap: butt; stroke-width: 1.4; fill: None; fill-rule: evenodd;"/>
+			<polygon points="453.9495 272.6287, 446.243 273.3355, 448.5004 267.1336" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<polyline points="422 261, 449.8512 241.4984" style="stroke: rgb(26%,49%,60%); stroke-linecap: butt; stroke-width: 1.4; fill: None; fill-rule: evenodd;"/>
+			<polygon points="449.8512 241.4984, 446.0099 248.2166, 442.2243 242.8102" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<text x="367.016" y="194" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,388) scale(1,-1)">Equal scale</text>
+			<polyline points="465 261, 505 261" style="stroke: rgb(12%,15%,17%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="505 261, 498 264.3, 498 257.7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<text x="514.0" y="320" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,640) scale(1,-1)">1</text>
+			<rect x="533" y="307" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(29%,50%,60%); fill-rule: evenodd;"/>
+			<text x="554.4375" y="319" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,638) scale(1,-1)">+</text>
+			<rect x="599" y="307" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(73%,82%,87%); fill-rule: evenodd;"/>
+			<text x="620.4375" y="319" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,638) scale(1,-1)">+</text>
+			<rect x="665" y="307" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(29%,50%,60%); fill-rule: evenodd;"/>
+			<text x="686.4375" y="319" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,638) scale(1,-1)">+</text>
+			<text x="514.0" y="276" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,552) scale(1,-1)">2</text>
+			<rect x="533" y="263" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(73%,82%,87%); fill-rule: evenodd;"/>
+			<text x="554.4375" y="275" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,550) scale(1,-1)">+</text>
+			<rect x="599" y="263" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(29%,50%,60%); fill-rule: evenodd;"/>
+			<text x="620.4375" y="275" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,550) scale(1,-1)">+</text>
+			<rect x="665" y="263" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(73%,82%,87%); fill-rule: evenodd;"/>
+			<text x="686.4375" y="275" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,550) scale(1,-1)">+</text>
+			<text x="514.0" y="232" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,464) scale(1,-1)">3</text>
+			<rect x="533" y="219" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,95%); fill-rule: evenodd;"/>
+			<text x="556.75" y="231" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,462) scale(1,-1)">0</text>
+			<rect x="599" y="219" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(77%,51%,34%); fill-rule: evenodd;"/>
+			<text x="624.8375" y="231" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,462) scale(1,-1)">-</text>
+			<rect x="665" y="219" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(89%,77%,67%); fill-rule: evenodd;"/>
+			<text x="690.8375" y="231" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,462) scale(1,-1)">-</text>
+			<text x="514.0" y="188" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,376) scale(1,-1)">4</text>
+			<rect x="533" y="175" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(29%,50%,60%); fill-rule: evenodd;"/>
+			<text x="554.4375" y="187" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,374) scale(1,-1)">+</text>
+			<rect x="599" y="175" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(73%,82%,87%); fill-rule: evenodd;"/>
+			<text x="620.4375" y="187" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,374) scale(1,-1)">+</text>
+			<rect x="665" y="175" width="60" height="40" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(73%,82%,87%); fill-rule: evenodd;"/>
+			<text x="686.4375" y="187" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,374) scale(1,-1)">+</text>
+			<text x="511.68399999999997" y="142" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,284) scale(1,-1)">Task-wise loss reduction</text>
+			<rect x="546" y="103" width="18" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<text x="573" y="104" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,208) scale(1,-1)">Improves</text>
+			<rect x="678" y="103" width="18" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(77%,51%,34%); fill-rule: evenodd;"/>
+			<text x="705" y="104" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,208) scale(1,-1)">Harms</text>
+			<text x="812.676" y="504" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,1008) scale(1,-1)">Weakest-task utility</text>
+			<text x="845.34" y="470" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,940) scale(1,-1)">Rank penalty</text>
+			<text x="826.656" y="437" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,874) scale(1,-1)">Previous weights</text>
+			<polyline points="909 421, 909 404" style="stroke: rgb(40%,44%,47%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="909 404, 912.3 411, 905.7 411" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(40%,44%,47%); fill-rule: evenodd;"/>
+			<polyline points="739 261, 790 261" style="stroke: rgb(12%,15%,17%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="790 261, 783 264.3, 783 257.7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<text x="817.9625" y="376" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-weight: bold; font-size: 25px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,752) scale(1,-1)">Client weights</text>
+			<path d="M 977,353 L 977,171 Z" style="stroke: rgb(40%,44%,47%); stroke-linecap: butt; stroke-width: 1.1; stroke-dasharray: 5, 4;"/>
+			<text x="1003.344" y="349" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,698) scale(1,-1)">cap</text>
+			<text x="803.0" y="320" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,640) scale(1,-1)">1</text>
+			<rect x="830" y="315" width="146" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="830" y="315" width="139" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<text x="803.0" y="276" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,552) scale(1,-1)">2</text>
+			<rect x="830" y="271" width="146" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="830" y="271" width="145" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<text x="803.0" y="232" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,464) scale(1,-1)">3</text>
+			<rect x="830" y="227" width="146" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="830" y="227" width="60" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(77%,51%,34%); fill-rule: evenodd;"/>
+			<text x="803.0" y="188" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,376) scale(1,-1)">4</text>
+			<rect x="830" y="183" width="146" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(94%,96%,96%); fill-rule: evenodd;"/>
+			<rect x="830" y="183" width="138" height="24" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(26%,49%,60%); fill-rule: evenodd;"/>
+			<polyline points="901 167, 901 98" style="stroke: rgb(12%,15%,17%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="901 98, 904.3 105, 897.7 105" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<rect x="816" y="25" width="170" height="69" style="stroke: rgb(65%,69%,72%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="854.344" y="65" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,130) scale(1,-1)">Weighted</text>
+			<text x="844.348" y="39" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,78) scale(1,-1)">aggregation</text>
+			<polyline points="346 258, 346 58, 812 58" style="stroke: rgb(12%,15%,17%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="812 58, 805 61.3, 805 54.7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<rect x="482" y="42" width="190" height="32" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="499.336" y="52" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(40%,44%,47%); stroke:none;" transform="translate(0,104) scale(1,-1)">Clipped updates</text>
+			<polyline points="986 59, 1033 59" style="stroke: rgb(12%,15%,17%); stroke-linecap: butt; stroke-width: 1.5; fill: None; fill-rule: evenodd;"/>
+			<polygon points="1033 59, 1026 62.3, 1026 55.7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(12%,15%,17%); fill-rule: evenodd;"/>
+			<rect x="1044" y="69" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(64%,75%,81%); fill-rule: evenodd;"/>
+			<rect x="1059" y="69" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(38%,55%,64%); fill-rule: evenodd;"/>
+			<rect x="1074" y="69" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(82%,87%,90%); fill-rule: evenodd;"/>
+			<rect x="1044" y="54" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(38%,55%,64%); fill-rule: evenodd;"/>
+			<rect x="1059" y="54" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(82%,87%,90%); fill-rule: evenodd;"/>
+			<rect x="1074" y="54" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(64%,75%,81%); fill-rule: evenodd;"/>
+			<rect x="1044" y="39" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(82%,87%,90%); fill-rule: evenodd;"/>
+			<rect x="1059" y="39" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(64%,75%,81%); fill-rule: evenodd;"/>
+			<rect x="1074" y="39" width="11" height="11" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(38%,55%,64%); fill-rule: evenodd;"/>
+			<text x="1022.344" y="141" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,282) scale(1,-1)">Updated</text>
+			<text x="1033.0" y="113" style="font-family: 'STIXGeneral', 'Times New Roman', serif; font-size: 24px;fill: rgb(12%,15%,17%); stroke:none;" transform="translate(0,226) scale(1,-1)">model</text>
+		</g>
+	</g>
+</svg>

@@ -5,7 +5,7 @@ This appendix records the exact scope, CARAT configuration, supplementary compon
 
 \subsection{Completed Empirical Scope}
 
-The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. For each dataset--model pair, the selected CARAT results contain all combinations of three displayed heterogeneity levels, five attacks, and five seeds, for $150$ CARAT runs in total. The defense baselines and clean Mean references also use five seeds.
+The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The $10\%$ comparison selects $150$ CARAT runs across the two datasets, three heterogeneity levels, five attacks, and five seeds; the baseline defenses and clean Mean references also use five seeds. Figure~\ref{fig:attacker-fraction} additionally uses the $10\%$, $20\%$, $30\%$, and $40\%$ CARAT runs for the same three heterogeneity levels and five attacks, totaling $600$ completed runs. Baseline defenses are not compared across these higher fractions.
 
 \subsection{Reported CIFAR Protocol}
 
@@ -24,7 +24,7 @@ Dataset and model & CIFAR-10 / VGG19; CIFAR-100 / ResNet18 & Complementary ten-c
 Client population & $20$ clients, full participation & Fixed participation in every round. \\
 Training schedule & SGD; $200$ rounds; $4$ local epochs; learning rate $0.05$; momentum $0.9$; weight decay $5\times10^{-4}$; batch size $64$ & Common optimization schedule for attacked runs. \\
 Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Rows displayed in the main figures. \\
-Malicious clients & $10\%$ & Two of the $20$ clients; this fraction is also supplied to CARAT as $\hat{\rho}$. \\
+Malicious clients & $10\%$ main comparison; $10\%$--$40\%$ CARAT-only sweep & Two to eight of the $20$ clients; each fraction is also supplied to CARAT as $\hat{\rho}$. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
 Compared methods & Clean reference: No Attack + Mean; attacked defenses: NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Curves in Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10}. \\
 Seeds and source policy & Five seeds for every reported result & All attacked defenses and clean references use seeds $42$--$46$. \\
@@ -53,7 +53,7 @@ Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the repor
 Reference pool & $512$ training-set examples & Pool from which hidden tasks are sampled; it is not disjoint from client partitions. \\
 Hidden-task evaluation & $8$ tasks, $4$ examples per class, batch size $128$ & Builds repeated class-balanced certificates; each task contains $40$ examples on CIFAR-10 and $400$ on CIFAR-100. \\
 Normalization and clipping & Probe-radius quantile $0.5$; MAD clipping factor $2.5$ & Places candidates on a common evaluation radius and limits residual norm influence. \\
-Feasible weight set & Attacker prior $\hat{\rho}=0.1$ & Caps per-client weight using the known experimental attacker fraction. \\
+Feasible weight set & Attacker prior $\hat{\rho}=0.1$ in the main comparison; $0.1$--$0.4$ in the CARAT-only sweep & Caps per-client weight using the specified experimental attacker fraction. \\
 Task and anomaly weighting & Temperature $\beta=12.0$; rank weight $0.20$; prior weight $0.05$ & Balances weakest-task utility, rank penalty, and temporal smoothness. \\
 Rank diagnostics & $4096$ sampled coordinates, $5$ rank subsamples & Estimates persistent coordinate-wise extremeness. \\
 Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capped-simplex weighting problem. \\
@@ -65,7 +65,7 @@ Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capp
 \subsection{Separate Component Study}
 \label{sec:appendix-component-study}
 
-We conduct a focused component study on CIFAR-100/ResNet18 with $20$ clients, $20\%$ malicious clients, and $\alpha=0.5$. This is a separate, higher-adversary stress test; the available archive does not contain a $10\%$ counterpart. Each variant uses the same five seeds as its within-study control. One task replaces $T=8$ with $T=1$; no clipping disables MAD clipping; no rank penalty sets its coefficient to zero; and no temporal prior removes the temporal regularizer. The study covers ALIE, FangAttack, MinMax, and MinSum and was executed independently from the main comparison.
+We conduct a focused component study on CIFAR-100/ResNet18 with $20$ clients, $20\%$ malicious clients, and $\alpha=0.5$. This is a separate, higher-adversary stress test; the component-study archive does not contain a $10\%$ counterpart. Each variant uses the same five seeds as its within-study control. One task replaces $T=8$ with $T=1$; no clipping disables MAD clipping; no rank penalty sets its coefficient to zero; and no temporal prior removes the temporal regularizer. The study covers ALIE, FangAttack, MinMax, and MinSum and was executed independently from the main comparison.
 
 \begin{table}[!htbp]
   \definecolor{caratrow}{gray}{0.88}
@@ -134,7 +134,7 @@ All $75$ selected CIFAR-100 runs record finite final-round cross-entropy. On CIF
 
 \subsection{Result Provenance and Integrity Checks}
 
-The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. The main paper selects $150$ runs: the $75$ CIFAR-10/VGG19 and $75$ CIFAR-100/ResNet18 runs with $\alpha\in\{1,0.5,0.1\}$, malicious ratio $0.1$, and the five displayed attacks. Every selected metric file contains all $200$ training rounds. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
+The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10} select $150$ runs at malicious ratio $0.1$; Figure~\ref{fig:attacker-fraction} selects $600$ runs at ratios $0.1$--$0.4$, with $\alpha\in\{1,0.5,0.1\}$ and the five displayed attacks. All selected metric files contain $200$ training rounds and completion markers. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
 
 The component study contains $100$ completed runs at malicious ratio $0.2$: five variants, four attacks, and five seeds, each with $200$ rounds. It was executed independently on the laboratory server and is reported as a higher-adversary stress test rather than as a ratio-matched ablation of the main comparison. Because concurrent jobs make wall-clock measurements sensitive to contention, these runs support the accuracy ablation in Table~\ref{tab:carat-ablation} but are not used for a runtime claim.
 

@@ -3,16 +3,16 @@
 
 We conduct experiments on CIFAR-100~\citep{krizhevsky2009learning} with ResNet18~\citep{he2016deep}. The class-rich label space provides a direct test of CARAT's class-balanced hidden tasks. We partition the training set among $20$ clients using a Dirichlet distribution with $\alpha\in\{1.0,0.5,0.1\}$, where smaller concentrations produce greater client heterogeneity. All clients participate in every round. Each run lasts $200$ communication rounds, and clients perform four local epochs of SGD per round with learning rate $0.05$, momentum $0.9$, weight decay $5\times10^{-4}$, and batch size $64$.
 
-We evaluate five untargeted model-poisoning attacks: ALIE~\citep{baruch2019alie}, FangAttack~\citep{fang2020local}, the MinMax and MinSum attacks~\citep{shejwalkar2021manipulating}, and Mimic~\citep{karimireddy2022bucketing}. The first four construct malicious updates to evade statistical or distance-based screening; Mimic instead copies the update of a fixed benign client to create a benign-looking aggregation bias. Malicious clients constitute $20\%$ of the federation, corresponding to four of the $20$ participants. We compare CARAT against unprotected Mean aggregation, NormClipping, MultiKrum~\citep{blanchard2017krum}, FLTrust~\citep{cao2021fltrust}, and FLDetector~\citep{zhang2022fldetector}.
+We evaluate five untargeted model-poisoning attacks: ALIE~\citep{baruch2019alie}, FangAttack~\citep{fang2020local}, the MinMax and MinSum attacks~\citep{shejwalkar2021manipulating}, and Mimic~\citep{karimireddy2022bucketing}. The first four construct malicious updates to evade statistical or distance-based screening; Mimic instead copies the update of a fixed benign client to create a benign-looking aggregation bias. Malicious clients constitute $10\%$ of the federation, corresponding to two of the $20$ participants. We compare CARAT against unprotected Mean aggregation, NormClipping, MultiKrum~\citep{blanchard2017krum}, FLTrust~\citep{cao2021fltrust}, and FLDetector~\citep{zhang2022fldetector}.
 
-CARAT uses eight hidden tasks, four probe examples per class and task, a $512$-example probe pool, and a probe batch size of $128$. We set the probe-radius quantile to $0.5$, the MAD clipping factor to $2.5$, the certificate temperature to $12$, the rank and temporal-prior weights to $0.20$ and $0.05$, and the attacker-fraction prior to the true experimental value $\hat{\rho}=0.2$. Appendix~\ref{sec:appendix-experiments} provides the complete configuration and result provenance.
+CARAT uses eight hidden tasks, four probe examples per class and task, a $512$-example probe pool, and a probe batch size of $128$. We set the probe-radius quantile to $0.5$, the MAD clipping factor to $2.5$, the certificate temperature to $12$, the rank and temporal-prior weights to $0.20$ and $0.05$, and the attacker-fraction prior to the true experimental value $\hat{\rho}=0.1$. Appendix~\ref{sec:appendix-experiments} provides the complete configuration and result provenance.
 
 All reported cells use five independent runs with seeds $42$--$46$. Table~\ref{tab:cifar100-main-acc} reports final-round accuracy as mean and sample standard deviation. The available archive does not contain Mimic runs for unprotected Mean, so that cell is marked unavailable rather than inferred. To keep the ranking comparable across all six methods, average rank is therefore computed over ALIE, FangAttack, MinMax, and MinSum only. CARAT and FLTrust also use different server-reference budgets: CARAT draws a $512$-example pool and FLTrust uses $100$ examples. In both cases, these examples come from the same public training set used to form client partitions and are not removed from client data. We interpret their rows as the performance of the recorded method--reference configurations, not as an isolated comparison of aggregation rules.
 
 \begin{table}[H]
   \definecolor{caratrow}{gray}{0.88}
   \renewcommand{\arraystretch}{1.03}
-  \caption{Final test accuracy (\%) under five model-poisoning attacks with $20\%$ malicious clients on CIFAR-100/ResNet18. Values are mean$\pm$sample standard deviation over five seeds at round 200; higher is better. Average rank is computed over the four conventional attacks because the Mimic--Mean cell is unavailable. Bold values are the highest recorded attack means.}
+  \caption{Final test accuracy (\%) under five model-poisoning attacks with $10\%$ malicious clients on CIFAR-100/ResNet18. Values are mean$\pm$sample standard deviation over five seeds at round 200; higher is better. Average rank is computed over the four conventional attacks because the Mimic--Mean cell is unavailable. Bold values are the highest recorded attack means.}
   \label{tab:cifar100-main-acc}
   \setlength{\tabcolsep}{3.4pt}
   \centering\small
@@ -29,30 +29,30 @@ All reported cells use five independent runs with seeds $42$--$46$. Table~\ref{t
   \midrule
   \multirow{6}{*}{\makecell[c]{CIFAR-100\\ResNet18}}
   & \multirow{6}{*}{$\alpha=1.0$}
-  & Mean & \textbf{49.43$\pm$0.39} & \textbf{48.86$\pm$0.70} & 50.49$\pm$0.59 & \textbf{50.50$\pm$0.49} & -- & \textbf{1.25} \\
-  & & NormClipping & 25.27$\pm$0.70 & 22.67$\pm$0.77 & 24.86$\pm$0.65 & 24.74$\pm$0.63 & 26.30$\pm$0.78 & 6.00 \\
-  & & MultiKrum & 39.59$\pm$0.74 & 37.18$\pm$0.83 & 48.69$\pm$0.84 & 47.71$\pm$1.12 & 15.26$\pm$1.52 & 3.75 \\
-  & & FLTrust & 33.26$\pm$0.63 & 33.81$\pm$0.99 & 33.61$\pm$0.86 & 33.85$\pm$0.78 & 32.22$\pm$0.52 & 4.75 \\
-  & & FLDetector & 47.96$\pm$0.58 & 28.54$\pm$4.42 & \textbf{50.58$\pm$0.76} & 50.47$\pm$0.27 & \textbf{48.38$\pm$0.70} & 2.75 \\
-  & & \cellcolor{caratrow}\textbf{CARAT ($T=8$)} & \cellcolor{caratrow}48.38$\pm$0.92 & \cellcolor{caratrow}48.75$\pm$0.73 & \cellcolor{caratrow}49.59$\pm$0.38 & \cellcolor{caratrow}49.53$\pm$0.63 & \cellcolor{caratrow}47.24$\pm$0.29 & \cellcolor{caratrow}2.50 \\
+  & Mean & 51.43$\pm$0.56 & \textbf{51.00$\pm$0.21} & 51.30$\pm$0.31 & 51.51$\pm$0.58 & -- & \textbf{2.00} \\
+  & & NormClipping & 25.89$\pm$0.50 & 24.29$\pm$0.71 & 25.36$\pm$0.40 & 25.14$\pm$0.60 & 27.35$\pm$0.64 & 6.00 \\
+  & & MultiKrum & 43.72$\pm$0.52 & 37.55$\pm$1.27 & 37.40$\pm$0.64 & 37.71$\pm$1.19 & 32.79$\pm$2.49 & 3.75 \\
+  & & FLTrust & 33.80$\pm$0.60 & 33.93$\pm$0.65 & 34.08$\pm$0.58 & 34.13$\pm$0.50 & 33.70$\pm$0.52 & 4.75 \\
+  & & FLDetector & \textbf{51.85$\pm$0.65} & 31.55$\pm$0.57 & \textbf{51.70$\pm$0.56} & \textbf{51.68$\pm$0.58} & \textbf{51.73$\pm$0.60} & \textbf{2.00} \\
+  & & \cellcolor{caratrow}\textbf{CARAT ($T=8$)} & \cellcolor{caratrow}51.40$\pm$0.84 & \cellcolor{caratrow}50.97$\pm$0.51 & \cellcolor{caratrow}51.52$\pm$0.69 & \cellcolor{caratrow}51.34$\pm$0.76 & \cellcolor{caratrow}51.27$\pm$0.34 & \cellcolor{caratrow}2.50 \\
   \cmidrule(lr){1-9}
   \multirow{6}{*}{\makecell[c]{CIFAR-100\\ResNet18}}
   & \multirow{6}{*}{$\alpha=0.5$}
-  & Mean & \textbf{47.62$\pm$0.73} & \textbf{47.53$\pm$1.01} & \textbf{48.88$\pm$0.32} & 48.88$\pm$0.52 & -- & \textbf{1.25} \\
-  & & NormClipping & 23.73$\pm$0.53 & 20.64$\pm$1.41 & 23.28$\pm$0.40 & 22.92$\pm$0.50 & 25.01$\pm$0.84 & 6.00 \\
-  & & MultiKrum & 37.00$\pm$0.81 & 33.05$\pm$1.20 & 46.59$\pm$1.09 & 46.45$\pm$0.80 & 12.37$\pm$1.03 & 3.75 \\
-  & & FLTrust & 31.72$\pm$0.51 & 32.20$\pm$0.47 & 32.21$\pm$0.68 & 32.08$\pm$0.46 & 30.35$\pm$0.73 & 4.75 \\
-  & & FLDetector & 45.30$\pm$0.75 & 27.77$\pm$1.25 & 48.85$\pm$0.53 & \textbf{49.01$\pm$0.69} & \textbf{47.04$\pm$0.92} & 2.75 \\
-  & & \cellcolor{caratrow}\textbf{CARAT ($T=8$)} & \cellcolor{caratrow}46.40$\pm$0.90 & \cellcolor{caratrow}47.12$\pm$0.52 & \cellcolor{caratrow}48.31$\pm$0.80 & \cellcolor{caratrow}48.39$\pm$1.02 & \cellcolor{caratrow}44.81$\pm$0.68 & \cellcolor{caratrow}2.50 \\
+  & Mean & \textbf{50.45$\pm$0.86} & 49.65$\pm$0.42 & \textbf{50.57$\pm$0.69} & 50.30$\pm$0.81 & -- & \textbf{1.50} \\
+  & & NormClipping & 24.68$\pm$0.71 & 23.26$\pm$0.26 & 24.08$\pm$0.35 & 24.12$\pm$0.58 & 26.25$\pm$0.72 & 6.00 \\
+  & & MultiKrum & 40.40$\pm$1.28 & 33.47$\pm$2.35 & 33.36$\pm$1.81 & 33.74$\pm$1.80 & 29.20$\pm$1.14 & 3.75 \\
+  & & FLTrust & 32.62$\pm$0.71 & 32.66$\pm$0.72 & 32.79$\pm$0.59 & 32.84$\pm$0.79 & 32.28$\pm$0.71 & 4.75 \\
+  & & FLDetector & 50.44$\pm$0.80 & 29.74$\pm$1.98 & 50.37$\pm$0.59 & \textbf{50.50$\pm$0.95} & \textbf{50.83$\pm$0.94} & 2.50 \\
+  & & \cellcolor{caratrow}\textbf{CARAT ($T=8$)} & \cellcolor{caratrow}50.09$\pm$1.00 & \cellcolor{caratrow}\textbf{49.70$\pm$0.60} & \cellcolor{caratrow}50.05$\pm$0.46 & \cellcolor{caratrow}49.96$\pm$0.60 & \cellcolor{caratrow}49.91$\pm$0.68 & \cellcolor{caratrow}2.50 \\
   \cmidrule(lr){1-9}
   \multirow{6}{*}{\makecell[c]{CIFAR-100\\ResNet18}}
   & \multirow{6}{*}{$\alpha=0.1$}
-  & Mean & \textbf{40.74$\pm$0.60} & 21.00$\pm$9.69 & 42.82$\pm$0.52 & 42.73$\pm$0.36 & -- & \textbf{2.00} \\
-  & & NormClipping & 19.92$\pm$1.03 & 13.47$\pm$0.71 & 19.01$\pm$0.90 & 18.60$\pm$0.95 & 19.79$\pm$0.93 & 5.50 \\
-  & & MultiKrum & 27.39$\pm$0.87 & 23.10$\pm$1.07 & 35.81$\pm$2.03 & 34.16$\pm$1.69 & 6.70$\pm$0.96 & 3.25 \\
-  & & FLTrust & 26.88$\pm$0.72 & \textbf{27.56$\pm$0.76} & 27.53$\pm$0.54 & 27.37$\pm$0.58 & 24.24$\pm$0.78 & 4.00 \\
-  & & FLDetector & 38.02$\pm$0.78 & 6.86$\pm$6.54 & \textbf{43.01$\pm$0.33} & \textbf{42.76$\pm$0.92} & \textbf{39.80$\pm$0.38} & 2.75 \\
-  & & \cellcolor{caratrow}\textbf{CARAT ($T=8$)} & \cellcolor{caratrow}39.43$\pm$0.47 & \cellcolor{caratrow}9.51$\pm$19.02 & \cellcolor{caratrow}42.14$\pm$0.44 & \cellcolor{caratrow}33.79$\pm$18.34 & \cellcolor{caratrow}38.00$\pm$0.72 & \cellcolor{caratrow}3.50 \\
+  & Mean & \textbf{44.62$\pm$0.73} & \textbf{43.92$\pm$0.47} & 44.56$\pm$0.45 & 44.32$\pm$0.42 & -- & \textbf{2.00} \\
+  & & NormClipping & 20.57$\pm$0.95 & 19.55$\pm$0.90 & 19.94$\pm$0.86 & 19.80$\pm$0.90 & 22.18$\pm$0.87 & 6.00 \\
+  & & MultiKrum & 31.22$\pm$1.07 & 23.18$\pm$1.76 & 23.06$\pm$1.67 & 23.38$\pm$1.95 & 19.74$\pm$1.43 & 4.75 \\
+  & & FLTrust & 28.66$\pm$0.78 & 28.60$\pm$0.71 & 28.61$\pm$0.62 & 28.47$\pm$1.05 & 27.62$\pm$0.59 & 4.00 \\
+  & & FLDetector & 44.36$\pm$0.59 & 27.71$\pm$4.63 & 44.61$\pm$0.59 & \textbf{44.75$\pm$0.56} & \textbf{44.78$\pm$0.18} & 2.25 \\
+  & & \cellcolor{caratrow}\textbf{CARAT ($T=8$)} & \cellcolor{caratrow}44.07$\pm$0.85 & \cellcolor{caratrow}43.09$\pm$0.79 & \cellcolor{caratrow}\textbf{44.80$\pm$0.85} & \cellcolor{caratrow}44.59$\pm$0.99 & \cellcolor{caratrow}43.70$\pm$0.91 & \cellcolor{caratrow}\textbf{2.00} \\
   \bottomrule
   \end{tabular}}
 \end{table}
@@ -61,18 +61,18 @@ All reported cells use five independent runs with seeds $42$--$46$. Table~\ref{t
 \subsection{Experimental Results}
 
 \subsubsection{Mitigating Conventional Model-Poisoning Attacks}
-For $\alpha\in\{1.0,0.5\}$, CARAT ranks second under ALIE and FangAttack and third under MinMax and MinSum, yielding an average rank of $2.50$. Its mean accuracy is within $0.11$--$1.22$ percentage points of the strongest row in each of these eight cells. CARAT also avoids FLDetector's sharp FangAttack degradation and exceeds MultiKrum and FLTrust throughout these two heterogeneity settings. Nevertheless, unprotected Mean has the best four-attack average rank, so the results do not show that CARAT improves on averaging when averaging itself remains stable.
+For $\alpha\in\{1.0,0.5\}$, CARAT has an average rank of $2.50$ under the four conventional attacks. It leads under FangAttack at $\alpha=0.5$ and lies within $0.03$--$0.54$ percentage points of the strongest row in the other seven cells. CARAT also avoids FLDetector's sharp FangAttack degradation and exceeds MultiKrum and FLTrust throughout these two heterogeneity settings. Nevertheless, unprotected Mean has the best average rank at $\alpha=0.5$ and ties FLDetector for the best rank at $\alpha=1.0$, so these results do not establish a uniform improvement over averaging.
 
-The most heterogeneous setting changes this conclusion. At $\alpha=0.1$, CARAT remains competitive under ALIE ($39.43\%$) and MinMax ($42.14\%$), but its FangAttack mean falls to $9.51\%$ with a $19.02$-point standard deviation because four of five seeds finish at chance-level $1\%$ accuracy. Under MinSum, one seed similarly finishes at $1\%$, producing $33.79\pm18.34\%$. CARAT's four-attack average rank consequently worsens to $3.50$, while the best methods reach $27.56\%$ under FangAttack and $42.76\%$ under MinSum. This high seed sensitivity is a substantive failure mode rather than evidence of uniform robustness.
+At $\alpha=0.1$, CARAT leads MinMax at $44.80\%$, ranks second under FangAttack and MinSum, and reaches an average rank of $2.00$, tied with Mean. Its attack means are within $0.16$--$0.83$ percentage points of the strongest recorded values, with seed-level standard deviations below one percentage point in all four cells. The lower attacker fraction therefore removes the chance-level collapses observed in the archived $20\%$ CARAT runs. This is evidence of stability for the evaluated $10\%$ threat level, not evidence that the same behavior persists as the malicious population grows.
 
 \subsubsection{Robustness to Mimic}
-Mimic stresses defenses with repeated benign-looking updates rather than an independently optimized outlier. CARAT reaches $47.24\%$, $44.81\%$, and $38.00\%$ as $\alpha$ decreases from $1.0$ to $0.1$. It ranks second among defenses with recorded Mimic runs in all three settings, trailing FLDetector by $1.14$, $2.23$, and $1.80$ percentage points, respectively, while remaining above NormClipping, MultiKrum, and FLTrust. These results indicate that hidden-task validation retains useful signal against copied benign updates, but FLDetector is consistently stronger in this test.
+Mimic stresses defenses with repeated benign-looking updates rather than an independently optimized outlier. CARAT reaches $51.27\%$, $49.91\%$, and $43.70\%$ as $\alpha$ decreases from $1.0$ to $0.1$. It ranks second among defenses with recorded Mimic runs in all three settings, trailing FLDetector by $0.46$, $0.92$, and $1.08$ percentage points, respectively, while remaining above NormClipping, MultiKrum, and FLTrust. These results indicate that hidden-task validation retains useful signal against copied benign updates, but FLDetector is consistently stronger in this test.
 
 \subsubsection{Impact of Client Heterogeneity}
-Averaged across all five attacks, CARAT obtains $48.70\%$, $47.01\%$, and $32.57\%$ for $\alpha=1.0$, $0.5$, and $0.1$, respectively. The modest $1.69$-point decline from $\alpha=1.0$ to $0.5$ becomes a $14.43$-point decline from $0.5$ to $0.1$. Most of this degradation comes from the unstable FangAttack and MinSum runs rather than a uniform decline across attacks. Thus, the expanded evaluation identifies $\alpha=0.1$ as an important robustness boundary for the current CARAT configuration.
+Averaged across all five attacks, CARAT obtains $51.30\%$, $49.94\%$, and $44.05\%$ for $\alpha=1.0$, $0.5$, and $0.1$, respectively. The $1.36$-point decline from $\alpha=1.0$ to $0.5$ grows to $5.89$ points from $0.5$ to $0.1$, but the decline is consistent across attacks rather than driven by isolated seed collapses. Client heterogeneity therefore remains an important source of degradation even when the malicious-client fraction is $10\%$.
 
 \subsubsection{Component Contributions}
-We conduct a focused component study on CIFAR-100/ResNet18 with $20$ clients, $20\%$ malicious clients, and $\alpha=0.5$. Each variant uses the same five seeds as its within-study control. One task replaces $T=8$ with $T=1$; no clipping disables MAD clipping; no rank penalty sets its coefficient to zero; and no temporal prior removes the temporal regularizer. The ablation covers ALIE, FangAttack, MinMax, and MinSum and was executed independently from the main comparison, so the full CARAT row in Table~\ref{tab:carat-ablation} is the relevant control.
+We conduct a focused component study on CIFAR-100/ResNet18 with $20$ clients, $20\%$ malicious clients, and $\alpha=0.5$. This is a separate, higher-adversary stress test; the available ablation archive does not contain a $10\%$ counterpart. Each variant uses the same five seeds as its within-study control. One task replaces $T=8$ with $T=1$; no clipping disables MAD clipping; no rank penalty sets its coefficient to zero; and no temporal prior removes the temporal regularizer. The ablation covers ALIE, FangAttack, MinMax, and MinSum and was executed independently from the main comparison, so the full CARAT row in Table~\ref{tab:carat-ablation} is the relevant control.
 
 \begin{table}[!htbp]
   \definecolor{caratrow}{gray}{0.88}
@@ -107,6 +107,6 @@ Figure~\ref{fig:verification-curves} reports a separate, earlier CIFAR-100/i.i.d
 \end{figure*}
 
 \subsubsection{Scope of the Evidence}
-The experiments cover one dataset--model pair, $20$ fully participating clients, three non-i.i.d.\ concentrations, a known attacker fraction used by CARAT's weight cap, and five untargeted attacks. They do not cover partial participation, larger federations, backdoor or data-poisoning attacks, misspecified attacker fractions, or adaptive attackers that infer the hidden tasks. The missing Mimic--Mean cell, overlap between server-reference and client-training examples, and unequal CARAT/FLTrust reference budgets further limit comparison. Together with the strong Mean results on the four conventional attacks, the failures at $\alpha=0.1$, and the small ablation gaps, these boundaries restrict the empirical claim to conditional competitiveness rather than universal robustness.
+The main experiments cover one dataset--model pair, $20$ fully participating clients, a $10\%$ malicious-client ratio, three non-i.i.d.\ concentrations, a known attacker fraction used by CARAT's weight cap, and five untargeted attacks. They do not cover partial participation, larger federations, backdoor or data-poisoning attacks, misspecified attacker fractions, or adaptive attackers that infer the hidden tasks. The missing Mimic--Mean cell, overlap between server-reference and client-training examples, unequal CARAT/FLTrust reference budgets, and the lack of a $10\%$ counterpart to the component study further limit comparison. Together with the strong Mean results on the four conventional attacks and the small ablation gaps, these boundaries restrict the empirical claim to the evaluated threat level rather than universal robustness.
 
 \FloatBarrier

@@ -5,13 +5,13 @@ This appendix records the exact scope, CARAT configuration, loss convention, and
 
 \subsection{Completed Empirical Scope}
 
-The completed comparison covers CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The CARAT sweep contains all combinations of three displayed heterogeneity levels, five attacks, and five seeds. Compatible baseline values also use five seeds; the available archive does not contain the Mimic--Mean cell, which is left unreported.
+The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports Mean, NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. For each dataset--model pair, the selected CARAT results contain all combinations of three displayed heterogeneity levels, five attacks, and five seeds, for $150$ CARAT runs in total. Compatible baseline values also use five seeds; the available archive does not contain the Mimic--Mean cells, which are left unreported.
 
-\subsection{Reported CIFAR-100 Protocol}
+\subsection{Reported CIFAR Protocol}
 
 \begin{table*}[!htbp]
 \centering
-\caption{Detailed protocol for the reported CIFAR-100/ResNet18 result set.}
+\caption{Detailed protocol for the reported CIFAR-10/VGG19 and CIFAR-100/ResNet18 result sets.}
 \label{tab:reported-protocol}
 \renewcommand{\arraystretch}{1.08}
 \small
@@ -20,14 +20,14 @@ The completed comparison covers CIFAR-100/ResNet18 with $20$ fully participating
 \toprule
 \textbf{Component} & \textbf{Setting} & \textbf{Role or qualification} \\
 \midrule
-Dataset and model & CIFAR-100 / ResNet18 & Primary class-rich benchmark. \\
+Dataset and model & CIFAR-10 / VGG19; CIFAR-100 / ResNet18 & Complementary ten-class and class-rich benchmarks. \\
 Client population & $20$ clients, full participation & Fixed participation in every round. \\
 Training schedule & $200$ rounds, $4$ local epochs, learning rate $0.05$ & Common optimization schedule for attacked runs. \\
 Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Settings displayed in the main table. \\
 Malicious clients & $10\%$ & Two of the $20$ clients; this fraction is also supplied to CARAT as $\hat{\rho}$. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
-Compared defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Methods in Table~\ref{tab:cifar100-main-acc}. \\
-Seeds and source policy & Five seeds for every reported attack cell & CARAT and baseline rows use seeds $42$--$46$; Mimic--Mean is unavailable. \\
+Compared defenses & Mean, NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Methods in Table~\ref{tab:cifar-main-acc}. \\
+Seeds and source policy & Five seeds for every reported attack cell & CARAT and baseline rows use seeds $42$--$46$; Mimic--Mean is unavailable for both datasets. \\
 Server examples & CARAT pool: $512$; FLTrust: $100$ & Budgets are unequal; examples are sampled from the training set and not excluded from client partitions. \\
 Reported statistic & Final-round accuracy, mean $\pm$ sample standard deviation & Average rank uses the four attacks shared by all six methods. \\
 \bottomrule
@@ -41,7 +41,7 @@ Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the repor
 
 \begin{table*}[!htbp]
 \centering
-\caption{CARAT hyperparameters used in the reported CIFAR-100/ResNet18 runs.}
+\caption{CARAT hyperparameters used in the reported CIFAR-10/VGG19 and CIFAR-100/ResNet18 runs.}
 \label{tab:carat-hyperparameters}
 \renewcommand{\arraystretch}{1.08}
 \small
@@ -51,7 +51,7 @@ Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the repor
 \textbf{Component} & \textbf{Default value} & \textbf{Purpose} \\
 \midrule
 Reference pool & $512$ training-set examples & Pool from which hidden tasks are sampled; it is not disjoint from client partitions. \\
-Hidden-task evaluation & $8$ tasks, $4$ examples per class, batch size $128$ & Builds repeated class-balanced certificates; each CIFAR-100 task contains $400$ examples. \\
+Hidden-task evaluation & $8$ tasks, $4$ examples per class, batch size $128$ & Builds repeated class-balanced certificates; each task contains $40$ examples on CIFAR-10 and $400$ on CIFAR-100. \\
 Normalization and clipping & Probe-radius quantile $0.5$; MAD clipping factor $2.5$ & Places candidates on a common evaluation radius and limits residual norm influence. \\
 Feasible weight set & Attacker prior $\hat{\rho}=0.1$ & Caps per-client weight using the known experimental attacker fraction. \\
 Task and anomaly weighting & Temperature $\beta=12.0$; rank weight $0.20$; prior weight $0.05$ & Balances weakest-task utility, rank penalty, and temporal smoothness. \\
@@ -64,32 +64,36 @@ Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capp
 
 \subsection{CARAT Final-Loss Results}
 
-The new exporter records evaluation loss as the raw mean cross-entropy. Earlier baseline logs stored cross-entropy with an additional batch-size normalization, so their numerical loss values are not comparable. We therefore avoid a cross-defense loss ranking and report only the internally consistent five-seed CARAT values in Table~\ref{tab:carat-main-loss}. Accuracy in Table~\ref{tab:cifar100-main-acc} remains the cross-defense metric.
+The new exporter records evaluation loss as the raw mean cross-entropy. Earlier baseline logs stored cross-entropy with an additional batch-size normalization, so their numerical loss values are not comparable. We therefore avoid a cross-defense loss ranking and report only the internally consistent five-seed CARAT values in Table~\ref{tab:carat-main-loss}. Accuracy in Table~\ref{tab:cifar-main-acc} remains the cross-defense metric.
 
 \begin{table}[!htbp]
 \centering
-\caption{Five-seed CARAT final-round raw mean cross-entropy on CIFAR-100/ResNet18 with $10\%$ malicious clients. Lower is better.}
+\caption{Five-seed CARAT final-round raw mean cross-entropy with $10\%$ malicious clients. Lower is better. A dash marks a cell containing at least one non-finite seed loss.}
 \label{tab:carat-main-loss}
 \renewcommand{\arraystretch}{1.08}
 \small
 \setlength{\tabcolsep}{4pt}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{cccccc}
+\begin{tabular}{ccccccc}
 \toprule
-\textbf{Dirichlet $\alpha$} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \textbf{Mimic} \\
+\textbf{Dataset / Model} & \textbf{Dirichlet $\alpha$} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \textbf{Mimic} \\
 \midrule
-$1.0$ & $1.7628 \pm 0.0270$ & $1.7942 \pm 0.0236$ & $1.7572 \pm 0.0323$ & $1.7656 \pm 0.0235$ & $1.7775 \pm 0.0199$ \\
-$0.5$ & $1.8212 \pm 0.0350$ & $1.8400 \pm 0.0308$ & $1.8259 \pm 0.0221$ & $1.8241 \pm 0.0209$ & $1.8252 \pm 0.0327$ \\
-$0.1$ & $2.0843 \pm 0.0381$ & $2.1249 \pm 0.0353$ & $2.0553 \pm 0.0337$ & $2.0643 \pm 0.0415$ & $2.0896 \pm 0.0278$ \\
+\multirow{3}{*}{CIFAR-100 / ResNet18} & $1.0$ & $1.7628 \pm 0.0270$ & $1.7942 \pm 0.0236$ & $1.7572 \pm 0.0323$ & $1.7656 \pm 0.0235$ & $1.7775 \pm 0.0199$ \\
+& $0.5$ & $1.8212 \pm 0.0350$ & $1.8400 \pm 0.0308$ & $1.8259 \pm 0.0221$ & $1.8241 \pm 0.0209$ & $1.8252 \pm 0.0327$ \\
+& $0.1$ & $2.0843 \pm 0.0381$ & $2.1249 \pm 0.0353$ & $2.0553 \pm 0.0337$ & $2.0643 \pm 0.0415$ & $2.0896 \pm 0.0278$ \\
+\midrule
+\multirow{3}{*}{CIFAR-10 / VGG19} & $1.0$ & $0.6002 \pm 0.0043$ & $0.6139 \pm 0.0105$ & $0.5741 \pm 0.0150$ & $0.5773 \pm 0.0137$ & $0.6009 \pm 0.0106$ \\
+& $0.5$ & $0.6741 \pm 0.0133$ & $0.6960 \pm 0.0088$ & $0.6621 \pm 0.0187$ & -- & $0.6658 \pm 0.0209$ \\
+& $0.1$ & $1.2320 \pm 0.1048$ & $1.2611 \pm 0.1128$ & -- & -- & $1.2582 \pm 0.0987$ \\
 \bottomrule
 \end{tabular}}
 \end{table}
 
-All $75$ selected CARAT runs record finite final-round cross-entropy, so every displayed loss cell uses the same five-seed estimator as the accuracy table.
+All $75$ selected CIFAR-100 runs record finite final-round cross-entropy. On CIFAR-10, the $\alpha=0.5$ MinSum cell and the $\alpha=0.1$ MinMax and MinSum cells each contain one non-finite loss paired with a chance-level $10\%$ accuracy. We mark these cells unavailable rather than report a finite-only mean.
 
 \subsection{Result Provenance and Integrity Checks}
 
-The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. The main paper selects the $75$ CIFAR-100/ResNet18 runs with $\alpha\in\{1,0.5,0.1\}$, malicious ratio $0.1$, and the five displayed attacks. Every selected metric file contains all $200$ training rounds. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
+The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. The main paper selects $150$ runs: the $75$ CIFAR-10/VGG19 and $75$ CIFAR-100/ResNet18 runs with $\alpha\in\{1,0.5,0.1\}$, malicious ratio $0.1$, and the five displayed attacks. Every selected metric file contains all $200$ training rounds. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
 
 The component study contains $100$ completed runs at malicious ratio $0.2$: five variants, four attacks, and five seeds, each with $200$ rounds. It was executed independently on the laboratory server and is reported as a higher-adversary stress test rather than as a ratio-matched ablation of the main table. Because concurrent jobs make wall-clock measurements sensitive to contention, these runs support the accuracy ablation in Table~\ref{tab:carat-ablation} but are not used for a runtime claim.
 

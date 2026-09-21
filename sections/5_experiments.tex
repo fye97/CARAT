@@ -83,14 +83,14 @@ All reported results use five independent runs with seeds $42$--$46$. Table~\ref
 \begin{figure*}[!t]
   \centering
   \safeincludegraphics[width=\textwidth]{figures/carat_table1_curves_cifar100.pdf}
-  \caption{Round-wise test accuracy on CIFAR-100/ResNet18 for the experiments summarized in Table~\ref{tab:cifar-main-acc}. Rows correspond to the three Dirichlet concentrations and columns to the five attacks. Each curve is the mean over seeds $42$--$46$ from communication rounds 1--200; shaded bands show one sample standard deviation. The NoAttack + Mean curve is the shared clean reference.}
+  \caption{Round-wise test accuracy on CIFAR-100/ResNet18 for Table~\ref{tab:cifar-main-acc}. Rows denote Dirichlet concentrations and columns denote attacks. Curves and bands show the mean and sample standard deviation over seeds $42$--$46$; NoAttack + Mean is the shared clean reference.}
   \label{fig:table1-curves-cifar100}
 \end{figure*}
 
 \begin{figure*}[!t]
   \centering
   \safeincludegraphics[width=\textwidth]{figures/carat_table1_curves_cifar10.pdf}
-  \caption{Round-wise test accuracy on CIFAR-10/VGG19 for the experiments summarized in Table~\ref{tab:cifar-main-acc}. The layout and uncertainty bands follow Figure~\ref{fig:table1-curves-cifar100}. The wide CARAT bands under MinSum at $\alpha=0.5$ and under MinMax and MinSum at $\alpha=0.1$ expose the seed-level failures that are compressed into the corresponding final-round entries of Table~\ref{tab:cifar-main-acc}.}
+  \caption{Round-wise test accuracy on CIFAR-10/VGG19 for Table~\ref{tab:cifar-main-acc}, using the layout and uncertainty convention of Figure~\ref{fig:table1-curves-cifar100}.}
   \label{fig:table1-curves-cifar10}
 \end{figure*}
 

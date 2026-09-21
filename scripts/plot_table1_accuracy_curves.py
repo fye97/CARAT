@@ -34,30 +34,20 @@ ROUNDS = 200
 class DatasetSpec:
     path_name: str
     display_name: str
-    y_max: float
-    y_ticks: tuple[int, ...]
 
 
 DATASETS = (
-    DatasetSpec("CIFAR100_resnet18", "CIFAR-100 / ResNet18", 60.0, (0, 10, 20, 30, 40, 50, 60)),
-    DatasetSpec("CIFAR10_vgg19", "CIFAR-10 / VGG19", 90.0, (0, 15, 30, 45, 60, 75, 90)),
+    DatasetSpec("CIFAR100_resnet18", "CIFAR-100 / ResNet18"),
+    DatasetSpec("CIFAR10_vgg19", "CIFAR-10 / VGG19"),
 )
 
 METHOD_STYLE = {
-    "NoAttack + Mean": dict(color="#202020", linestyle=(0, (6, 3)), linewidth=1.45, zorder=3),
-    "NormClipping": dict(color="#F28E2B", linestyle="--", linewidth=1.25, zorder=4),
-    "MultiKrum": dict(color="#59A14F", linestyle=":", linewidth=1.45, zorder=4),
-    "FLTrust": dict(color="#E15759", linestyle="-.", linewidth=1.25, zorder=4),
-    "FLDetector": dict(color="#B07AA1", linestyle=(0, (1, 1.5)), linewidth=1.45, zorder=4),
-    "CARAT": dict(color="#1F77B4", linestyle="-", linewidth=1.75, zorder=6),
-}
-
-ATTACK_COLOR = {
-    "ALIE": "#4C78A8",
-    "FangAttack": "#F58518",
-    "MinMax": "#E45756",
-    "MinSum": "#54A24B",
-    "Mimic": "#B279A2",
+    "NoAttack + Mean": dict(color="#202020", linestyle=(0, (6, 3)), linewidth=0.95, zorder=3),
+    "NormClipping": dict(color="#F28E2B", linestyle="--", linewidth=0.85, zorder=4),
+    "MultiKrum": dict(color="#59A14F", linestyle=":", linewidth=0.95, zorder=4),
+    "FLTrust": dict(color="#E15759", linestyle="-.", linewidth=0.85, zorder=4),
+    "FLDetector": dict(color="#B07AA1", linestyle=(0, (1, 1.5)), linewidth=0.95, zorder=4),
+    "CARAT": dict(color="#1F77B4", linestyle="-", linewidth=1.20, zorder=6),
 }
 
 TEXT_LINE = re.compile(
@@ -212,39 +202,49 @@ def load_runs(
     return result
 
 
+def adaptive_y_max(maximum_mean: float, upper_band_values: list[float]) -> float:
+    """Choose a compact row-wise upper limit without letting one band dominate."""
+    upper_percentile = float(np.percentile(upper_band_values, 99))
+    target = max(maximum_mean + 3.0, min(upper_percentile + 1.0, maximum_mean + 10.0))
+    return min(100.0, 5.0 * np.ceil(target / 5.0))
+
+
 def draw_dataset(
     args: argparse.Namespace, dataset: DatasetSpec
 ) -> tuple[Path, list[dict[str, str | float | int]]]:
     plt.rcParams.update(
         {
             "font.family": "sans-serif",
-            "font.size": 8.6,
-            "axes.titlesize": 10.2,
-            "axes.labelsize": 9.0,
-            "xtick.labelsize": 7.8,
-            "ytick.labelsize": 7.8,
-            "legend.fontsize": 8.3,
+            "font.size": 7.0,
+            "axes.titlesize": 7.8,
+            "axes.labelsize": 7.0,
+            "xtick.labelsize": 6.2,
+            "ytick.labelsize": 6.2,
+            "legend.fontsize": 6.5,
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
         }
     )
-    fig, axes = plt.subplots(3, 5, figsize=(15.8, 10.2), sharex=True, sharey=True)
+    # Generate at approximately the paper's final display width so that font
+    # sizes are not reduced a second time by LaTeX.
+    fig, axes = plt.subplots(3, 5, figsize=(7.2, 3.75), sharex=True, sharey="row")
     rounds = np.arange(1, ROUNDS + 1)
     audit_rows: list[dict[str, str | float | int]] = []
     handles_by_method = {}
 
     for row_index, (alpha_token, alpha_display) in enumerate(ALPHAS):
+        row_maximum_mean = 0.0
+        row_upper_band_values: list[float] = []
         clean_runs = load_runs(
             args, dataset.path_name, "NoAttack", "NoAttack + Mean", alpha_token
         )
         for column_index, attack in enumerate(ATTACKS):
             axis = axes[row_index, column_index]
-            accent = ATTACK_COLOR[attack]
-            axis.set_facecolor((*plt.matplotlib.colors.to_rgb(accent), 0.045))
+            axis.set_facecolor("white")
             for spine in axis.spines.values():
-                spine.set_color(accent)
-                spine.set_alpha(0.42)
-                spine.set_linewidth(0.9)
+                spine.set_color("#777777")
+                spine.set_alpha(0.65)
+                spine.set_linewidth(0.55)
 
             for method in ("NoAttack + Mean", *DEFENSES):
                 runs = clean_runs if method == "NoAttack + Mean" else load_runs(
@@ -252,6 +252,8 @@ def draw_dataset(
                 )
                 mean = runs.mean(axis=0)
                 std = runs.std(axis=0, ddof=1)
+                row_maximum_mean = max(row_maximum_mean, float(mean.max()))
+                row_upper_band_values.extend((mean + std).tolist())
                 style = METHOD_STYLE[method]
                 line, = axis.plot(rounds, mean, label=method, **style)
                 fill_alpha = 0.105 if method == "CARAT" else 0.06
@@ -278,30 +280,22 @@ def draw_dataset(
                     }
                 )
 
-            axis.grid(True, color="#B7B7B7", alpha=0.24, linewidth=0.55)
+            axis.grid(True, color="#B7B7B7", alpha=0.28, linewidth=0.4)
             axis.set_xlim(1, ROUNDS)
-            axis.set_ylim(0, dataset.y_max)
             axis.set_xticks((1, 50, 100, 150, 200))
-            axis.set_yticks(dataset.y_ticks)
-            axis.tick_params(length=2.5, width=0.7)
+            axis.tick_params(length=2.0, width=0.5, pad=1.5)
 
             if row_index == 0:
-                axis.set_title(
-                    attack,
-                    color=accent,
-                    fontweight="bold",
-                    pad=7,
-                    bbox={
-                        "boxstyle": "round,pad=0.25",
-                        "facecolor": (*plt.matplotlib.colors.to_rgb(accent), 0.10),
-                        "edgecolor": (*plt.matplotlib.colors.to_rgb(accent), 0.45),
-                        "linewidth": 0.8,
-                    },
-                )
+                axis.set_title(attack, color="#202020", fontweight="bold", pad=3.0)
             if column_index == 0:
-                axis.set_ylabel(f"$\\alpha={alpha_display}$\nTest accuracy (\\%)")
-            if row_index == len(ALPHAS) - 1:
-                axis.set_xlabel("Communication round")
+                axis.set_ylabel(f"$\\alpha={alpha_display}$\nAccuracy (\\%)", labelpad=2.0)
+
+        y_max = adaptive_y_max(row_maximum_mean, row_upper_band_values)
+        tick_step = 10.0 if y_max <= 60.0 else 20.0
+        for axis in axes[row_index]:
+            axis.set_ylim(0.0, y_max)
+            axis.set_yticks(np.arange(0.0, y_max + 0.01, tick_step))
+        print(f"{dataset.display_name}, alpha={alpha_display}: y-axis 0--{y_max:g}%")
 
     legend_order = ("NormClipping", "MultiKrum", "FLTrust", "FLDetector", "CARAT", "NoAttack + Mean")
     legend_labels = {
@@ -318,12 +312,14 @@ def draw_dataset(
         loc="lower center",
         ncol=6,
         frameon=False,
-        bbox_to_anchor=(0.5, 0.015),
-        handlelength=3.0,
-        columnspacing=1.45,
+        bbox_to_anchor=(0.5, 0.012),
+        handlelength=1.9,
+        handletextpad=0.45,
+        columnspacing=0.85,
     )
-    fig.suptitle(dataset.display_name, fontsize=11.3, fontweight="bold", y=0.995)
-    fig.subplots_adjust(left=0.065, right=0.995, top=0.955, bottom=0.085, wspace=0.12, hspace=0.17)
+    fig.suptitle(dataset.display_name, fontsize=8.8, fontweight="bold", y=0.995)
+    fig.supxlabel("Communication round", fontsize=7.2, y=0.105)
+    fig.subplots_adjust(left=0.078, right=0.995, top=0.925, bottom=0.205, wspace=0.11, hspace=0.16)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     suffix = "cifar100" if dataset.path_name.startswith("CIFAR100") else "cifar10"

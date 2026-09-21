@@ -433,13 +433,13 @@ The object $\mathcal{D}^{\mathrm{ref}}$ denotes the labeled server reference set
 \label{sec:appendix-reproducibility}
 
 \paragraph{Reproducibility.}
-All main reported results use the public CIFAR-100 benchmark and the fixed training protocol described in Section~\ref{sec:experiments}. The aggregation method is specified in Algorithm~\ref{alg:carat-round}, with implementation defaults listed above. For anonymous review, logs, plotting scripts, and configuration files should be included in the supplementary material or an anonymized archive so that each table cell can be traced to its seed-level runs.
+All main reported results use the public CIFAR-100 benchmark and the fixed training protocol described in Section~\ref{sec:experiments}. The aggregation method is specified in Algorithm~\ref{alg:carat-round}, with implementation defaults listed in Appendix~\ref{sec:appendix-experiments}. The main CARAT cells and component variants each use five seeds, and the result archives retain metrics, completion markers, job metadata, and configuration files so that every reported cell can be traced to seed-level runs.
 
 \paragraph{Compute resources.}
-The reported public-baseline logs were generated through the repository launch scripts on a Compute Canada SLURM cluster. All runs use the same launcher, export script, and fixed configuration files. Each run writes a metadata file recording the configuration file, command line, seed, Python environment, CUDA requirement, and git commit.
+The main CARAT sweep and reported public-baseline logs were generated through the repository launch scripts on a Compute Canada SLURM cluster; the component study was run with the same experiment interface on a laboratory GPU server. Each run writes a metadata file recording its configuration, command line, seed, Python environment, and CUDA requirement; the main sweep also records the git commit.
 
 \paragraph{Ethics.}
 This work studies defenses against model-poisoning attacks in federated learning. The attack implementations are used to evaluate robustness and do not require access to private user data. The main practical risk is dual use: stronger attack simulations may help adversaries tune poisoning strategies. We mitigate this by framing attacks as benchmark stressors and by releasing defensive evaluation code together with the corresponding protocols.
 
 \paragraph{Data availability.}
-CIFAR-100 is a public dataset. CARAT uses a small labeled server-side reference split during evaluation; when reproducing the results, this split should be generated deterministically from the public training data under the same seed and excluded from client local training data.
+CIFAR-100 is a public dataset. In the reported implementation, CARAT samples a $512$-example server pool from the same public training set used to construct client partitions; those examples are not removed from client local data. This overlap and the unequal CARAT/FLTrust reference budgets are limitations of the current evaluation. A stricter reproduction should additionally test a deterministic, disjoint server split while reporting the resulting reduction in client training data.

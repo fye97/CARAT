@@ -1,5 +1,4 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-CARAT validates candidate updates through hidden, class-balanced task certificates rather than geometric centrality or a single trusted reference direction. In the completed CIFAR-100/ResNet18 non-i.i.d.\ evaluation with matched trusted-data budgets, it achieves the strongest performance among the reported public baselines under four untargeted model-poisoning attacks, supporting its use when a modest labeled server reference set is available.
-
+CARAT validates candidate updates through hidden, class-balanced task certificates rather than relying only on geometric centrality or a single trusted reference direction. In the completed five-seed CIFAR-100/ResNet18 evaluation, CARAT is competitive across four untargeted model-poisoning attacks, with average rank $2.5$ and a worst-case gap of $1.2$ percentage points from the best reported mean accuracy. Simple averaging remains stronger overall in this particular protocol, and the component study shows only modest aggregate gains for the complete design. The evidence therefore supports CARAT as a viable reference-assisted aggregation mechanism, while motivating broader tests with disjoint reference data, matched auxiliary-data budgets, adaptive attacks, and settings in which unprotected averaging fails more decisively.

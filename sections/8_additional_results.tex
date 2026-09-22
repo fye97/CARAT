@@ -62,15 +62,16 @@ Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capp
 }
 \end{table*}
 
-\subsection{Separate Component Study}
+\FloatBarrier
+\subsection{Ablation Study of CARAT Components}
 \label{sec:appendix-component-study}
 
-We conduct a focused component study on CIFAR-100/ResNet18 with $20$ clients, $20\%$ malicious clients, and $\alpha=0.5$. This is a separate, higher-adversary stress test; the component-study archive does not contain a $10\%$ counterpart. Each variant uses the same five seeds as its within-study control. One task replaces $T=8$ with $T=1$; no clipping disables MAD clipping; no rank penalty sets its coefficient to zero; and no temporal prior removes the temporal regularizer. The study covers ALIE, FangAttack, MinMax, and MinSum and was executed independently from the main comparison.
+We conduct a one-component-at-a-time ablation on CIFAR-100/ResNet18 with $20$ fully participating clients, $20\%$ malicious clients, non-i.i.d.\ $\alpha=0.5$, and $200$ communication rounds. This is a separate, higher-adversary experiment rather than a ratio-matched ablation of the main $10\%$ comparison. Every variant is evaluated under ALIE, FangAttack, MinMax, and MinSum with the same five seeds $42$--$46$; Mimic is not included. Full CARAT uses $T=8$ hidden tasks, MAD clipping, rank-penalty weight $0.20$, and temporal-prior weight $0.05$. Each reduced variant changes only one of these settings: one task sets $T=1$, no clipping disables MAD clipping, no rank penalty sets its weight to zero, and no temporal prior sets its weight to zero. The other recorded settings are held fixed within this study.
 
 \begin{table}[!htbp]
   \definecolor{caratrow}{gray}{0.88}
   \renewcommand{\arraystretch}{1.05}
-  \caption{CARAT component study on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ $\alpha=0.5$. Values are final test accuracy (\%) over five seeds. The final column averages the four attack means; higher is better.}
+  \caption{CARAT component ablation on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ $\alpha=0.5$. Cells show round-200 test accuracy (\%) as mean$\pm$sample standard deviation over seeds $42$--$46$; the final column is the unweighted mean of the four attack means. Higher is better.}
   \label{tab:carat-ablation}
   \setlength{\tabcolsep}{7pt}
   \centering\small
@@ -87,7 +88,8 @@ We conduct a focused component study on CIFAR-100/ResNet18 with $20$ clients, $2
   \end{tabular}
 \end{table}
 
-Full CARAT has the highest cross-attack mean, but its advantage over the reduced variants is only $0.06$--$0.28$ percentage points and is smaller than the seed-level variation in individual attack settings. Full CARAT leads under ALIE and FangAttack; no clipping leads under MinMax; and one task leads under MinSum. Thus, $T=1$ nearly matches $T=8$, and the study supports only a small combined benefit in this higher-adversary setting.
+\FloatBarrier
+Full CARAT reaches a $47.61\%$ cross-attack mean. Relative to it, one task, no clipping, no rank penalty, and no temporal prior reduce the mean by $0.06$, $0.27$, $0.28$, and $0.16$ percentage points, respectively. Full CARAT leads under ALIE and FangAttack, but no clipping is $0.10$ points higher under MinMax, and one task is $0.42$ points higher under MinSum. The per-attack ranking is therefore mixed, and the $0.49$--$1.22$-point seed-level standard deviations exceed the cross-attack mean differences. In particular, $T=1$ nearly matches $T=8$ here. The table supports a small combined benefit for the complete configuration in this setting, not a claim that every component is independently necessary or that the same ranking holds at $10\%$ malicious clients, on other datasets, or under Mimic.
 
 \FloatBarrier
 \subsection{Runtime Diagnostic}

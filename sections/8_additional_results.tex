@@ -9,7 +9,7 @@ The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ 
 
 \subsection{Reported CIFAR Protocol}
 
-\begin{table*}[!htbp]
+\begin{table*}[htbp]
 \centering
 \caption{Detailed protocol for the reported CIFAR-10/VGG19 and CIFAR-100/ResNet18 result sets.}
 \label{tab:reported-protocol}
@@ -39,7 +39,7 @@ Reported statistic & Round-wise accuracy, mean $\pm$ sample standard deviation &
 
 Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the reported result set. The attacker prior is set to the actual malicious-client fraction; robustness to a misspecified fraction is not evaluated here.
 
-\begin{table*}[!htbp]
+\begin{table*}[htbp]
 \centering
 \caption{CARAT hyperparameters used in the reported CIFAR-10/VGG19 and CIFAR-100/ResNet18 runs.}
 \label{tab:carat-hyperparameters}
@@ -97,7 +97,7 @@ Full CARAT reaches a $47.61\%$ cross-attack mean. Relative to it, one task, no c
 
 Figure~\ref{fig:verification-curves} reports a separate, earlier CIFAR-100/i.i.d.\ ALIE verification run with three seeds. CARAT records an average per-round time of $9.94$ seconds, compared with $2.80$ seconds for Mean under attack, or approximately $3.6\times$ higher wall-clock cost. This premium is consistent with evaluating every candidate update on repeated hidden tasks. The diagnostic predates the five-seed sweep and is not hardware-normalized for the main comparison.
 
-\begin{figure*}[!b]
+\begin{figure*}[htbp]
   \centering
   \safeincludegraphics[width=0.98\textwidth]{figures/carat_verification.pdf}
   \caption{Verification-scale CIFAR-100/i.i.d.\ results under ALIE. Left: round-wise test accuracy over three seeds; the dashed clean Mean curve is a single-seed no-attack reference. Right: average per-round wall-clock time with seed-level error bars. This earlier run is an overhead diagnostic and is not part of the main five-seed comparison.}

@@ -66,30 +66,30 @@ Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capp
 \subsection{Ablation Study of CARAT Components}
 \label{sec:appendix-component-study}
 
-We conduct a one-component-at-a-time ablation on CIFAR-100/ResNet18 with $20$ fully participating clients, $20\%$ malicious clients, non-i.i.d.\ $\alpha=0.5$, and $200$ communication rounds. This is a separate, higher-adversary experiment rather than a ratio-matched ablation of the main $10\%$ comparison. Every variant is evaluated under ALIE, FangAttack, MinMax, and MinSum with the same five seeds $42$--$46$; Mimic is not included. Full CARAT uses $T=8$ hidden tasks, MAD clipping, rank-penalty weight $0.20$, and temporal-prior weight $0.05$. Each reduced variant changes only one of these settings: one task sets $T=1$, no clipping disables MAD clipping, no rank penalty sets its weight to zero, and no temporal prior sets its weight to zero. The other recorded settings are held fixed within this study.
+We conduct a one-component-at-a-time ablation on CIFAR-100/ResNet18 with $20$ fully participating clients, $20\%$ malicious clients, non-i.i.d.\ $\alpha=0.5$, and $200$ communication rounds. This is a separate, higher-adversary experiment rather than a ratio-matched ablation of the main $10\%$ comparison. We report ALIE and FangAttack, each with the same five seeds $42$--$46$ for every variant. Full CARAT uses $T=8$ hidden tasks, MAD clipping, rank-penalty weight $0.20$, and temporal-prior weight $0.05$. Each reduced variant changes only one of these settings: one task sets $T=1$, no clipping disables MAD clipping, no rank penalty sets its weight to zero, and no temporal prior sets its weight to zero. The other recorded settings are held fixed within this study.
 
 \begin{table}[!htbp]
   \definecolor{caratrow}{gray}{0.88}
   \renewcommand{\arraystretch}{1.05}
-  \caption{CARAT component ablation on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ $\alpha=0.5$. Cells show round-200 test accuracy (\%) as mean$\pm$sample standard deviation over seeds $42$--$46$; the final column is the unweighted mean of the four attack means. Higher is better.}
+  \caption{CARAT component ablation on CIFAR-100/ResNet18 with $20\%$ malicious clients and non-i.i.d.\ $\alpha=0.5$ under ALIE and FangAttack. Cells show round-200 test accuracy (\%) as mean$\pm$sample standard deviation over seeds $42$--$46$; higher is better.}
   \label{tab:carat-ablation}
   \setlength{\tabcolsep}{7pt}
   \centering\small
-  \begin{tabular}{lccccc}
+  \begin{tabular}{lcc}
   \toprule
-  \textbf{Variant} & \textbf{ALIE} & \textbf{FangAttack} & \textbf{MinMax} & \textbf{MinSum} & \textbf{Mean} \\
+  \textbf{Variant} & \textbf{ALIE} & \textbf{FangAttack} \\
   \midrule
-  \cellcolor{caratrow}\textbf{Full CARAT} & \cellcolor{caratrow}\textbf{46.81$\pm$1.06} & \cellcolor{caratrow}\textbf{47.59$\pm$0.61} & \cellcolor{caratrow}48.20$\pm$1.12 & \cellcolor{caratrow}47.82$\pm$0.99 & \cellcolor{caratrow}\textbf{47.61} \\
-  One task ($T=1$) & 46.68$\pm$0.93 & 47.12$\pm$0.76 & 48.17$\pm$0.95 & \textbf{48.24$\pm$0.82} & 47.55 \\
-  No clipping & 46.26$\pm$0.62 & 46.79$\pm$0.85 & \textbf{48.30$\pm$1.01} & 48.01$\pm$1.00 & 47.34 \\
-  No rank penalty & 46.36$\pm$1.11 & 46.96$\pm$0.59 & 48.09$\pm$0.49 & 47.90$\pm$1.00 & 47.33 \\
-  No temporal prior & 46.33$\pm$0.80 & 47.42$\pm$1.18 & 48.12$\pm$1.22 & 47.93$\pm$1.04 & 47.45 \\
+  \cellcolor{caratrow}\textbf{Full CARAT} & \cellcolor{caratrow}\textbf{46.81$\pm$1.06} & \cellcolor{caratrow}\textbf{47.59$\pm$0.61} \\
+  One task ($T=1$) & 46.68$\pm$0.93 & 47.12$\pm$0.76 \\
+  No clipping & 46.26$\pm$0.62 & 46.79$\pm$0.85 \\
+  No rank penalty & 46.36$\pm$1.11 & 46.96$\pm$0.59 \\
+  No temporal prior & 46.33$\pm$0.80 & 47.42$\pm$1.18 \\
   \bottomrule
   \end{tabular}
 \end{table}
 
 \FloatBarrier
-Full CARAT reaches a $47.61\%$ cross-attack mean. Relative to it, one task, no clipping, no rank penalty, and no temporal prior reduce the mean by $0.06$, $0.27$, $0.28$, and $0.16$ percentage points, respectively. Full CARAT leads under ALIE and FangAttack, but no clipping is $0.10$ points higher under MinMax, and one task is $0.42$ points higher under MinSum. The per-attack ranking is therefore mixed, and the $0.49$--$1.22$-point seed-level standard deviations exceed the cross-attack mean differences. In particular, $T=1$ nearly matches $T=8$ here. The table supports a small combined benefit for the complete configuration in this setting, not a claim that every component is independently necessary or that the same ranking holds at $10\%$ malicious clients, on other datasets, or under Mimic.
+Full CARAT has the highest mean under both reported attacks: $46.81\%$ for ALIE and $47.59\%$ for FangAttack. Relative to the reduced variants, its gains range from $0.13$ to $0.55$ percentage points under ALIE and from $0.17$ to $0.80$ points under FangAttack. The differences are modest compared with the $0.59$--$1.18$-point seed-level standard deviations; in particular, one task nearly matches eight tasks under ALIE. These results support a limited benefit for the complete configuration in this higher-adversary setting, not a claim that every component is independently necessary or that the same ranking holds at $10\%$ malicious clients or on other datasets.
 
 \FloatBarrier
 \subsection{Runtime Diagnostic}
@@ -138,6 +138,6 @@ All $75$ selected CIFAR-100 runs record finite final-round cross-entropy. On CIF
 
 The CARAT client-$20$ sweep contains $960$ completed runs across two datasets, four data-distribution settings, four malicious-client ratios, six attacks, and five seeds. Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10} select $150$ runs at malicious ratio $0.1$; Figure~\ref{fig:attacker-fraction} selects $600$ runs at ratios $0.1$--$0.4$, with $\alpha\in\{1,0.5,0.1\}$ and the five displayed attacks. All selected metric files contain $200$ training rounds and completion markers. Job metadata records code commit \texttt{70920a89}, the launch command, configuration, seed, Python environment, and CUDA requirement. The extracted CARAT-only archive has SHA-256 checksum \texttt{382bac20d9a44dffa41e8b36de1c05943c69d20d4cb1107e6e2963a6bca97134}.
 
-The component study contains $100$ completed runs at malicious ratio $0.2$: five variants, four attacks, and five seeds, each with $200$ rounds. It was executed independently on the laboratory server and is reported as a higher-adversary stress test rather than as a ratio-matched ablation of the main comparison. Because concurrent jobs make wall-clock measurements sensitive to contention, these runs support the accuracy ablation in Table~\ref{tab:carat-ablation} but are not used for a runtime claim.
+The component-study archive \texttt{carat\_ablation\_results\_20260921.tar.gz} contains $100$ completed runs at malicious ratio $0.2$: five variants, four attacks, and five seeds, each with $200$ rounds. Table~\ref{tab:carat-ablation} selects the $50$ ALIE and FangAttack runs; its cells are computed from the final \texttt{eval\_acc} of each completed metric file. The study was executed independently on the laboratory server and is reported as a higher-adversary stress test rather than as a ratio-matched ablation of the main comparison. Because concurrent jobs make wall-clock measurements sensitive to contention, these runs are not used for a runtime claim.
 
 \FloatBarrier

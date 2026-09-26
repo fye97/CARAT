@@ -1,11 +1,11 @@
 \section{Experimental Protocols and Additional Results}
 \label{sec:appendix-experiments}
 
-This appendix records the exact scope, CARAT configuration, supplementary component and runtime studies, loss convention, and provenance underlying Section~\ref{sec:experiments}.
+This appendix records the exact scope, CARAT configuration, component ablation, client-population scalability study, and runtime diagnostic underlying Section~\ref{sec:experiments}.
 
 \subsection{Completed Empirical Scope}
 
-The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The $10\%$ comparison selects $150$ CARAT runs across the two datasets, three heterogeneity levels, five attacks, and five seeds; the baseline defenses and clean Mean references also use five seeds. Figure~\ref{fig:attacker-fraction} additionally uses the $10\%$, $20\%$, $30\%$, and $40\%$ CARAT runs for the same three heterogeneity levels and five attacks, totaling $600$ completed runs. Baseline defenses are not compared across these higher fractions.
+The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The $10\%$ comparison selects $150$ CARAT runs across the two datasets, three heterogeneity levels, five attacks, and five seeds; the baseline defenses and clean Mean references also use five seeds. Figure~\ref{fig:attacker-fraction} additionally uses the $10\%$, $20\%$, $30\%$, and $40\%$ CARAT runs for the same three heterogeneity levels and five attacks, totaling $600$ completed runs. Baseline defenses are not compared across these higher fractions. Appendix~\ref{sec:appendix-scalability} gives a CARAT-only comparison with $20$, $40$, and $60$ clients using the common completed seeds.
 
 \subsection{Reported CIFAR Protocol}
 
@@ -90,6 +90,46 @@ We conduct a one-component-at-a-time ablation on CIFAR-100/ResNet18 with $20$ fu
 
 \FloatBarrier
 Full CARAT has the highest mean under both reported attacks: $46.81\%$ for ALIE and $47.59\%$ for FangAttack. Relative to the reduced variants, its gains range from $0.13$ to $0.55$ percentage points under ALIE and from $0.17$ to $0.80$ points under FangAttack. The differences are modest compared with the $0.59$--$1.18$-point seed-level standard deviations; in particular, one task nearly matches eight tasks under ALIE. These results support a limited benefit for the complete configuration in this higher-adversary setting, not a claim that every component is independently necessary or that the same ranking holds at $10\%$ malicious clients or on other datasets.
+
+\FloatBarrier
+\subsection{Client-Population Scalability}
+\label{sec:appendix-scalability}
+
+We evaluate CARAT with $20$, $40$, and $60$ fully participating clients while fixing the malicious-client fraction at $10\%$, the training schedule at $200$ rounds, and all CARAT hyperparameters. Because the available $60$-client archive is incomplete for CIFAR-100 at $\alpha=1.0$ beyond the first three seeds, Table~\ref{tab:carat-client-scaling} uses the common completed seeds $42$--$44$ for every client count and setting. The selected slice contains $324$ completed 200-round runs. For each seed, the attacked summary first averages ALIE, FangAttack, MinMax, MinSum, and Mimic; the table then reports the mean and sample standard deviation of these seed-level averages. The no-attack column runs CARAT without malicious updates and is distinct from the NoAttack + Mean reference in the main comparison.
+
+\begin{table*}[htbp]
+\centering
+\caption{CARAT round-200 test accuracy (\%) as the fully participating client population increases. All cells use $10\%$ malicious clients when attacked and report mean$\pm$sample standard deviation over the common seeds $42$--$44$. ``Five-attack mean'' averages the five attack accuracies within each seed before aggregation across seeds.}
+\label{tab:carat-client-scaling}
+\renewcommand{\arraystretch}{1.06}
+\scriptsize
+\setlength{\tabcolsep}{2.6pt}
+\begin{tabular}{cc cc cc cc}
+\toprule
+\multirow{2}{*}{\makecell[c]{Dataset / Model}} &
+\multirow{2}{*}{$\alpha$} &
+\multicolumn{2}{c}{$20$ clients} &
+\multicolumn{2}{c}{$40$ clients} &
+\multicolumn{2}{c}{$60$ clients} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+& & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} \\
+\midrule
+\multirow{3}{*}{\makecell[c]{CIFAR-100 / ResNet18}}
+& $1.0$ & $52.08\pm0.12$ & $51.07\pm0.61$ & $55.92\pm0.35$ & $54.77\pm0.26$ & $56.89\pm0.44$ & $44.87\pm0.35$ \\
+& $0.5$ & $50.95\pm1.22$ & $49.83\pm0.79$ & $54.83\pm0.62$ & $53.80\pm0.68$ & $55.21\pm0.27$ & $43.86\pm0.28$ \\
+& $0.1$ & $44.86\pm1.45$ & $43.80\pm0.63$ & $48.47\pm0.48$ & $35.40\pm5.31$ & $48.77\pm0.46$ & $32.39\pm6.04$ \\
+\midrule
+\multirow{3}{*}{\makecell[c]{CIFAR-10 / VGG19}}
+& $1.0$ & $79.74\pm0.22$ & $79.51\pm0.35$ & $81.93\pm0.29$ & $81.68\pm0.17$ & $81.97\pm0.17$ & $82.23\pm0.13$ \\
+& $0.5$ & $77.57\pm0.94$ & $72.35\pm7.02$ & $79.09\pm0.91$ & $78.81\pm0.92$ & $80.15\pm0.41$ & $80.31\pm0.56$ \\
+& $0.1$ & $55.85\pm5.59$ & $48.61\pm8.33$ & $60.03\pm3.30$ & $57.77\pm3.45$ & $62.16\pm1.97$ & $55.29\pm8.16$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The no-attack results improve or remain stable as the client population grows, so increasing the number of clients does not by itself prevent optimization. Under attack, CIFAR-10 also improves from $20$ to $40$ clients in all three heterogeneity regimes and remains strong at $60$ clients for $\alpha\in\{1.0,0.5\}$. The $\alpha=0.1$ five-attack mean decreases from $57.77\%$ at $40$ clients to $55.29\%$ at $60$, with high variability caused by two chance-level MinSum seeds.
+
+CIFAR-100 exposes a different scaling failure. FangAttack finishes at chance-level $1\%$ accuracy for all three common seeds at $60$ clients and every reported $\alpha$, which lowers the five-attack averages despite improving no-attack accuracy. At $\alpha=0.1$, MinSum additionally collapses for one of three seeds at $40$ clients and two of three seeds at $60$ clients. Thus, these results show that CARAT's benign training behavior scales to $60$ clients, but its robustness does not scale uniformly across attacks. They are a CARAT-only diagnostic based on three common seeds, not a larger-federation baseline comparison or a complete five-seed result.
 
 \FloatBarrier
 \subsection{Runtime Diagnostic}

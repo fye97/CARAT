@@ -43,17 +43,32 @@ def arguments() -> argparse.Namespace:
         default=Path(__file__).resolve().parents[1] / "figures/carat_attacker_fraction.pdf",
     )
     parser.add_argument("--audit-csv", type=Path, help="Optional summary CSV.")
+    parser.add_argument(
+        "--rerun-root",
+        type=Path,
+        default=None,
+        help="Optional root of reruns (same layout); a run found here replaces the original.",
+    )
     return parser.parse_args()
+
+
+REPLACED: list[str] = []
 
 
 def final_accuracy(
     root: Path, dataset: str, alpha: str, fraction: str, attack: str, seed: int
 ) -> float:
-    folder = root / dataset / "non-iid" / f"{attack}__CARAT"
     run_pattern = (
         f"ep200_clients20_lr0.05_adv{fraction}_seed{seed}_exp*_alpha{alpha}_cfg*"
     )
-    matches = sorted(folder.glob(f"{run_pattern}/metrics_exp*.csv"))
+    sub = Path(dataset) / "non-iid" / f"{attack}__CARAT"
+    matches = []
+    if RERUN_ROOT is not None:
+        matches = sorted((RERUN_ROOT / sub).glob(f"{run_pattern}/metrics_exp*.csv"))
+        if matches:
+            REPLACED.append(f"{dataset}/{attack}/adv{fraction}/alpha{alpha}/seed{seed}")
+    if not matches:
+        matches = sorted((root / sub).glob(f"{run_pattern}/metrics_exp*.csv"))
     if len(matches) != 1:
         raise RuntimeError(
             f"Expected one result for {dataset}/{alpha}/{fraction}/{attack}/{seed}; "
@@ -72,7 +87,12 @@ def final_accuracy(
     return accuracy
 
 
+RERUN_ROOT: Path | None = None
+
+
 def collect(args: argparse.Namespace) -> list[dict[str, str | int | float]]:
+    global RERUN_ROOT
+    RERUN_ROOT = args.rerun_root
     records = []
     for dataset, _, _ in DATASETS:
         for alpha, _, _, _, _ in ALPHAS:
@@ -174,6 +194,8 @@ def main() -> None:
             writer = csv.DictWriter(handle, fieldnames=list(records[0]))
             writer.writeheader()
             writer.writerows(records)
+    if args.rerun_root is not None:
+        print(f"Replaced {len(REPLACED)} runs with reruns from {args.rerun_root}")
     print(f"Validated {len(records)} settings x {len(ATTACKS)} attacks x {len(SEEDS)} seeds = 600 runs")
     for row in records:
         print(

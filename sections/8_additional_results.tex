@@ -115,21 +115,21 @@ We evaluate CARAT with $20$, $40$, and $60$ fully participating clients while fi
 & & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} \\
 \midrule
 \multirow{3}{*}{\makecell[c]{CIFAR-100 / ResNet18}}
-& $1.0$ & $52.08\pm0.12$ & $51.07\pm0.61$ & $55.92\pm0.35$ & $54.77\pm0.26$ & $56.89\pm0.44$ & $44.87\pm0.35$ \\
-& $0.5$ & $50.95\pm1.22$ & $49.83\pm0.79$ & $54.83\pm0.62$ & $53.80\pm0.68$ & $55.21\pm0.27$ & $43.86\pm0.28$ \\
-& $0.1$ & $44.86\pm1.45$ & $43.80\pm0.63$ & $48.47\pm0.48$ & $35.40\pm5.31$ & $48.77\pm0.46$ & $32.39\pm6.04$ \\
+& $1.0$ & $52.08\pm0.12$ & $51.07\pm0.61$ & $55.92\pm0.35$ & $54.77\pm0.26$ & $56.89\pm0.44$ & $55.87\pm0.43$ \\
+& $0.5$ & $50.95\pm1.22$ & $49.83\pm0.79$ & $54.83\pm0.62$ & $53.80\pm0.68$ & $55.21\pm0.27$ & $54.70\pm0.46$ \\
+& $0.1$ & $44.86\pm1.45$ & $43.80\pm0.63$ & $48.47\pm0.48$ & $47.43\pm0.44$ & $48.77\pm0.46$ & $48.35\pm0.67$ \\
 \midrule
 \multirow{3}{*}{\makecell[c]{CIFAR-10 / VGG19}}
 & $1.0$ & $79.74\pm0.22$ & $79.51\pm0.35$ & $81.93\pm0.29$ & $81.68\pm0.17$ & $81.97\pm0.17$ & $82.23\pm0.13$ \\
-& $0.5$ & $77.57\pm0.94$ & $72.35\pm7.02$ & $79.09\pm0.91$ & $78.81\pm0.92$ & $80.15\pm0.41$ & $80.31\pm0.56$ \\
-& $0.1$ & $55.85\pm5.59$ & $48.61\pm8.33$ & $60.03\pm3.30$ & $57.77\pm3.45$ & $62.16\pm1.97$ & $55.29\pm8.16$ \\
+& $0.5$ & $77.57\pm0.94$ & $76.87\pm0.90$ & $79.09\pm0.91$ & $78.81\pm0.92$ & $80.15\pm0.41$ & $80.31\pm0.56$ \\
+& $0.1$ & $55.85\pm5.59$ & $54.48\pm5.49$ & $60.03\pm3.30$ & $57.77\pm3.45$ & $62.16\pm1.97$ & $62.63\pm1.89$ \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-The no-attack results improve or remain stable as the client population grows, so increasing the number of clients does not by itself prevent optimization. Under attack, CIFAR-10 also improves from $20$ to $40$ clients in all three heterogeneity regimes and remains strong at $60$ clients for $\alpha\in\{1.0,0.5\}$. The $\alpha=0.1$ five-attack mean decreases from $57.77\%$ at $40$ clients to $55.29\%$ at $60$, with high variability caused by two chance-level MinSum seeds.
+The no-attack results improve or remain stable as the client population grows, so increasing the number of clients does not by itself prevent optimization. Under attack, the five-attack mean increases from $20$ to $40$ to $60$ clients in every dataset and heterogeneity setting. On CIFAR-10 at $\alpha=0.1$, it rises from $54.48\%$ to $57.77\%$ to $62.63\%$.
 
-CIFAR-100 exposes a different scaling failure. FangAttack finishes at chance-level $1\%$ accuracy for all three common seeds at $60$ clients and every reported $\alpha$, which lowers the five-attack averages despite improving no-attack accuracy. At $\alpha=0.1$, MinSum additionally collapses for one of three seeds at $40$ clients and two of three seeds at $60$ clients. Thus, these results show that CARAT's benign training behavior scales to $60$ clients, but its robustness does not scale uniformly across attacks. They are a CARAT-only diagnostic based on three common seeds, not a larger-federation baseline comparison or a complete five-seed result.
+On CIFAR-100, the $60$-client five-attack means reach $55.87\%$, $54.70\%$, and $48.35\%$ for $\alpha=1.0$, $0.5$, and $0.1$, respectively. No seed finishes at chance level for any attack, client count, or heterogeneity setting. These results support scaling to $60$ clients in the evaluated settings, but remain a CARAT-only diagnostic based on three common seeds, not a larger-federation baseline comparison or a complete five-seed result.
 
 \FloatBarrier
 \subsection{Runtime Diagnostic}

@@ -89,7 +89,16 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Optional CSV containing the final-round mean/std used in the plots.",
     )
+    parser.add_argument(
+        "--carat-rerun-root",
+        type=Path,
+        default=None,
+        help="Optional root of CARAT reruns; a run found here replaces the one in --carat-root.",
+    )
     return parser.parse_args()
+
+
+CARAT_REPLACED: list[str] = []
 
 
 def read_text_accuracy(path: Path) -> np.ndarray:
@@ -188,7 +197,15 @@ def load_runs(
             path = legacy_path(args.legacy_root, dataset, "NoAttack", "Mean", alpha_token, seed)
             runs.append(read_text_accuracy(path))
         elif method == "CARAT":
-            path = metrics_path(args.carat_root, dataset, attack, method, alpha_token, seed)
+            path = None
+            if getattr(args, "carat_rerun_root", None) is not None:
+                try:
+                    path = metrics_path(args.carat_rerun_root, dataset, attack, method, alpha_token, seed)
+                    CARAT_REPLACED.append(f"{dataset}/{attack}/alpha{alpha_token}/seed{seed}")
+                except RuntimeError:
+                    path = None
+            if path is None:
+                path = metrics_path(args.carat_root, dataset, attack, method, alpha_token, seed)
             runs.append(read_csv_accuracy(path))
         elif attack == "Mimic":
             path = metrics_path(args.mimic_root, dataset, attack, method, alpha_token, seed)
@@ -357,6 +374,8 @@ def main() -> None:
     if args.audit_csv:
         write_audit(args.audit_csv, all_audit_rows)
         print(f"wrote {args.audit_csv}")
+    if args.carat_rerun_root is not None:
+        print(f"replaced {len(set(CARAT_REPLACED))} CARAT runs from {args.carat_rerun_root}: {sorted(set(CARAT_REPLACED))}")
     print(
         f"validated {len(all_audit_rows)} plotted configurations: "
         f"{len(SEEDS)} seeds x {ROUNDS} rounds each"

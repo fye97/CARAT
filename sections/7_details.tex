@@ -56,6 +56,10 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server aggregation round. T
         \STATE $c_{i,t} \leftarrow \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i^r)$
     \ENDFOR
 \ENDFOR
+\STATE $\mathcal{B} \leftarrow$ clients $i$ with a non-finite $c_{i,t}$ for some $t$
+\FOR{$i \in \mathcal{B}$ and $t=1$ to $T$}
+    \STATE $c_{i,t} \leftarrow m_t - \max(1, M_t - m_t)$, where $m_t$ and $M_t$ are the minimum and maximum of $\{c_{j,t}\}_{j\notin\mathcal{B}}$
+\ENDFOR
 \STATE Robustly standardize certificate columns to obtain $C$
 \STATE Compute rank penalties $\gamma$ from repeated coordinate subsamples of $\{\bar{\Delta}_i^r\}_{i=1}^n$
 \STATE $\alpha^{(0)} \leftarrow \alpha^{\mathrm{prev}}$
@@ -65,7 +69,11 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server aggregation round. T
     \STATE $g \leftarrow C\pi - \lambda_r \gamma - 2\lambda_p(\alpha^{(k)}-\alpha^{\mathrm{prev}})$
     \STATE $\alpha^{(k+1)} \leftarrow \Pi_{\mathcal{W}(\hat{\rho})}\!\left(\alpha^{(k)}+\eta g\right)$
 \ENDFOR
-\STATE $\alpha^\star \leftarrow \alpha^{(K)}$ and $\alpha^{\mathrm{prev}} \leftarrow \alpha^\star$
+\STATE $\alpha^\star \leftarrow \alpha^{(K)}$
+\IF{$\alpha^\star$ has a non-finite entry}
+    \STATE $\alpha_i^\star \leftarrow \mathbf{1}[i\notin\mathcal{B}]/(n-|\mathcal{B}|)$ for all $i$
+\ENDIF
+\STATE $\alpha^{\mathrm{prev}} \leftarrow \alpha^\star$
 \STATE $\Delta_{\mathrm{agg}} \leftarrow \sum_{i=1}^n \alpha_i^\star \bar{\Delta}_i^r$
 \STATE \textbf{return} $\Delta_{\mathrm{agg}}, \alpha^{\mathrm{prev}}$
 \end{algorithmic}

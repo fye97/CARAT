@@ -5,7 +5,7 @@ This appendix records the exact scope, CARAT configuration, component ablation, 
 
 \subsection{Completed Empirical Scope}
 
-The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The $10\%$ comparison selects $150$ CARAT runs across the two datasets, three heterogeneity levels, five attacks, and five seeds; the baseline defenses and clean Mean references also use five seeds. Figure~\ref{fig:attacker-fraction} additionally uses the $10\%$, $20\%$, $30\%$, and $40\%$ CARAT runs for the same three heterogeneity levels and five attacks, totaling $600$ completed runs. Baseline defenses are not compared across these higher fractions. Appendix~\ref{sec:appendix-scalability} gives a CARAT-only comparison with $20$, $40$, and $60$ clients using the common completed seeds.
+The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The $10\%$ comparison selects $150$ CARAT runs across the two datasets, three heterogeneity levels, five attacks, and five seeds; the baseline defenses and clean Mean references also use five seeds. Figure~\ref{fig:attacker-fraction} additionally uses the $10\%$, $20\%$, $30\%$, and $40\%$ runs of CARAT and the four baseline defenses for the same three heterogeneity levels and five attacks ($3{,}000$ completed runs), plus $480$ runs of undefended Mean under ALIE, FangAttack, MinMax, and MinSum. Appendix~\ref{sec:appendix-scalability} gives a CARAT-only comparison with $20$, $40$, and $60$ clients using the common completed seeds.
 
 \subsection{Reported CIFAR Protocol}
 
@@ -24,7 +24,7 @@ Dataset and model & CIFAR-10 / VGG19; CIFAR-100 / ResNet18 & Complementary ten-c
 Client population & $20$ clients, full participation & Fixed participation in every round. \\
 Training schedule & SGD; $200$ rounds; $4$ local epochs; learning rate $0.05$; momentum $0.9$; weight decay $5\times10^{-4}$; batch size $64$ & Common optimization schedule for attacked runs. \\
 Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Rows displayed in the main figures. \\
-Malicious clients & $10\%$ main comparison; $10\%$--$40\%$ CARAT-only sweep & Two to eight of the $20$ clients; each fraction is also supplied to CARAT as $\hat{\rho}$. \\
+Malicious clients & $10\%$ main comparison; $10\%$--$40\%$ attacker-fraction sweep & Two to eight of the $20$ clients; each fraction is also supplied to CARAT as $\hat{\rho}$. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
 Compared methods & Clean reference: No Attack + Mean; attacked defenses: NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Curves in Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10}. \\
 Seeds and source policy & Five seeds for every reported result & All attacked defenses and clean references use seeds $42$--$46$. \\
@@ -53,7 +53,7 @@ Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the repor
 Reference pool & $512$ training-set examples & Pool from which hidden tasks are sampled; it is not disjoint from client partitions. \\
 Hidden-task evaluation & $8$ tasks, $4$ examples per class, batch size $128$ & Builds repeated class-balanced certificates; each task contains $40$ examples on CIFAR-10 and $400$ on CIFAR-100. \\
 Normalization and clipping & Probe-radius quantile $0.5$; MAD clipping factor $2.5$ & Places candidates on a common evaluation radius and limits residual norm influence. \\
-Feasible weight set & Attacker prior $\hat{\rho}=0.1$ in the main comparison; $0.1$--$0.4$ in the CARAT-only sweep & Caps per-client weight using the specified experimental attacker fraction. \\
+Feasible weight set & Attacker prior $\hat{\rho}=0.1$ in the main comparison; $0.1$--$0.4$ in the attacker-fraction sweep & Caps per-client weight using the specified experimental attacker fraction. \\
 Task and anomaly weighting & Temperature $\beta=12.0$; rank weight $0.20$; prior weight $0.05$ & Balances weakest-task utility, rank penalty, and temporal smoothness. \\
 Rank diagnostics & $4096$ sampled coordinates, $5$ rank subsamples & Estimates persistent coordinate-wise extremeness. \\
 Projected optimization & $60$ projected steps, step size $0.5$ & Solves the capped-simplex weighting problem. \\

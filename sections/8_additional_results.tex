@@ -95,41 +95,56 @@ Full CARAT has the highest mean under both reported attacks: $46.81\%$ for ALIE 
 \subsection{Client-Population Scalability}
 \label{sec:appendix-scalability}
 
-We evaluate CARAT with $20$, $40$, and $60$ fully participating clients while fixing the malicious-client fraction at $10\%$, the training schedule at $200$ rounds, and all CARAT hyperparameters. Because the available $60$-client archive is incomplete for CIFAR-100 at $\alpha=1.0$ beyond the first three seeds, Table~\ref{tab:carat-client-scaling} uses the common completed seeds $42$--$44$ for every client count and setting. The selected slice contains $324$ completed 200-round runs. For each seed, the attacked summary first averages ALIE, FangAttack, MinMax, MinSum, and Mimic; the table then reports the mean and sample standard deviation of these seed-level averages. The no-attack column runs CARAT without malicious updates and is distinct from the NoAttack + Mean reference in the main comparison.
+We evaluate CARAT with $20$, $40$, and $60$ fully participating clients while fixing the malicious-client fraction at $10\%$, the training schedule at $200$ rounds, and all CARAT hyperparameters. On CIFAR-100, we also run NormClipping, MultiKrum, FLTrust, and FLDetector with their default parameters at every client count; on CIFAR-10, the larger-federation baselines are not yet available, so those rows report CARAT only. Table~\ref{tab:carat-client-scaling} uses seeds $42$--$46$ for every client count and setting and contains $1{,}620$ completed 200-round runs. For each seed, the attacked summary first averages ALIE, FangAttack, MinMax, MinSum, and Mimic; the table then reports the mean and sample standard deviation of these seed-level averages. The no-attack column runs each defense without malicious updates and is distinct from the NoAttack + Mean reference in the main comparison.
 
 \begin{table*}[htbp]
 \centering
-\caption{CARAT round-200 test accuracy (\%) as the fully participating client population increases. All cells use $10\%$ malicious clients when attacked and report mean$\pm$sample standard deviation over the common seeds $42$--$44$. ``Five-attack mean'' averages the five attack accuracies within each seed before aggregation across seeds.}
+\caption{Round-200 test accuracy (\%) as the fully participating client population increases. All cells use $10\%$ malicious clients when attacked and report mean$\pm$sample standard deviation over seeds $42$--$46$. ``Five-attack mean'' averages the five attack accuracies within each seed before aggregation across seeds. On CIFAR-100, bold marks the highest five-attack mean among the defenses for each $\alpha$ and client count; CIFAR-10 reports CARAT only.}
 \label{tab:carat-client-scaling}
 \renewcommand{\arraystretch}{1.06}
 \scriptsize
 \setlength{\tabcolsep}{2.6pt}
-\begin{tabular}{cc cc cc cc}
+\begin{tabular}{ccl cc cc cc}
 \toprule
 \multirow{2}{*}{\makecell[c]{Dataset / Model}} &
 \multirow{2}{*}{$\alpha$} &
+\multirow{2}{*}{Defense} &
 \multicolumn{2}{c}{$20$ clients} &
 \multicolumn{2}{c}{$40$ clients} &
 \multicolumn{2}{c}{$60$ clients} \\
-\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
-& & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} \\
+\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+& & & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} & \makecell[c]{No\\attack} & \makecell[c]{Five-attack\\mean} \\
 \midrule
-\multirow{3}{*}{\makecell[c]{CIFAR-100 / ResNet18}}
-& $1.0$ & $52.08\pm0.12$ & $51.07\pm0.61$ & $55.92\pm0.35$ & $54.77\pm0.26$ & $56.89\pm0.44$ & $55.87\pm0.43$ \\
-& $0.5$ & $50.95\pm1.22$ & $49.83\pm0.79$ & $54.83\pm0.62$ & $53.80\pm0.68$ & $55.21\pm0.27$ & $54.70\pm0.46$ \\
-& $0.1$ & $44.86\pm1.45$ & $43.80\pm0.63$ & $48.47\pm0.48$ & $47.43\pm0.44$ & $48.77\pm0.46$ & $48.35\pm0.67$ \\
+\multirow{15}{*}{\makecell[c]{CIFAR-100 /\\ResNet18}}
+& \multirow{5}{*}{$1.0$} & NormClipping & $26.06\pm0.53$ & $25.61\pm0.52$ & $26.57\pm0.36$ & $26.17\pm0.29$ & $26.63\pm0.43$ & $26.58\pm0.41$ \\
+&  & MultiKrum & $37.88\pm1.12$ & $37.83\pm1.09$ & $47.40\pm0.44$ & $46.35\pm0.37$ & $50.48\pm0.43$ & $48.78\pm0.59$ \\
+&  & FLTrust & $34.13\pm0.75$ & $33.93\pm0.40$ & $34.16\pm0.29$ & $34.03\pm0.32$ & $34.21\pm0.51$ & $34.21\pm0.34$ \\
+&  & FLDetector & $51.95\pm0.96$ & $47.70\pm0.43$ & $55.09\pm1.08$ & $50.77\pm0.86$ & $56.67\pm0.58$ & $52.82\pm0.86$ \\
+&  & CARAT & $52.33\pm0.67$ & $\mathbf{51.30\pm0.58}$ & $55.97\pm0.29$ & $\mathbf{54.74\pm0.27}$ & $56.90\pm0.34$ & $\mathbf{55.92\pm0.41}$ \\
+\cmidrule(lr){2-9}
+& \multirow{5}{*}{$0.5$} & NormClipping & $24.68\pm0.83$ & $24.48\pm0.51$ & $25.20\pm0.46$ & $24.99\pm0.69$ & $25.48\pm0.39$ & $25.09\pm0.58$ \\
+&  & MultiKrum & $33.99\pm2.44$ & $34.03\pm1.56$ & $44.54\pm0.66$ & $43.48\pm0.86$ & $48.03\pm0.73$ & $47.35\pm0.64$ \\
+&  & FLTrust & $33.08\pm0.71$ & $32.64\pm0.65$ & $33.17\pm0.49$ & $32.82\pm0.54$ & $33.01\pm0.58$ & $32.72\pm0.64$ \\
+&  & FLDetector & $50.65\pm0.66$ & $46.38\pm0.95$ & $54.10\pm0.63$ & $50.06\pm1.06$ & $55.11\pm0.68$ & $51.33\pm1.13$ \\
+&  & CARAT & $50.87\pm0.91$ & $\mathbf{49.94\pm0.62}$ & $54.59\pm0.55$ & $\mathbf{53.71\pm0.52}$ & $55.39\pm0.48$ & $\mathbf{54.65\pm0.73}$ \\
+\cmidrule(lr){2-9}
+& \multirow{5}{*}{$0.1$} & NormClipping & $20.83\pm0.81$ & $20.41\pm0.87$ & $20.79\pm0.66$ & $19.91\pm0.80$ & $21.31\pm0.50$ & $20.79\pm0.50$ \\
+&  & MultiKrum & $22.76\pm1.65$ & $24.12\pm1.29$ & $33.07\pm0.58$ & $32.51\pm0.93$ & $38.29\pm0.74$ & $37.40\pm1.01$ \\
+&  & FLTrust & $29.43\pm0.89$ & $28.39\pm0.69$ & $28.21\pm0.67$ & $27.09\pm0.68$ & $28.65\pm0.71$ & $27.65\pm0.48$ \\
+&  & FLDetector & $45.36\pm0.54$ & $41.24\pm0.82$ & $47.05\pm1.04$ & $43.45\pm1.19$ & $48.53\pm0.97$ & $45.71\pm1.24$ \\
+&  & CARAT & $45.18\pm1.23$ & $\mathbf{44.05\pm0.79}$ & $48.53\pm0.71$ & $\mathbf{47.24\pm0.61}$ & $49.27\pm0.80$ & $\mathbf{48.45\pm0.49}$ \\
 \midrule
-\multirow{3}{*}{\makecell[c]{CIFAR-10 / VGG19}}
-& $1.0$ & $79.74\pm0.22$ & $79.51\pm0.35$ & $81.93\pm0.29$ & $81.68\pm0.17$ & $81.97\pm0.17$ & $82.23\pm0.13$ \\
-& $0.5$ & $77.57\pm0.94$ & $76.87\pm0.90$ & $79.09\pm0.91$ & $78.81\pm0.92$ & $80.15\pm0.41$ & $80.31\pm0.56$ \\
-& $0.1$ & $55.85\pm5.59$ & $54.48\pm5.49$ & $60.03\pm3.30$ & $57.77\pm3.45$ & $62.16\pm1.97$ & $62.63\pm1.89$ \\
+\multirow{3}{*}{\makecell[c]{CIFAR-10 /\\VGG19}}
+& $1.0$ & CARAT & $79.64\pm0.20$ & $79.38\pm0.33$ & $81.68\pm0.40$ & $81.54\pm0.44$ & $82.20\pm0.40$ & $82.26\pm0.23$ \\
+& $0.5$ & CARAT & $77.36\pm0.76$ & $76.85\pm0.64$ & $78.94\pm0.71$ & $78.82\pm0.68$ & $79.89\pm0.61$ & $80.08\pm0.52$ \\
+& $0.1$ & CARAT & $55.22\pm4.30$ & $54.34\pm3.89$ & $59.58\pm2.88$ & $57.99\pm2.96$ & $61.31\pm2.23$ & $61.89\pm2.78$ \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-The no-attack results improve or remain stable as the client population grows, so increasing the number of clients does not by itself prevent optimization. Under attack, the five-attack mean increases from $20$ to $40$ to $60$ clients in every dataset and heterogeneity setting. On CIFAR-10 at $\alpha=0.1$, it rises from $54.48\%$ to $57.77\%$ to $62.63\%$.
+On CIFAR-100, CARAT has the highest five-attack mean among the defenses for every heterogeneity level and client count. Its margin over the strongest baseline, FLDetector in every setting, is $2.74$--$3.97$ points. The two methods have similar clean accuracy (within $1.48$ points), but the five attacks reduce FLDetector by $2.82$--$4.31$ points and CARAT by $0.74$--$1.29$ points. NormClipping and FLTrust lose less than $1.2$ points under attack but remain $16$--$30$ points below CARAT even without attack, so their gap reflects lower clean accuracy rather than weaker filtering. MultiKrum benefits most from a larger federation: its five-attack mean rises from $37.83\%$ to $48.78\%$ at $\alpha=1.0$ and from $24.12\%$ to $37.40\%$ at $\alpha=0.1$ between $20$ and $60$ clients, but stays below FLDetector and CARAT.
 
-On CIFAR-100, the $60$-client five-attack means reach $55.87\%$, $54.70\%$, and $48.35\%$ for $\alpha=1.0$, $0.5$, and $0.1$, respectively. No seed finishes at chance level for any attack, client count, or heterogeneity setting. These results support scaling to $60$ clients in the evaluated settings, but remain a CARAT-only diagnostic based on three common seeds, not a larger-federation baseline comparison or a complete five-seed result.
+For CARAT, the no-attack results improve as the client population grows, so increasing the number of clients does not by itself prevent optimization. Under attack, its five-attack mean increases from $20$ to $40$ to $60$ clients in every dataset and heterogeneity setting. On CIFAR-100 at $60$ clients, it reaches $55.92\%$, $54.65\%$, and $48.45\%$ for $\alpha=1.0$, $0.5$, and $0.1$; on CIFAR-10 at $\alpha=0.1$, it rises from $54.34\%$ to $57.99\%$ to $61.89\%$. No CARAT seed finishes at chance level for any attack, client count, or heterogeneity setting; the lowest single-run accuracy is $41.97\%$. These results support scaling to $60$ clients in the evaluated settings at $10\%$ malicious clients. As in the main comparison, attacks at this fraction barely degrade the defenses that keep clean accuracy, so the table tests scalability more than robustness, and the CIFAR-10 rows still lack baselines.
 
 \FloatBarrier
 \subsection{Runtime Diagnostic}

@@ -270,6 +270,8 @@ q_{\mathcal{M}}\|\Delta_{\mathcal{B}}\|_2
 Since $\Delta_{\mathcal{B}}$ is a convex combination of clipped benign updates, $\|\Delta_{\mathcal{B}}\|_2\le\tau_r$ by Proposition~\ref{prop:aggregate-bound}. Combining this with the first inequality gives the stated bound.
 \end{proof}
 
+Proposition~\ref{prop:malicious-mass-bound} bounds malicious influence in terms of $q_{\mathcal{M}}$ but does not control $q_{\mathcal{M}}$ itself; the cap only guarantees $q_{\mathcal{M}}\le|\mathcal{M}|/((1-\hat{\rho})n)$. Appendix~\ref{sec:appendix-reference-control} reports the measured $q_{\mathcal{M}}$.
+
 \begin{proposition}[Directional invariance of certificate scoring]
 \label{prop:directional-invariance}
 Suppose two nonzero clipped updates satisfy $\bar{\Delta}_i = a \bar{\Delta}_j$ for some scalar $a>0$. Then their normalized versions in Eq.~\eqref{eq:normalize} coincide, i.e.,

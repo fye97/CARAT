@@ -12,7 +12,7 @@ CARAT turns the requirements above into the three-stage server-side pipeline sho
 \label{fig:carat-overview}
 \end{figure*}
 
-Appendix~\ref{sec:appendix-component-rationale} summarizes how each component maps to a concrete failure mode in non-i.i.d.\ robust aggregation.
+\paragraph{Design rationale and evidence.} Each component targets a distinct failure mode (Appendix~\ref{sec:appendix-component-rationale}). Clipping bounds the upper tail of update norms and, with the weight cap, bounds the aggregate (Appendix~\ref{sec:appendix-theory}). The hidden-task certificate and the rank penalty drive aggressive attackers to near-zero weight at higher malicious fractions: FangAttack clients in late training and ALIE clients at $40\%$ in early training, with FangAttack rank penalties $2.8$--$17$ MAD units above benign clients. Near-mean attacks keep the capped weight but stay close to benign updates, so their effect remains small (Appendix~\ref{sec:appendix-reference-control}). The component ablation (Appendix~\ref{sec:appendix-component-study}) shows modest individual effects at $20\%$ malicious clients and does not isolate a benefit from the number of hidden tasks.
 
 \subsection{Hidden Tasks and Task-Conditioned Validation}
 
@@ -31,9 +31,9 @@ CARAT then rescales each clipped update to a common evaluation radius $q_r$,
 \tilde{\Delta}_i = q_r \frac{\bar{\Delta}_i}{\|\bar{\Delta}_i\|_2 + \varepsilon},
 \label{eq:normalize}
 \end{equation}
-where $q_r$ is chosen as a quantile of the positive clipped norms. The normalized vector $\tilde{\Delta}_i$ is used only to evaluate candidate utility; the final aggregation step uses $\bar{\Delta}_i$. This separation makes certificate scoring scale-neutral without changing the conservative clipped update applied to the global model.
+where $q_r$ is chosen as a quantile of the positive clipped norms. The normalized vector $\tilde{\Delta}_i$ is used only to evaluate candidate utility; the final aggregation step uses $\bar{\Delta}_i$. This separation makes certificate scoring scale-neutral without changing the conservative clipped update applied to the global model. We clip rather than normalize the aggregated updates: normalizing every update to the same norm would give a near-zero, uninformative update the same influence as a full benign update and would discard benign magnitude differences under non-i.i.d.\ data, whereas clipping only bounds the upper tail.
 
-CARAT then constructs hidden semantic validation tasks from the server reference data. It samples $T$ hidden tasks from the probe pool $\mathcal{P}$, with each task constructed to be approximately class-balanced. This class-balanced construction is the source of CARAT's class awareness: a malicious update may remain globally plausible while degrading only a subset of classes, whereas repeated balanced tasks make localized failures more visible to the server. For task $t$, let $\ell_t(w)$ denote the average cross-entropy loss of model $w$ on that task. CARAT defines a \emph{hidden-task certificate}
+CARAT then constructs hidden semantic validation tasks from the server reference data. It samples $T$ hidden tasks from the probe pool $\mathcal{P}$, with each task constructed to be approximately class-balanced. This class-balanced construction is the source of CARAT's class awareness. It is motivated by the possibility that a malicious update remains globally plausible while degrading only a subset of classes, which repeated balanced tasks would make more visible to the server. We use it as a conservative design choice; we do not verify this class-local mechanism directly, and the evaluated attacks are untargeted. For task $t$, let $\ell_t(w)$ denote the average cross-entropy loss of model $w$ on that task. CARAT defines a \emph{hidden-task certificate}
 \begin{equation}
 c_{i,t} = \ell_t(w_r) - \ell_t(w_r + \tilde{\Delta}_i).
 \label{eq:cert}

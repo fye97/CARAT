@@ -5,7 +5,7 @@ This appendix records the exact scope, CARAT configuration, component ablation, 
 
 \subsection{Completed Empirical Scope}
 
-The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The $10\%$ comparison selects $150$ CARAT runs across the two datasets, three heterogeneity levels, five attacks, and five seeds; the baseline defenses and clean Mean references also use five seeds. Figure~\ref{fig:attacker-fraction} additionally uses the $10\%$, $20\%$, $30\%$, and $40\%$ runs of CARAT, the four baseline defenses, and undefended Mean for the same three heterogeneity levels and five attacks, totaling $3{,}600$ completed runs. Appendix~\ref{sec:appendix-scalability} compares CARAT with the four baseline defenses on CIFAR-100 with $20$, $40$, and $60$ clients over seeds $42$--$46$.
+The completed comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully participating clients, Dirichlet non-i.i.d.\ partitions, $10\%$ malicious clients, and five attacks: ALIE, FangAttack, MinMax, MinSum, and Mimic. The paper reports an unattacked Mean reference and attacked results for NormClipping, MultiKrum, FLTrust, FLDetector, and CARAT. The $10\%$ comparison selects $150$ CARAT runs across the two datasets, three heterogeneity levels, five attacks, and five seeds; the baseline defenses and clean Mean references also use five seeds. Figure~\ref{fig:attacker-fraction} additionally uses the $10\%$, $20\%$, $30\%$, and $40\%$ runs of CARAT, the four baseline defenses, and undefended Mean for the same three heterogeneity levels and five attacks, totaling $3{,}600$ completed runs. Appendix~\ref{sec:appendix-scalability} compares CARAT with the four baseline defenses on CIFAR-100 with $20$, $40$, and $60$ clients over seeds $42$--$46$. Appendix~\ref{sec:appendix-reference-control} adds a held-out, budget-matched reference-data control with Zeno, the measured malicious weight, and a SignGuard comparison.
 
 \subsection{Reported CIFAR Protocol}
 
@@ -28,7 +28,7 @@ Malicious clients & $10\%$ main comparison; $10\%$--$40\%$ attacker-fraction swe
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\
 Compared methods & Clean reference: No Attack + Mean; attacked defenses: NormClipping, MultiKrum, FLTrust, FLDetector, CARAT & Curves in Figures~\ref{fig:table1-curves-cifar100} and~\ref{fig:table1-curves-cifar10}. \\
 Seeds and source policy & Five seeds for every reported result & All attacked defenses and clean references use seeds $42$--$46$. \\
-Server examples & CARAT pool: $512$; FLTrust: $100$ & Budgets are unequal; examples are sampled from the training set and not excluded from client partitions. \\
+Server examples & CARAT pool: $512$; FLTrust: $100$ & Budgets are unequal; examples are sampled from the training set and not excluded from client partitions. Appendix~\ref{sec:appendix-reference-control} repeats the comparison with a held-out pool and matched budgets. \\
 Reported statistic & Round-wise accuracy, mean $\pm$ sample standard deviation & The discussion compares round-200 means; rankings exclude the clean reference. \\
 \bottomrule
 \end{tabular}
@@ -50,7 +50,7 @@ Table~\ref{tab:carat-hyperparameters} lists the CARAT defaults used in the repor
 \toprule
 \textbf{Component} & \textbf{Default value} & \textbf{Purpose} \\
 \midrule
-Reference pool & $512$ training-set examples & Pool from which hidden tasks are sampled; it is not disjoint from client partitions. \\
+Reference pool & $512$ training-set examples & Pool from which hidden tasks are sampled; it is not disjoint from client partitions (held-out control in Appendix~\ref{sec:appendix-reference-control}). \\
 Hidden-task evaluation & $8$ tasks, $4$ examples per class, batch size $128$ & Builds repeated class-balanced certificates; each task contains $40$ examples on CIFAR-10 and $400$ on CIFAR-100. \\
 Normalization and clipping & Probe-radius quantile $0.5$; MAD clipping factor $2.5$ & Places candidates on a common evaluation radius and limits residual norm influence. \\
 Feasible weight set & Attacker prior $\hat{\rho}=0.1$ in the main comparison; $0.1$--$0.4$ in the attacker-fraction sweep & Caps per-client weight using the specified experimental attacker fraction. \\
@@ -89,7 +89,80 @@ We conduct a one-component-at-a-time ablation on CIFAR-100/ResNet18 with $20$ fu
 \end{table}
 
 \FloatBarrier
-Full CARAT has the highest mean under both reported attacks: $46.81\%$ for ALIE and $47.59\%$ for FangAttack. Relative to the reduced variants, its gains range from $0.13$ to $0.55$ percentage points under ALIE and from $0.17$ to $0.80$ points under FangAttack. The differences are modest compared with the $0.59$--$1.18$-point seed-level standard deviations; in particular, one task nearly matches eight tasks under ALIE. These results support a limited benefit for the complete configuration in this higher-adversary setting, not a claim that every component is independently necessary or that the same ranking holds at $10\%$ malicious clients or on other datasets.
+Full CARAT has the highest mean under both reported attacks: $46.81\%$ for ALIE and $47.59\%$ for FangAttack. Relative to the reduced variants, its gains range from $0.13$ to $0.55$ percentage points under ALIE and from $0.17$ to $0.80$ points under FangAttack. The differences are modest compared with the $0.59$--$1.18$-point seed-level standard deviations; in particular, one task nearly matches eight tasks under ALIE. These results support a limited benefit for the complete configuration in this higher-adversary setting, not a claim that every component is independently necessary or that the same ranking holds at $10\%$ malicious clients or on other datasets. In particular, one task nearly matching eight tasks means that this study does not isolate a benefit from the number of hidden tasks; we therefore do not claim that task multiplicity is independently necessary. The certificate-driven filtering of aggressive attacks at higher malicious fractions is reported in Appendix~\ref{sec:appendix-reference-control}.
+
+\FloatBarrier
+\subsection{Reference-Data Control, Zeno, and Malicious Weight}
+\label{sec:appendix-reference-control}
+
+In the main comparison, CARAT's $512$-example pool and FLTrust's $100$-example set are drawn from the training set without removing those examples from client partitions, so auxiliary-data access differs across methods. To separate the aggregation rule from this access, we remove a class-balanced pool of $512$ training examples, fixed per seed, from every client partition. FLTrust, Zeno~\citep{xie2019zeno}, and CARAT then draw server data only from this held-out pool, each with $100$ and with $512$ examples; for a given seed, all three methods use the same $100$-example subset. The study uses CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ clients, $10\%$ malicious clients, non-i.i.d.\ $\alpha=0.5$, the five attacks of the main comparison, seeds $42$--$46$, and default method parameters ($300$ runs).
+
+\begin{table}[!htbp]
+  \centering
+  \caption{Held-out, budget-matched reference data ($\alpha=0.5$, $10\%$ malicious clients). Cells show the five-attack mean of round-200 accuracy (\%), averaged within each seed and reported as mean$\pm$sample standard deviation over seeds $42$--$46$. ``In-training'' is CARAT's main-comparison configuration, whose $512$-example pool overlaps client data.}
+  \label{tab:reference-control}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lccccccc}
+  \toprule
+  & \multicolumn{3}{c}{CARAT} & \multicolumn{2}{c}{Zeno} & \multicolumn{2}{c}{FLTrust} \\
+  \cmidrule(lr){2-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+  Dataset & $100$ & $512$ & In-training & $100$ & $512$ & $100$ & $512$ \\
+  \midrule
+  CIFAR-10 & $76.76\pm0.73$ & $76.76\pm0.63$ & $76.85$ & $76.78\pm0.57$ & $76.75\pm0.45$ & $59.36\pm0.68$ & $55.19\pm0.78$ \\
+  CIFAR-100 & $50.16\pm0.47$ & $50.08\pm0.50$ & $49.94$ & $50.03\pm0.43$ & $49.83\pm0.57$ & $31.78\pm0.89$ & $29.21\pm1.16$ \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:reference-control} shows that CARAT is insensitive to both the overlap and the budget: the held-out pool reproduces its in-training accuracy, and $100$ and $512$ examples give the same result. No run of any method in this study finishes at chance level; CARAT's lowest single run is $75.04\%$ on CIFAR-10 and $48.74\%$ on CIFAR-100. FLTrust does not benefit from more server data and is $2.6$--$4.2$ points worse at $512$ examples. Zeno, which also scores clients by loss reduction on server data, matches CARAT within $0.25$ points. At this $10\%$ malicious fraction, the evaluated attacks barely degrade even undefended averaging (Section~\ref{sec:experiments}), so this comparison isolates the effect of reference data rather than distinguishing loss-based defenses from one another.
+
+\begin{table}[!htbp]
+  \centering
+  \caption{Total malicious weight $q_{\mathcal{M}}$ in the reference-data control ($10\%$ malicious clients, $\alpha=0.5$), averaged over rounds, seeds, and both pool sizes; CIFAR-10 / CIFAR-100. Uniform weighting gives $0.10$; CARAT's cap allows at most $2/18\approx0.111$.}
+  \label{tab:malicious-weight}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lccccc}
+  \toprule
+  Defense & ALIE & FangAttack & MinMax & MinSum & Mimic \\
+  \midrule
+  CARAT & $0.111$ / $0.111$ & $0.084$ / $0.056$ & $0.111$ / $0.111$ & $0.111$ / $0.111$ & $0.107$ / $0.105$ \\
+  Zeno & $0.111$ / $0.111$ & $0.111$ / $0.111$ & $0.111$ / $0.111$ & $0.111$ / $0.111$ & $0.107$ / $0.103$ \\
+  FLTrust & $0.100$ / $0.101$ & $0.008$ / $0.002$ & $0.108$ / $0.103$ & $0.106$ / $0.102$ & $0.100$ / $0.102$ \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:malicious-weight} reports the malicious weight $q_{\mathcal{M}}$ that Proposition~\ref{prop:malicious-mass-bound} takes as given. At $10\%$ malicious clients, CARAT reduces $q_{\mathcal{M}}$ only under FangAttack; the near-mean attacks ALIE, MinMax, and MinSum keep the capped weight, as they do under Zeno. These attacks are constructed to imitate benign update statistics. An update that keeps its weight under CARAT must reduce the hidden-task losses about as well as benign updates, which keeps it close to the benign mean; its influence is then bounded by the cap and by clipping. Accordingly, each of these three attacks lowers CARAT's round-200 accuracy by at most $1.6$ points relative to its no-attack accuracy in the main comparison.
+
+Filtering becomes active as attacks become more aggressive. In the attacker-fraction sweep (Figure~\ref{fig:attacker-fraction}), CARAT logs per-round weights for seed $42$. Under FangAttack with $20$--$40\%$ malicious clients, $q_{\mathcal{M}}$ averages at most $0.05$ over the last $50$ rounds in $17$ of the $18$ dataset--$\alpha$--fraction settings and is zero in most of them; the exception is CIFAR-100 at $\alpha=0.5$ with $40\%$ malicious clients ($0.19$). In these runs the FangAttack clients' rank penalties exceed those of benign clients by $2.8$--$17$ robust (MAD) units at $30$--$40\%$. Under ALIE with $40\%$ malicious clients, whose perturbation grows with the attacker count, $q_{\mathcal{M}}$ averages at most $0.06$ over the first $20$ rounds in all six dataset--$\alpha$ settings and is zero throughout rounds $0$--$99$ at $\alpha=0.5$; in the same setting, undefended Mean reaches $24.68\%$ on CIFAR-10 at $\alpha=1.0$, whereas CARAT reaches $72.05\%$. Under MinMax and MinSum, the malicious clients keep the capped weight at every fraction, and CARAT remains within $3$ points of undefended averaging. These per-round observations come from a single seed and are descriptive.
+
+\paragraph{SignGuard.}
+SignGuard~\citep{xu2022signguard} results are available for $10\%$ and $20\%$ malicious clients under ALIE, FangAttack, MinMax, and MinSum ($20$ clients, seeds $42$--$46$). Table~\ref{tab:signguard} compares the four-attack means. CARAT is higher in all $12$ settings, by $1.22$--$4.73$ points at $10\%$ and $0.08$--$6.37$ points at $20\%$.
+
+\begin{table}[!htbp]
+  \centering
+  \caption{CARAT versus SignGuard: round-200 accuracy (\%) averaged over ALIE, FangAttack, MinMax, and MinSum within each seed, mean$\pm$sample standard deviation over seeds $42$--$46$.}
+  \label{tab:signguard}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{llcccc}
+  \toprule
+  & & \multicolumn{2}{c}{$10\%$ malicious} & \multicolumn{2}{c}{$20\%$ malicious} \\
+  \cmidrule(lr){3-4}\cmidrule(lr){5-6}
+  Dataset & $\alpha$ & CARAT & SignGuard & CARAT & SignGuard \\
+  \midrule
+  \multirow{3}{*}{CIFAR-10} & $1.0$ & $79.46\pm0.35$ & $78.24\pm0.41$ & $78.12\pm0.37$ & $78.04\pm0.60$ \\
+  & $0.5$ & $76.82\pm0.66$ & $74.48\pm0.88$ & $75.40\pm0.53$ & $74.30\pm1.19$ \\
+  & $0.1$ & $54.43\pm4.05$ & $49.70\pm4.27$ & $50.21\pm5.01$ & $47.63\pm3.68$ \\
+  \midrule
+  \multirow{3}{*}{CIFAR-100} & $1.0$ & $51.30\pm0.67$ & $49.26\pm0.59$ & $49.06\pm0.58$ & $48.19\pm0.58$ \\
+  & $0.5$ & $49.95\pm0.64$ & $47.90\pm0.80$ & $47.55\pm0.74$ & $46.46\pm0.85$ \\
+  & $0.1$ & $44.14\pm0.84$ & $41.32\pm0.39$ & $41.21\pm0.35$ & $34.84\pm1.01$ \\
+  \bottomrule
+  \end{tabular}
+\end{table}
 
 \FloatBarrier
 \subsection{Client-Population Scalability}

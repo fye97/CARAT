@@ -57,9 +57,13 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server aggregation round. T
     \ENDFOR
 \ENDFOR
 \STATE $\mathcal{B} \leftarrow$ clients $i$ with a non-finite $c_{i,t}$ for some $t$
+\IF{$\mathcal{B} \neq \{1,\dots,n\}$}
 \FOR{$i \in \mathcal{B}$ and $t=1$ to $T$}
     \STATE $c_{i,t} \leftarrow m_t - \max(1, M_t - m_t)$, where $m_t$ and $M_t$ are the minimum and maximum of $\{c_{j,t}\}_{j\notin\mathcal{B}}$
 \ENDFOR
+\ELSE
+    \STATE $c_{i,t} \leftarrow -1$ for all $i,t$ \COMMENT{no finite certificate: scores carry no information}
+\ENDIF
 \STATE Robustly standardize certificate columns to obtain $C$
 \STATE Compute rank penalties $\gamma$ from repeated coordinate subsamples of $\{\bar{\Delta}_i^r\}_{i=1}^n$
 \STATE $\alpha^{(0)} \leftarrow \alpha^{\mathrm{prev}}$
@@ -71,7 +75,8 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server aggregation round. T
 \ENDFOR
 \STATE $\alpha^\star \leftarrow \alpha^{(K)}$
 \IF{$\alpha^\star$ has a non-finite entry}
-    \STATE $\alpha_i^\star \leftarrow \mathbf{1}[i\notin\mathcal{B}]/(n-|\mathcal{B}|)$ for all $i$
+    \STATE $\mathcal{K} \leftarrow \{i : i\notin\mathcal{B}\}$ if non-empty, else $\{1,\dots,n\}$
+    \STATE $\alpha_i^\star \leftarrow \mathbf{1}[i\in\mathcal{K}]/|\mathcal{K}|$ for all $i$ \COMMENT{numerical fallback; may exceed the cap; never triggered in reported runs}
 \ENDIF
 \STATE $\alpha^{\mathrm{prev}} \leftarrow \alpha^\star$
 \STATE $\Delta_{\mathrm{agg}} \leftarrow \sum_{i=1}^n \alpha_i^\star \bar{\Delta}_i^r$

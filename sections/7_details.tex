@@ -76,7 +76,7 @@ Algorithm~\ref{alg:carat-round} summarizes one CARAT server aggregation round. T
 \STATE $\alpha^\star \leftarrow \alpha^{(K)}$
 \IF{$\alpha^\star$ has a non-finite entry}
     \STATE $\mathcal{K} \leftarrow \{i : i\notin\mathcal{B}\}$ if non-empty, else $\{1,\dots,n\}$
-    \STATE $\alpha_i^\star \leftarrow \mathbf{1}[i\in\mathcal{K}]/|\mathcal{K}|$ for all $i$ \COMMENT{numerical fallback; may exceed the cap; never triggered in reported runs}
+    \STATE $\alpha_i^\star \leftarrow \mathbf{1}[i\in\mathcal{K}]/|\mathcal{K}|$ for all $i$ \COMMENT{numerical fallback; may exceed the cap if $|\mathcal{K}|<(1-\hat{\rho})n$; never triggered in reported runs}
 \ENDIF
 \STATE $\alpha^{\mathrm{prev}} \leftarrow \alpha^\star$
 \STATE $\Delta_{\mathrm{agg}} \leftarrow \sum_{i=1}^n \alpha_i^\star \bar{\Delta}_i^r$

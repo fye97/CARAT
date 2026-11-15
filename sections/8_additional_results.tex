@@ -22,7 +22,7 @@ The comparison covers CIFAR-10/VGG19 and CIFAR-100/ResNet18 with $20$ fully part
 \midrule
 Dataset and model & CIFAR-10 / VGG19; CIFAR-100 / ResNet18 & Complementary ten-class and class-rich benchmarks. \\
 Client population & $20$ clients, full participation & Fixed participation in every round. \\
-Training schedule & SGD; $200$ rounds; $4$ local epochs; learning rate $0.05$; momentum $0.9$; weight decay $5\times10^{-4}$; batch size $64$ & Common optimization schedule for attacked runs. \\
+Training schedule & SGD; $200$ rounds; $4$ local epochs; initial learning rate $0.05$, multiplied by $0.1$ at rounds $100$ and $160$; momentum $0.9$; weight decay $5\times10^{-4}$; batch size $64$ & Common optimization schedule for attacked runs. \\
 Data heterogeneity & Dirichlet non-i.i.d.\ $\alpha\in\{1,0.5,0.1\}$ & Rows displayed in the main figures. \\
 Malicious clients & $10\%$ main comparison; $10\%$--$40\%$ attacker-fraction sweep & Two to eight of the $20$ clients; each fraction is also supplied to CARAT as $\hat{\rho}$. \\
 Attack suite & ALIE, FangAttack, MinMax, MinSum, Mimic & Four conventional poisoning attacks and a benign-update copying attack. \\

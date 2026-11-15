@@ -25,7 +25,9 @@ import numpy as np
 
 SEEDS = (42, 43, 44, 45, 46)
 ATTACKS = ("ALIE", "FangAttack", "MinMax", "MinSum", "Mimic")
-DEFENSES = ("NormClipping", "MultiKrum", "FLTrust", "FLDetector", "CARAT")
+DEFENSES = ("NormClipping", "MultiKrum", "FLTrust", "SignGuard", "FLDetector", "CARAT")
+# SignGuard was not run under Mimic; its curve is omitted in that column.
+MISSING = {("SignGuard", "Mimic")}
 ALPHAS = (("1", "1.0"), ("0.5", "0.5"), ("0.1", "0.1"))
 ROUNDS = 200
 
@@ -47,6 +49,7 @@ METHOD_STYLE = {
     "MultiKrum": dict(color="#59A14F", linestyle=":", linewidth=0.95, zorder=4),
     "FLTrust": dict(color="#E15759", linestyle="-.", linewidth=0.85, zorder=4),
     "FLDetector": dict(color="#B07AA1", linestyle=(0, (1, 1.5)), linewidth=0.95, zorder=4),
+    "SignGuard": dict(color="#9C755F", linestyle=(0, (4, 1.5, 1, 1.5)), linewidth=0.85, zorder=4),
     "CARAT": dict(color="#1F77B4", linestyle="-", linewidth=1.20, zorder=6),
 }
 
@@ -264,6 +267,8 @@ def draw_dataset(
                 spine.set_linewidth(0.55)
 
             for method in ("NoAttack + Mean", *DEFENSES):
+                if (method, attack) in MISSING:
+                    continue
                 runs = clean_runs if method == "NoAttack + Mean" else load_runs(
                     args, dataset.path_name, attack, method, alpha_token
                 )
@@ -314,20 +319,21 @@ def draw_dataset(
             axis.set_yticks(np.arange(0.0, y_max + 0.01, tick_step))
         print(f"{dataset.display_name}, alpha={alpha_display}: y-axis 0--{y_max:g}%")
 
-    legend_order = ("NormClipping", "MultiKrum", "FLTrust", "FLDetector", "CARAT", "NoAttack + Mean")
+    legend_order = ("NormClipping", "MultiKrum", "FLTrust", "SignGuard", "FLDetector", "CARAT", "NoAttack + Mean")
     legend_labels = {
         "NoAttack + Mean": "NoAttack + Mean (clean)",
         "NormClipping": "NormClipping",
         "MultiKrum": "MultiKrum",
         "FLTrust": "FLTrust",
         "FLDetector": "FLDetector",
+        "SignGuard": "SignGuard",
         "CARAT": "CARAT",
     }
     fig.legend(
         [handles_by_method[name] for name in legend_order],
         [legend_labels[name] for name in legend_order],
         loc="lower center",
-        ncol=6,
+        ncol=7,
         frameon=False,
         bbox_to_anchor=(0.5, 0.012),
         handlelength=1.9,
